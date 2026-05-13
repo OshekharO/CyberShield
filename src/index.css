@@ -31,7 +31,8 @@ body {
 
 @layer components {
   .app-shell {
-    @apply min-h-screen bg-base-200/60;
+    min-height: 100vh;
+    background-color: color-mix(in oklab, var(--color-base-200) 88%, transparent);
   }
 
   .mesh-bg {
@@ -42,6 +43,7 @@ body {
   }
 
   .card-border {
-    @apply border border-base-300/60 shadow-sm;
+    border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+    box-shadow: 0 12px 30px color-mix(in oklab, var(--color-base-content) 8%, transparent);
   }
 }
