@@ -1,0 +1,52 @@
+name: Prisma Migrate Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prisma-migrate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DIRECT_URL: ${{ secrets.DIRECT_URL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Validate required secrets
+        run: |
+          missing=0
+          if [ -z "${DATABASE_URL}" ]; then
+            echo "Missing required secret: DATABASE_URL"
+            missing=1
+          fi
+          if [ -z "${DIRECT_URL}" ]; then
+            echo "Missing required secret: DIRECT_URL"
+            missing=1
+          fi
+          if [ "${missing}" -eq 1 ]; then
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prisma migrations
+        run: npm run prisma:migrate
