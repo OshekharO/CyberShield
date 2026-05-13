@@ -3,6 +3,8 @@ import { Activity, FileSpreadsheet, LayoutDashboard, ScanSearch, Settings, Shiel
 import { ThemeToggle } from '../components/ThemeToggle'
 import { useAuthStore } from '../store/authStore'
 import { Button } from '../components/ui/button'
+import { GlitchText } from '../components/ui/glitch-text'
+import { SurfacePanel } from '../components/ui/surface-panel'
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -18,15 +20,19 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen px-4 py-4 sm:px-6 lg:px-10">
-      <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
-        <aside className="rounded-2xl border border-slate-300/70 bg-white/90 p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900/80">
+      <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <SurfacePanel className="scanline-overlay p-4 sm:p-5">
           <div className="mb-6 flex items-center justify-between gap-2">
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-300">CyberShield</p>
-              <h1 className="mt-1 flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-white">
-                <Shield size={16} className="text-cyan-500" />
-                Operations
-              </h1>
+              <p className="cyber-label">CyberShield</p>
+              <GlitchText
+                as="h1"
+                text="OPERATIONS"
+                className="cyber-title mt-1 flex items-center gap-2 text-lg font-semibold tracking-[0.12em]"
+              >
+                <Shield size={16} className="text-cyan-300" />
+                OPERATIONS
+              </GlitchText>
             </div>
             <ThemeToggle />
           </div>
@@ -37,10 +43,10 @@ export function AppLayout() {
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition ${
+                  `flex items-center gap-3 px-3 py-2 text-sm font-medium transition [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)] ${
                     isActive
-                      ? 'bg-cyan-500/15 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-200'
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/70'
+                      ? 'border border-cyan-300/55 bg-cyan-300/16 text-cyan-100 cyber-glow-cyan'
+                      : 'border border-transparent text-[var(--text-1)] hover:border-cyan-300/30 hover:bg-cyan-300/8 hover:text-[var(--text-0)]'
                   }`
                 }
               >
@@ -52,10 +58,10 @@ export function AppLayout() {
               <NavLink
                 to="/admin"
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition ${
+                  `flex items-center gap-3 px-3 py-2 text-sm font-medium transition [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)] ${
                     isActive
-                      ? 'bg-cyan-500/15 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-200'
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/70'
+                      ? 'border border-cyan-300/55 bg-cyan-300/16 text-cyan-100 cyber-glow-cyan'
+                      : 'border border-transparent text-[var(--text-1)] hover:border-cyan-300/30 hover:bg-cyan-300/8 hover:text-[var(--text-0)]'
                   }`
                 }
               >
@@ -65,19 +71,17 @@ export function AppLayout() {
             )}
           </nav>
 
-          <div className="mt-6 rounded-xl border border-slate-200 p-3 dark:border-slate-800">
-            <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{user?.name}</p>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
+          <div className="hud-panel mt-6">
+            <p className="truncate text-sm font-medium text-[var(--text-0)]">{user?.name}</p>
+            <p className="truncate text-xs text-[var(--text-2)]">{user?.email}</p>
             <Button type="button" variant="ghost" size="sm" className="mt-2 w-full justify-start" onClick={() => void logout()}>
               Sign out
             </Button>
           </div>
-        </aside>
+        </SurfacePanel>
 
         <main className="min-w-0 space-y-4">
-          <header className="rounded-2xl border border-slate-300/70 bg-white/90 px-4 py-3 text-sm text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-300">
-            Live security workspace for real-time threat scanning and reporting.
-          </header>
+          <header className="hud-panel text-sm text-[var(--text-1)]">Live security workspace for real-time threat scanning and reporting.</header>
           <Outlet />
         </main>
       </div>
