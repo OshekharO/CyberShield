@@ -44,6 +44,7 @@ model User {
   updatedAt      DateTime      @updatedAt
   scans          Scan[]
   reports        ThreatReport[]
+  blockedEntry   BlockedUser?  @relation("BlockedAccount")
   blockedRecords BlockedUser[] @relation("BlockedByAdmin")
 
   @@index([role])
@@ -115,7 +116,7 @@ model BlockedUser {
   blockedById  String
   reason       String
   blockedAt    DateTime @default(now())
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation("BlockedAccount", fields: [userId], references: [id], onDelete: Cascade)
   blockedBy    User     @relation("BlockedByAdmin", fields: [blockedById], references: [id])
 
   @@index([blockedAt])

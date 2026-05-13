@@ -1,4 +1,4 @@
-import { ScanType } from '@prisma/client'
+import { type Prisma, ScanType } from '@prisma/client'
 import { prisma } from './db.js'
 import { generateThreatSummary } from './gemini.js'
 import { logApiUsage } from './logger.js'
@@ -116,8 +116,8 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
   await prisma.scanResult.create({
     data: {
       scanId: scan.id,
-      signals,
-      providers: providerData,
+      signals: signals as Prisma.InputJsonValue,
+      providers: providerData as Prisma.InputJsonValue,
       aiSummary,
       providerHealth: {
         providers: Object.keys(providerData),

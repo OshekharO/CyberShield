@@ -1,3 +1,4 @@
+import type { Prisma } from '@prisma/client'
 import { prisma } from './db.js'
 
 interface LogInput {
@@ -17,7 +18,7 @@ export const logApiUsage = async (input: LogInput) => {
       statusCode: input.statusCode,
       providerName: input.providerName,
       latencyMs: input.latencyMs,
-      requestMeta: input.requestMeta,
+      requestMeta: input.requestMeta as Prisma.InputJsonValue | undefined,
     },
   })
 }
