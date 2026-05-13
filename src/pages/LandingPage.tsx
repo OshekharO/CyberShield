@@ -41,11 +41,13 @@ const workflow = [
   { title: 'Export evidence', desc: 'Generate PDF reports for investigations, handoffs, and stakeholder communication.' },
 ]
 
+const chips = ['Threat triage', 'IOC scanning', 'Analyst summaries', 'PDF exports']
+
 export default function LandingPage() {
   return (
     <div className="mesh-bg min-h-screen">
       <header className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="navbar rounded-box card-border bg-base-100/85 px-4 shadow-sm backdrop-blur">
+        <div className="navbar rounded-box card-border glass-panel px-4 shadow-sm backdrop-blur-xl">
           <div className="flex-1 gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-box bg-primary/15 text-primary">
               <ShieldCheck size={20} />
@@ -60,7 +62,7 @@ export default function LandingPage() {
             <Link to="/login" className="btn btn-ghost hidden sm:inline-flex">
               Sign in
             </Link>
-            <Link to="/signup" className="btn btn-primary">
+            <Link to="/signup" className="btn btn-primary shadow-[0_0_24px_rgba(0,212,255,0.2)]">
               Start free trial
             </Link>
           </nav>
@@ -92,9 +94,16 @@ export default function LandingPage() {
                 </Button>
               </Link>
             </div>
+            <div className="flex flex-wrap gap-2">
+              {chips.map((chip) => (
+                <span key={chip} className="badge badge-outline badge-lg bg-base-100/65 px-4">
+                  {chip}
+                </span>
+              ))}
+            </div>
             <div className="grid gap-3 sm:grid-cols-3">
               {stats.map((stat) => (
-                <div key={stat.label} className="rounded-box border border-base-300/60 bg-base-100/80 p-5 shadow-sm">
+                <div key={stat.label} className="glass-panel rounded-box border border-base-300/60 p-5 shadow-sm">
                   <p className="text-2xl font-bold sm:text-3xl">{stat.value}</p>
                   <p className="mt-2 text-sm leading-6 text-base-content/60">{stat.label}</p>
                 </div>
@@ -107,7 +116,7 @@ export default function LandingPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Mission control</p>
               <h2 className="text-3xl font-semibold leading-tight">A complete product surface for the modern security team.</h2>
               <p className="text-sm leading-7 text-base-content/70">
-                Designed with stronger spacing, typography, and conversion-focused CTAs to feel like a production SaaS landing page instead of a rough prototype.
+                Inspired by sharper cyber UI references, the interface leans into focused dark mode, brighter accents, and cleaner operator panels.
               </p>
             </div>
             <div className="stats stats-vertical border border-base-300/60 bg-base-200/60 shadow-sm">
@@ -120,7 +129,7 @@ export default function LandingPage() {
                 <div className="stat-desc">Summaries keep investigations readable and shareable</div>
               </div>
               <div className="stat">
-                <div className="stat-figure text-secondary">
+                <div className="stat-figure text-accent">
                   <CheckCircle2 size={22} />
                 </div>
                 <div className="stat-title">Product experience</div>
@@ -138,12 +147,12 @@ export default function LandingPage() {
               <h2 className="text-3xl font-semibold">Product polish that matches the security workflow.</h2>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-base-content/65">
-              The redesign uses structured cards, clearer content blocks, and better rhythm so the site reads like a complete security SaaS product.
+              The redesign uses structured cards, clearer content blocks, better rhythm, and a stronger cyber palette so the site reads like a complete security SaaS product.
             </p>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {features.map((feature) => (
-              <SurfacePanel key={feature.title} className="space-y-4 p-6 transition-transform duration-200 hover:-translate-y-1">
+              <SurfacePanel key={feature.title} className="space-y-4 p-6 transition-transform duration-200 hover:-translate-y-1 hover:border-primary/35">
                 <div className="flex h-12 w-12 items-center justify-center rounded-box bg-primary/15 text-primary">
                   <feature.icon size={22} />
                 </div>
@@ -189,7 +198,7 @@ export default function LandingPage() {
           </SurfacePanel>
         </section>
 
-        <section className="rounded-box card-border bg-base-100/90 px-6 py-10 shadow-sm sm:px-10 lg:px-12">
+        <section className="rounded-box card-border glass-panel px-6 py-10 shadow-sm sm:px-10 lg:px-12">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Ready to launch</p>

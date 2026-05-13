@@ -14,6 +14,14 @@
       content="cybersecurity SaaS, threat detection, IOC scanning, security dashboard, analyst reports, cyber threat intelligence"
     />
     <meta name="theme-color" content="#2563eb" />
+    <script>
+      (() => {
+        const storedTheme = window.localStorage.getItem('cybershield-theme')
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const isDark = storedTheme ? storedTheme === 'dark' : prefersDark
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#0a0e1a' : '#f4f8fb')
+      })()
+    </script>
     <meta property="og:type" content="website" />
     <meta property="og:title" content="CyberShield | SaaS Cyber Threat Detection Platform" />
     <meta

@@ -9,8 +9,8 @@ interface ThemeState {
 
 const STORAGE_KEY = 'cybershield-theme'
 const themeMap = {
-  light: 'winter',
-  dark: 'business',
+  light: 'cybershieldlight',
+  dark: 'cybershielddark',
 } as const
 
 const getInitialTheme = (): Theme => {

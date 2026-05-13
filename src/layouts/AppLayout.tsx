@@ -19,7 +19,7 @@ export function AppLayout() {
 
   return (
     <div className="app-shell">
-      <div className="navbar border-b border-base-300/60 bg-base-100/80 px-4 backdrop-blur lg:px-8">
+      <div className="navbar sticky top-0 z-20 border-b border-base-300/60 bg-base-100/75 px-4 backdrop-blur-xl lg:px-8">
         <div className="flex-1 gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-box bg-primary/15 text-primary">
             <Shield size={20} />
@@ -30,23 +30,26 @@ export function AppLayout() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <div className="badge badge-outline hidden sm:inline-flex">Live ops</div>
           <ThemeToggle />
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-8">
-        <aside className="space-y-4">
-          <SurfacePanel className="p-0">
+      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:px-8">
+        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <SurfacePanel className="glass-panel p-0">
             <div className="border-b border-base-300/60 p-5">
               <p className="text-sm font-medium text-base-content/70">Operations menu</p>
-              <p className="mt-1 text-xs text-base-content/50">Navigate scans, reports, and governance controls.</p>
+              <p className="mt-1 text-xs text-base-content/50">Navigate scans, reports, governance, and response workflows.</p>
             </div>
             <ul className="menu gap-1 p-3">
               {links.map(({ to, label, icon: Icon }) => (
                 <li key={to}>
                   <NavLink
                     to={to}
-                    className={({ isActive }) => (isActive ? 'active bg-primary text-primary-content' : '')}
+                    className={({ isActive }) =>
+                      isActive ? 'active bg-primary text-primary-content shadow-[0_0_20px_rgba(0,212,255,0.18)]' : 'hover:bg-base-200/70'
+                    }
                   >
                     <Icon size={16} />
                     <span>{label}</span>
@@ -55,7 +58,12 @@ export function AppLayout() {
               ))}
               {user?.role === 'ADMIN' && (
                 <li>
-                  <NavLink to="/admin" className={({ isActive }) => (isActive ? 'active bg-primary text-primary-content' : '')}>
+                  <NavLink
+                    to="/admin"
+                    className={({ isActive }) =>
+                      isActive ? 'active bg-primary text-primary-content shadow-[0_0_20px_rgba(0,212,255,0.18)]' : 'hover:bg-base-200/70'
+                    }
+                  >
                     <Users size={16} />
                     <span>Admin</span>
                   </NavLink>
@@ -69,7 +77,10 @@ export function AppLayout() {
               <p className="text-sm font-semibold">{user?.name}</p>
               <p className="text-sm text-base-content/60">{user?.email}</p>
             </div>
-            <div className="badge badge-outline">{user?.role ?? 'USER'}</div>
+            <div className="flex flex-wrap gap-2">
+              <div className="badge badge-outline">{user?.role ?? 'USER'}</div>
+              <div className="badge badge-accent badge-outline">Secure session</div>
+            </div>
             <Button type="button" variant="ghost" className="justify-start" onClick={() => void logout()}>
               Sign out
             </Button>
@@ -78,7 +89,17 @@ export function AppLayout() {
 
         <main className="min-w-0 space-y-6">
           <SurfacePanel className="mesh-bg p-5">
-            <p className="text-sm text-base-content/70">Real-time scanning, triage, and reporting for your cyber operations workflow.</p>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-sm font-semibold">Command center</p>
+                <p className="mt-1 text-sm text-base-content/70">Real-time scanning, triage, and reporting for your cyber operations workflow.</p>
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs text-base-content/70">
+                <span className="badge badge-outline">Detection</span>
+                <span className="badge badge-outline">Triage</span>
+                <span className="badge badge-outline">Reporting</span>
+              </div>
+            </div>
           </SurfacePanel>
           <Outlet />
         </main>
