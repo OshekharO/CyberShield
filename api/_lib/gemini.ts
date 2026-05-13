@@ -23,7 +23,9 @@ export const generateThreatSummary = async (payload: Record<string, unknown>) =>
       })
 
       return response.text || 'No AI summary generated.'
-    } catch {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      console.error(`[gemini] Failed to generate summary with model "${model}": ${message}`)
       continue
     }
   }
