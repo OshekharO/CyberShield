@@ -3,14 +3,18 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '../../utils/cn'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-xl border text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 disabled:pointer-events-none disabled:opacity-60',
+  'inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap border px-4 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-55 active:translate-y-[1px] [clip-path:polygon(0.65rem_0,calc(100%-0.65rem)_0,100%_0.65rem,100%_calc(100%-0.65rem),calc(100%-0.65rem)_100%,0.65rem_100%,0_calc(100%-0.65rem),0_0.65rem)]',
   {
     variants: {
       variant: {
-        default: 'border-cyan-400/30 bg-cyan-400 text-slate-950 hover:bg-cyan-300',
-        ghost: 'border-transparent bg-transparent text-slate-600 hover:bg-slate-200/60 dark:text-slate-300 dark:hover:bg-slate-800/80',
+        default:
+          'border-cyan-300/60 bg-cyan-300/15 text-cyan-100 shadow-[0_0_0_1px_rgba(77,234,255,0.35),0_0_16px_rgba(77,234,255,0.24)] hover:border-cyan-200 hover:bg-cyan-300/25 focus-visible:ring-cyan-300/70',
+        ghost:
+          'border-transparent bg-transparent text-[var(--text-1)] hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-[var(--text-0)] focus-visible:ring-cyan-300/70',
         outline:
-          'border-slate-300/80 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800',
+          'border-[var(--line)] bg-[var(--surface-1)] text-[var(--text-0)] hover:border-cyan-300/60 hover:text-cyan-100 focus-visible:ring-cyan-300/70',
+        danger:
+          'border-rose-400/50 bg-rose-500/20 text-rose-200 shadow-[0_0_0_1px_rgba(251,113,133,0.24),0_0_14px_rgba(251,113,133,0.2)] hover:bg-rose-500/28 focus-visible:ring-rose-300/70',
       },
       size: {
         default: 'h-10 px-4',
