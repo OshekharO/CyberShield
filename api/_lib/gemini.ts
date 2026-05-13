@@ -23,7 +23,9 @@ export const generateThreatSummary = async (payload: Record<string, unknown>) =>
       })
 
       return response.text || 'No AI summary generated.'
-    } catch {}
+    } catch {
+      continue
+    }
   }
 
   return 'AI threat summary is temporarily unavailable.'
