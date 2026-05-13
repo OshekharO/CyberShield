@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum ScanType {
+  IP
+  URL
+  EMAIL
+  DOMAIN
+}
+
+enum RiskLevel {
+  SAFE
+  LOW_RISK
+  MEDIUM_RISK
+  HIGH_RISK
+  CRITICAL
+}
+
+enum ScanStatus {
+  SUCCESS
+  FAILED
+}
+
+model User {
+  id             String        @id @default(cuid())
+  email          String        @unique
+  name           String
+  passwordHash   String
+  role           UserRole      @default(USER)
+  isBanned       Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  scans          Scan[]
+  reports        ThreatReport[]
+  blockedRecords BlockedUser[] @relation("BlockedByAdmin")
+
+  @@index([role])
+}
+
+model Scan {
+  id          String       @id @default(cuid())
+  userId      String
+  target      String
+  type        ScanType
+  riskScore   Int
+  riskLevel   RiskLevel
+  matchedRules Json
+  status      ScanStatus   @default(SUCCESS)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  user        User         @relation(fields: [userId], references: [id])
+  results     ScanResult[]
+  report      ThreatReport?
+
+  @@index([userId, createdAt])
+  @@index([type, riskLevel])
+}
+
+model ScanResult {
+  id            String   @id @default(cuid())
+  scanId         String
+  signals        Json
+  providers      Json
+  aiSummary      String?
+  providerHealth Json?
+  createdAt      DateTime @default(now())
+  scan           Scan     @relation(fields: [scanId], references: [id], onDelete: Cascade)
+
+  @@index([scanId])
+}
+
+model ApiLog {
+  id           String   @id @default(cuid())
+  endpoint     String
+  method       String
+  statusCode   Int
+  providerName String?
+  latencyMs    Int
+  requestMeta  Json?
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([providerName])
+}
+
+model ThreatReport {
+  id             String   @id @default(cuid())
+  scanId          String   @unique
+  userId          String
+  reportTitle     String
+  reportBody      String
+  mitigationSteps Json
+  generatedAt     DateTime @default(now())
+  scan            Scan     @relation(fields: [scanId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, generatedAt])
+}
+
+model BlockedUser {
+  id          String   @id @default(cuid())
+  userId       String   @unique
+  blockedById  String
+  reason       String
+  blockedAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blockedBy    User     @relation("BlockedByAdmin", fields: [blockedById], references: [id])
+
+  @@index([blockedAt])
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

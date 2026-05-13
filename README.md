@@ -1,73 +1,145 @@
-# React + TypeScript + Vite
+# CyberShield X
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Production-grade full-stack AI-assisted cybersecurity platform deployable as a **single Vercel project**.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Frontend: React + TypeScript + Vite + TailwindCSS + React Router + Axios + Zustand + Framer Motion + shadcn/ui-style component foundation + Recharts
+- Backend: Vercel Serverless Functions (`/api`) + Node.js + TypeScript
+- Database: PostgreSQL via **Supabase Postgres** + Prisma ORM
+- Auth: JWT + secure HTTP-only cookies + RBAC (Admin/User)
+- AI: Google Gemini API
 
-## React Compiler
+## Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```txt
+/src     -> Frontend SPA
+/api     -> Vercel serverless functions
+/prisma  -> Prisma schema
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Single deployment routes:
+- `/dashboard`, `/scan-center`, `/admin`
+- `/api/auth/login`, `/api/scan/ip`, `/api/admin/stats`, etc.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Implemented APIs
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
+### Auth
+- `POST /api/auth/signup`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `POST /api/auth/forgot-password`
+- `GET /api/auth/me`
+
+### Scan
+- `POST /api/scan/ip`
+- `POST /api/scan/url`
+- `POST /api/scan/email`
+- `POST /api/scan/domain`
+
+### AI
+- `POST /api/ai-summary`
+
+### Admin
+- `GET /api/admin/users`
+- `POST /api/admin/users` (ban/unban)
+- `GET /api/admin/stats`
+- `GET /api/admin/logs`
+
+### Reports
+- `GET /api/export-report?scanId=...` (PDF)
+
+## External Provider Integrations
+
+- IP: IPInfo Lite, AbuseIPDB, Fidro
+- URL: VirusTotal, URLHaus, DestroyList
+- Email: UserCheck Email API, EmailRep, Fidro Email Validation
+- Domain: RDAP, WhoisXML Subdomains API, Pulsedive, UserCheck Domain API
+
+## Risk Scoring Engine
+
+Rule-based scoring (never AI-based risk determination):
+- Inputs: abuse confidence, blacklist hits, phishing indicators, disposable email flags, Fidro risk, VirusTotal malicious detections, recent domain registration
+- Outputs:
+  - Levels: Safe / Low Risk / Medium Risk / High Risk / Critical
+  - `matched_rules`
+  - provider confidence score
+
+## API Response Shape
+
+```json
+{
+  "scan_id": "",
+  "target": "",
+  "type": "",
+  "risk": {
+    "score": 0,
+    "level": "",
+    "matched_rules": []
   },
-])
+  "signals": {},
+  "providers": {}
+}
 ```
+
+## Prisma Models
+
+- `users`
+- `scans`
+- `scan_results`
+- `api_logs`
+- `threat_reports`
+- `blocked_users`
+- `settings`
+
+Includes enums, relations, indexes, timestamps, and foreign keys.
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+- `DATABASE_URL`
+- `DIRECT_URL`
+- `GEMINI_API_KEY`
+- `JWT_SECRET`
+- `IPINFO_TOKEN`
+- `ABUSEIPDB_API_KEY`
+- `VIRUSTOTAL_API_KEY`
+- `DESTROYLIST_BASE_URL`
+- `USERCHECK_API_KEY`
+- `FIDRO_API_KEY`
+- `WHOISXML_API_KEY`
+
+> `DATABASE_URL` and `DIRECT_URL` are configured for Supabase Postgres.
+
+## Local Setup
+
+```bash
+npm install
+npm run prisma:generate
+npm run dev
+```
+
+For database migration deployment:
+
+```bash
+npm run prisma:migrate
+```
+
+## Deploy to Vercel
+
+1. Push this repository to GitHub.
+2. Import project in Vercel.
+3. Add environment variables from `.env.example`.
+4. Ensure Supabase Postgres is reachable from Vercel.
+5. Deploy.
+
+`vercel.json` is included for SPA rewrites + `/api` function routing under one project.
+
+## Security Notes
+
+- Password hashing with bcrypt
+- JWT in HTTP-only secure cookies
+- Role-based auth guards for admin APIs
+- Input sanitization and validation (zod)
+- API logging for monitoring/analytics
