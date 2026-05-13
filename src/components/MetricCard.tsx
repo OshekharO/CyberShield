@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { motion } from 'framer-motion'
 import { Card } from './ui/card'
 
@@ -6,7 +7,7 @@ interface Props {
   value: string | number
 }
 
-export function MetricCard({ label, value }: Props) {
+function MetricCardBase({ label, value }: Props) {
   return (
     <motion.div whileHover={{ y: -2 }}>
       <Card>
@@ -16,3 +17,5 @@ export function MetricCard({ label, value }: Props) {
     </motion.div>
   )
 }
+
+export const MetricCard = memo(MetricCardBase)

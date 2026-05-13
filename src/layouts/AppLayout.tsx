@@ -12,13 +12,14 @@ const links = [
 ]
 
 export function AppLayout() {
-  const { user, logout } = useAuthStore()
+  const user = useAuthStore((s) => s.user)
+  const logout = useAuthStore((s) => s.logout)
 
   return (
     <div className="min-h-screen bg-transparent text-slate-100">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[260px_1fr]">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-4 md:grid-cols-[260px_minmax(0,1fr)] md:py-6">
         <aside className="rounded-2xl border border-slate-700/60 bg-slate-900/75 p-4 backdrop-blur-md">
-          <div className="mb-5 flex items-center justify-between">
+          <div className="mb-5 flex items-center justify-between gap-3">
             <h1 className="text-lg font-semibold text-cyan-300">CyberShield X</h1>
             <ThemeToggle />
           </div>
@@ -34,7 +35,7 @@ export function AppLayout() {
                 }
               >
                 <Icon size={16} />
-                {label}
+                <span className="truncate">{label}</span>
               </NavLink>
             ))}
             {user?.role === 'ADMIN' && (
@@ -53,15 +54,15 @@ export function AppLayout() {
           </nav>
 
           <div className="mt-8 rounded-xl border border-slate-700/60 p-3 text-xs text-slate-300">
-            <p className="font-medium text-slate-100">{user?.name}</p>
-            <p>{user?.email}</p>
-            <button type="button" onClick={logout} className="mt-3 text-cyan-300">
+            <p className="truncate font-medium text-slate-100">{user?.name}</p>
+            <p className="truncate">{user?.email}</p>
+            <button type="button" onClick={() => void logout()} className="mt-3 text-cyan-300">
               Logout
             </button>
           </div>
         </aside>
 
-        <main>
+        <main className="min-w-0">
           <Outlet />
         </main>
       </div>
