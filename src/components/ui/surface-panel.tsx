@@ -7,5 +7,14 @@ interface SurfacePanelProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export function SurfacePanel({ className, scanline = false, ...props }: SurfacePanelProps) {
-  return <Card className={cn(scanline && 'scanline-overlay', className)} {...props} />
+  return (
+    <Card
+      className={cn(
+        scanline &&
+          'relative overflow-hidden before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-primary before:to-transparent',
+        className,
+      )}
+      {...props}
+    />
+  )
 }

@@ -4,9 +4,9 @@ import { TerminalBlock } from '../components/ui/terminal-block'
 
 export default function UserManagementPage() {
   return (
-    <SurfacePanel>
-      <HUDHeader title="User Management" subtitle="Role permissions and account ban controls are managed from the Admin panel." glitch />
-      <TerminalBlock className="mt-4">Use Admin Analytics for operational user controls and enforcement actions.</TerminalBlock>
+    <SurfacePanel className="space-y-4">
+      <HUDHeader title="User management" subtitle="Role permissions and account enforcement actions are centralized inside the Admin view." />
+      <TerminalBlock>Use Admin Analytics for operational user controls and enforcement actions.</TerminalBlock>
     </SurfacePanel>
   )
 }

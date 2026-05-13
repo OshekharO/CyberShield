@@ -52,28 +52,28 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <SurfacePanel>
-        <HUDHeader title="Admin Analytics" subtitle="Track governance, scan volume, and risk concentration." glitch />
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+    <div className="space-y-6">
+      <SurfacePanel className="space-y-4">
+        <HUDHeader title="Admin analytics" subtitle="Monitor user totals, scan volume, and high-risk concentration across the platform." />
+        <div className="grid gap-4 sm:grid-cols-3">
           <TerminalBlock>
-            <p className="cyber-label">Users</p>
-            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.users ?? 0}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-content/70">Users</p>
+            <p className="mt-2 text-3xl font-semibold">{stats?.users ?? 0}</p>
           </TerminalBlock>
           <TerminalBlock>
-            <p className="cyber-label">Scans</p>
-            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.scans ?? 0}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-content/70">Scans</p>
+            <p className="mt-2 text-3xl font-semibold">{stats?.scans ?? 0}</p>
           </TerminalBlock>
           <TerminalBlock>
-            <p className="cyber-label">High Risk</p>
-            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.highRiskScans ?? 0}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-content/70">High risk</p>
+            <p className="mt-2 text-3xl font-semibold">{stats?.highRiskScans ?? 0}</p>
           </TerminalBlock>
         </div>
       </SurfacePanel>
 
-      <SurfacePanel>
-        <HUDHeader title="User Management" subtitle="Review and enforce account access controls." />
-        <div className="mt-3 space-y-2">
+      <SurfacePanel className="space-y-4">
+        <HUDHeader title="User management" subtitle="Review accounts and apply access enforcement actions from one list." />
+        <div className="space-y-3">
           {users.map((user) => (
             <DataRow
               key={user.id}
@@ -86,6 +86,7 @@ export default function AdminPage() {
               }
             />
           ))}
+          {users.length === 0 ? <div className="alert">No user records available.</div> : null}
         </div>
       </SurfacePanel>
     </div>

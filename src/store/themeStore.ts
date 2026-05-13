@@ -8,6 +8,10 @@ interface ThemeState {
 }
 
 const STORAGE_KEY = 'cybershield-theme'
+const themeMap = {
+  light: 'cybershieldlight',
+  dark: 'cybershielddark',
+} as const
 
 const getInitialTheme = (): Theme => {
   if (typeof window === 'undefined') return 'dark'
@@ -18,6 +22,7 @@ const getInitialTheme = (): Theme => {
 
 const applyTheme = (theme: Theme) => {
   if (typeof document === 'undefined') return
+  document.documentElement.setAttribute('data-theme', themeMap[theme])
   document.documentElement.classList.toggle('dark', theme === 'dark')
   window.localStorage.setItem(STORAGE_KEY, theme)
 }

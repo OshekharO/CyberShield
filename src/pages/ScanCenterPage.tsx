@@ -39,10 +39,10 @@ export default function ScanCenterPage() {
   }, [addResult, target, type])
 
   return (
-    <div className="space-y-4">
-      <HUDHeader title="Scan Center" subtitle="Run IOC scans and receive contextual analyst summaries." glitch />
+    <div className="space-y-6">
+      <HUDHeader title="Scan Center" subtitle="Submit fresh indicators, review recent activity, and capture AI summaries in the same view." />
 
-      <SurfacePanel>
+      <SurfacePanel className="space-y-5">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-[220px_minmax(0,1fr)_auto]">
           <CyberSelect value={type} onChange={(e) => setType(e.target.value as ScanType)}>
             {scanTypes.map((scanType) => (
@@ -56,27 +56,28 @@ export default function ScanCenterPage() {
             {loading ? 'Scanning...' : 'Run scan'}
           </Button>
         </div>
-        {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
+        {error ? <div className="alert alert-error text-sm">{error}</div> : null}
       </SurfacePanel>
 
-      {summary && (
+      {summary ? (
         <TerminalBlock>
-          <p className="cyber-label">AI Summary</p>
-          <p className="mt-2 text-sm text-[var(--text-1)]">{summary}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-content/70">AI summary</p>
+          <p className="mt-2 leading-7">{summary}</p>
         </TerminalBlock>
-      )}
+      ) : null}
 
-      <SurfacePanel>
-        <h3 className="cyber-title text-base">Recent scans</h3>
-        <div className="mt-3 space-y-2">
+      <SurfacePanel className="space-y-4">
+        <HUDHeader title="Recent scans" subtitle="The latest scan submissions and their assessed severity." />
+        <div className="space-y-3">
           {recent.map((scan) => (
             <DataRow
               key={scan.scan_id}
-              title={`${scan.type.toUpperCase()} — ${scan.target}`}
+              title={`${scan.type.toUpperCase()} · ${scan.target}`}
               subtitle={`Risk score ${scan.risk.score}`}
               action={<StatusBadge tone={statusToneFromRisk(scan.risk.level)}>{scan.risk.level}</StatusBadge>}
             />
           ))}
+          {recent.length === 0 ? <div className="alert">Recent scan results will appear here once you run a scan.</div> : null}
         </div>
       </SurfacePanel>
     </div>

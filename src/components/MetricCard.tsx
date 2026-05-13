@@ -1,20 +1,19 @@
 import { memo } from 'react'
-import { motion } from 'framer-motion'
 import { SurfacePanel } from './ui/surface-panel'
 
 interface Props {
   label: string
   value: string | number
+  helper?: string
 }
 
-function MetricCardBase({ label, value }: Props) {
+function MetricCardBase({ label, value, helper }: Props) {
   return (
-    <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.18 }}>
-      <SurfacePanel className="p-4">
-        <p className="cyber-label">{label}</p>
-        <h3 className="mt-2 text-2xl font-semibold text-[var(--text-0)]">{value}</h3>
-      </SurfacePanel>
-    </motion.div>
+    <SurfacePanel className="space-y-2 p-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-base-content/50">{label}</p>
+      <h3 className="text-3xl font-semibold text-base-content">{value}</h3>
+      {helper ? <p className="text-sm text-base-content/60">{helper}</p> : null}
+    </SurfacePanel>
   )
 }
 
