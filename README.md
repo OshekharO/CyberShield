@@ -137,8 +137,8 @@ npm run prisma:migrate
 3. Add environment variables from `.env.example`.
 4. Ensure Supabase Postgres is reachable from Vercel.
 5. Add `DATABASE_URL` and `DIRECT_URL` as GitHub repository secrets so migrations can run in CI.
-6. Push to `main` (or run the workflow manually in Actions) to execute Prisma migrations automatically.
-7. Deploy.
+6. Push to `main` (or run the workflow manually in Actions) to execute Prisma migrations automatically in GitHub Actions.
+7. Deploy after migrations complete successfully.
 
 `vercel.json` is included for SPA rewrites + `/api` function routing under one project.
 

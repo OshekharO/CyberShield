@@ -32,8 +32,16 @@ jobs:
 
       - name: Validate required secrets
         run: |
-          if [ -z "${DATABASE_URL}" ] || [ -z "${DIRECT_URL}" ]; then
-            echo "DATABASE_URL and DIRECT_URL secrets are required."
+          missing=0
+          if [ -z "${DATABASE_URL}" ]; then
+            echo "Missing required secret: DATABASE_URL"
+            missing=1
+          fi
+          if [ -z "${DIRECT_URL}" ]; then
+            echo "Missing required secret: DIRECT_URL"
+            missing=1
+          fi
+          if [ "${missing}" -eq 1 ]; then
             exit 1
           fi
 
