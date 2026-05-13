@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { env } from './env'
+import { env } from './env.js'
 
 const safeGet = async <T>(request: () => Promise<T>, fallback: T): Promise<T> => {
   try {

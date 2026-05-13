@@ -2,7 +2,7 @@ import type { UserRole } from '@prisma/client'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { env, requireEnv } from './env'
+import { env, requireEnv } from './env.js'
 
 const COOKIE_NAME = 'cybershield_token'
 

@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { allowMethods, withErrorHandling } from '../_lib/http'
-import { requireAuth } from '../_lib/guards'
-import { targetSchema } from '../_lib/validation'
-import { runScan } from '../_lib/scan-service'
-import { sanitizeInput } from '../_lib/security'
+import { allowMethods, withErrorHandling } from '../_lib/http.js'
+import { requireAuth } from '../_lib/guards.js'
+import { targetSchema } from '../_lib/validation.js'
+import { runScan } from '../_lib/scan-service.js'
+import { sanitizeInput } from '../_lib/security.js'
 
 export default withErrorHandling(async (req: VercelRequest, res: VercelResponse) => {
   allowMethods(['POST'], req)

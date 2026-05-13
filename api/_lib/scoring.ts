@@ -1,4 +1,4 @@
-import type { RiskAssessment } from './types'
+import type { RiskAssessment } from './types.js'
 
 interface ScoringInput {
   abuseConfidence?: number

@@ -1,7 +1,7 @@
 import type { UserRole } from '@prisma/client'
 import type { VercelRequest } from '@vercel/node'
-import { getAuthTokenFromCookie, verifyToken } from './auth'
-import { prisma } from './db'
+import { getAuthTokenFromCookie, verifyToken } from './auth.js'
+import { prisma } from './db.js'
 
 export const requireAuth = async (req: VercelRequest) => {
   const token = getAuthTokenFromCookie(req)

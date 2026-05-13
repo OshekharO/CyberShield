@@ -1,10 +1,10 @@
 import { ScanType } from '@prisma/client'
-import { prisma } from './db'
-import { generateThreatSummary } from './gemini'
-import { logApiUsage } from './logger'
-import { providers } from './providers'
-import { calculateRisk } from './scoring'
-import type { ScanPayload } from './types'
+import { prisma } from './db.js'
+import { generateThreatSummary } from './gemini.js'
+import { logApiUsage } from './logger.js'
+import { providers } from './providers.js'
+import { calculateRisk } from './scoring.js'
+import type { ScanPayload } from './types.js'
 
 const extractUrlId = (url: string) => Buffer.from(url).toString('base64url')
 
