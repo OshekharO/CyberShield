@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai'
-import { env } from './env'
+import { env } from './env.js'
 
 export const generateThreatSummary = async (payload: Record<string, unknown>) => {
   if (!env.GEMINI_API_KEY) {

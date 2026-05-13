@@ -117,10 +117,14 @@ Copy `.env.example` to `.env` and configure:
 ```bash
 npm install
 npm run prisma:generate
+npm run prisma:migrate
 npm run dev
 ```
 
-For database migration deployment:
+> `prisma generate` only creates the Prisma client. It does **not** create tables in Supabase.
+> You must run migrations at least once for every new database.
+
+For database migration deployment (production):
 
 ```bash
 npm run prisma:migrate
@@ -132,7 +136,8 @@ npm run prisma:migrate
 2. Import project in Vercel.
 3. Add environment variables from `.env.example`.
 4. Ensure Supabase Postgres is reachable from Vercel.
-5. Deploy.
+5. Run `npm run prisma:migrate` against your Supabase database before first signup/login.
+6. Deploy.
 
 `vercel.json` is included for SPA rewrites + `/api` function routing under one project.
 

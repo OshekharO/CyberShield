@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { UserRole } from '@prisma/client'
-import { allowMethods, withErrorHandling } from '../_lib/http'
-import { requireAuth, requireRole } from '../_lib/guards'
-import { prisma } from '../_lib/db'
+import { allowMethods, withErrorHandling } from '../_lib/http.js'
+import { requireAuth, requireRole } from '../_lib/guards.js'
+import { prisma } from '../_lib/db.js'
 
 export default withErrorHandling(async (req: VercelRequest, res: VercelResponse) => {
   allowMethods(['GET'], req)

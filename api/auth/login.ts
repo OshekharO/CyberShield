@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { authSchema } from '../_lib/validation'
-import { allowMethods, withErrorHandling } from '../_lib/http'
-import { prisma } from '../_lib/db'
-import { comparePassword, setAuthCookie, signToken } from '../_lib/auth'
-import { sanitizeObject } from '../_lib/security'
+import { authSchema } from '../_lib/validation.js'
+import { allowMethods, withErrorHandling } from '../_lib/http.js'
+import { prisma } from '../_lib/db.js'
+import { comparePassword, setAuthCookie, signToken } from '../_lib/auth.js'
+import { sanitizeObject } from '../_lib/security.js'
 
 export default withErrorHandling(async (req: VercelRequest, res: VercelResponse) => {
   allowMethods(['POST'], req)
