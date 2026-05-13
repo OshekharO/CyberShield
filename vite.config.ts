@@ -12,12 +12,6 @@ export default defineConfig({
           if (id.includes('react') || id.includes('react-router') || id.includes('scheduler')) {
             return 'react-vendor'
           }
-          if (id.includes('recharts') || id.includes('d3-')) {
-            return 'charts-vendor'
-          }
-          if (id.includes('framer-motion')) {
-            return 'motion-vendor'
-          }
           return 'vendor'
         },
       },

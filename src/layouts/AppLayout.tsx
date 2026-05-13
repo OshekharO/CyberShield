@@ -3,7 +3,6 @@ import { Activity, FileSpreadsheet, LayoutDashboard, ScanSearch, Settings, Shiel
 import { ThemeToggle } from '../components/ThemeToggle'
 import { useAuthStore } from '../store/authStore'
 import { Button } from '../components/ui/button'
-import { GlitchText } from '../components/ui/glitch-text'
 import { SurfacePanel } from '../components/ui/surface-panel'
 
 const links = [
@@ -19,65 +18,68 @@ export function AppLayout() {
   const logout = useAuthStore((s) => s.logout)
 
   return (
-    <div className="min-h-screen px-4 py-4 sm:px-6 lg:px-10">
-      <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <SurfacePanel className="scanline-overlay p-4 sm:p-5">
-          <div className="mb-6 flex items-center justify-between gap-2">
-            <div>
-              <p className="cyber-label">CyberShield</p>
-              <h1 className="cyber-title mt-1 flex items-center gap-2 text-lg font-semibold tracking-[0.12em]">
-                <Shield size={16} className="text-cyan-300" />
-                <GlitchText text="OPERATIONS" className="inline-block" />
-              </h1>
-            </div>
-            <ThemeToggle />
+    <div className="app-shell">
+      <div className="navbar border-b border-base-300/60 bg-base-100/80 px-4 backdrop-blur lg:px-8">
+        <div className="flex-1 gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-box bg-primary/15 text-primary">
+            <Shield size={20} />
           </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">CyberShield</p>
+            <h1 className="text-lg font-semibold">Security Workspace</h1>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+        </div>
+      </div>
 
-          <nav className="space-y-1.5">
-            {links.map(({ to, label, icon: Icon }) => (
-              <NavLink
-                key={to}
-                to={to}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 text-sm font-medium transition [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)] ${
-                    isActive
-                      ? 'border border-cyan-300/55 bg-cyan-300/16 text-cyan-100 cyber-glow-cyan'
-                      : 'border border-transparent text-[var(--text-1)] hover:border-cyan-300/30 hover:bg-cyan-300/8 hover:text-[var(--text-0)]'
-                  }`
-                }
-              >
-                <Icon size={16} />
-                {label}
-              </NavLink>
-            ))}
-            {user?.role === 'ADMIN' && (
-              <NavLink
-                to="/admin"
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 text-sm font-medium transition [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)] ${
-                    isActive
-                      ? 'border border-cyan-300/55 bg-cyan-300/16 text-cyan-100 cyber-glow-cyan'
-                      : 'border border-transparent text-[var(--text-1)] hover:border-cyan-300/30 hover:bg-cyan-300/8 hover:text-[var(--text-0)]'
-                  }`
-                }
-              >
-                <Users size={16} />
-                Admin
-              </NavLink>
-            )}
-          </nav>
+      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-8">
+        <aside className="space-y-4">
+          <SurfacePanel className="p-0">
+            <div className="border-b border-base-300/60 p-5">
+              <p className="text-sm font-medium text-base-content/70">Operations menu</p>
+              <p className="mt-1 text-xs text-base-content/50">Navigate scans, reports, and governance controls.</p>
+            </div>
+            <ul className="menu gap-1 p-3">
+              {links.map(({ to, label, icon: Icon }) => (
+                <li key={to}>
+                  <NavLink
+                    to={to}
+                    className={({ isActive }) => (isActive ? 'active bg-primary text-primary-content' : '')}
+                  >
+                    <Icon size={16} />
+                    <span>{label}</span>
+                  </NavLink>
+                </li>
+              ))}
+              {user?.role === 'ADMIN' && (
+                <li>
+                  <NavLink to="/admin" className={({ isActive }) => (isActive ? 'active bg-primary text-primary-content' : '')}>
+                    <Users size={16} />
+                    <span>Admin</span>
+                  </NavLink>
+                </li>
+              )}
+            </ul>
+          </SurfacePanel>
 
-          <div className="hud-panel mt-6">
-            <p className="truncate text-sm font-medium text-[var(--text-0)]">{user?.name}</p>
-            <p className="truncate text-xs text-[var(--text-2)]">{user?.email}</p>
-            <Button type="button" variant="ghost" size="sm" className="mt-2 w-full justify-start" onClick={() => void logout()}>
+          <SurfacePanel className="space-y-3 p-5">
+            <div>
+              <p className="text-sm font-semibold">{user?.name}</p>
+              <p className="text-sm text-base-content/60">{user?.email}</p>
+            </div>
+            <div className="badge badge-outline">{user?.role ?? 'USER'}</div>
+            <Button type="button" variant="ghost" className="justify-start" onClick={() => void logout()}>
               Sign out
             </Button>
-          </div>
-        </SurfacePanel>
+          </SurfacePanel>
+        </aside>
 
-        <main className="min-w-0 space-y-4">
-          <header className="hud-panel text-sm text-[var(--text-1)]">Live security workspace for real-time threat scanning and reporting.</header>
+        <main className="min-w-0 space-y-6">
+          <SurfacePanel className="mesh-bg p-5">
+            <p className="text-sm text-base-content/70">Real-time scanning, triage, and reporting for your cyber operations workflow.</p>
+          </SurfacePanel>
           <Outlet />
         </main>
       </div>

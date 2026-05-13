@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ShieldCheck } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { SurfacePanel } from '../components/ui/surface-panel'
 import { HUDHeader } from '../components/ui/hud-header'
+import { ThemeToggle } from '../components/ThemeToggle'
 import { useAuthStore } from '../store/authStore'
 import { getApiErrorMessage } from '../utils/apiError'
 
@@ -25,35 +27,55 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto mt-8 max-w-md px-4 sm:mt-16">
-      <SurfacePanel scanline className="p-8">
-        <HUDHeader
-          label="CyberShield"
-          title="Welcome back"
-          subtitle="Sign in to access your security operations dashboard."
-          glitch
-        />
-
-        <div className="mt-6 space-y-3">
-          <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          {error && (
-            <p className="border border-rose-300/45 bg-rose-500/12 px-3 py-2 text-sm text-rose-200 [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)]">
-              {error}
-            </p>
-          )}
-          <Button className="w-full" onClick={submit}>
-            Sign in
-          </Button>
+    <div className="mesh-bg min-h-screen px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-5xl justify-end">
+        <ThemeToggle />
+      </div>
+      <div className="mx-auto mt-8 grid max-w-5xl gap-6 lg:grid-cols-[1fr_420px] lg:items-center">
+        <div className="hidden lg:block">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">CyberShield access</p>
+          <h1 className="mt-4 text-5xl font-bold leading-tight">Sign in to manage threats with a cleaner security workspace.</h1>
+          <p className="mt-4 max-w-xl text-base leading-8 text-base-content/70">
+            Review scans, follow risk signals, and generate reports from a redesigned daisyUI experience.
+          </p>
         </div>
 
-        <p className="mt-5 text-sm text-[var(--text-2)]">
-          No account?{' '}
-          <Link to="/signup" className="font-medium text-cyan-200 hover:text-cyan-100">
-            Create one
-          </Link>
-        </p>
-      </SurfacePanel>
+        <SurfacePanel scanline className="p-8">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-box bg-primary/15 text-primary">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">CyberShield</p>
+              <p className="text-sm text-base-content/60">Secure login</p>
+            </div>
+          </div>
+
+          <HUDHeader title="Welcome back" subtitle="Enter your account details to open the operations workspace." />
+
+          <div className="mt-6 space-y-4">
+            <label className="form-control w-full gap-2">
+              <span className="label-text font-medium">Email</span>
+              <Input placeholder="analyst@company.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </label>
+            <label className="form-control w-full gap-2">
+              <span className="label-text font-medium">Password</span>
+              <Input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </label>
+            {error ? <div className="alert alert-error text-sm">{error}</div> : null}
+            <Button className="w-full" onClick={submit}>
+              Sign in
+            </Button>
+          </div>
+
+          <p className="mt-5 text-sm text-base-content/60">
+            No account?{' '}
+            <Link to="/signup" className="link link-primary font-semibold">
+              Create one
+            </Link>
+          </p>
+        </SurfacePanel>
+      </div>
     </div>
   )
 }

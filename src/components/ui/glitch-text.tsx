@@ -10,7 +10,7 @@ interface GlitchTextProps {
 
 export function GlitchText({ text, as: Tag = 'span', className, children }: GlitchTextProps) {
   return (
-    <Tag className={cn('glitch-text', className)} data-text={text}>
+    <Tag className={cn('bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent', className)}>
       {children ?? text}
     </Tag>
   )

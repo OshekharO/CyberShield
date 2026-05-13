@@ -28,12 +28,13 @@ export default function ReportsPage() {
   const scans = useMemo(() => history, [history])
 
   return (
-    <SurfacePanel>
-      <HUDHeader title="Reports" subtitle="Export detailed PDF reports from recorded scans." glitch />
-      <div className="mt-4 space-y-2">
+    <SurfacePanel className="space-y-4">
+      <HUDHeader title="Reports" subtitle="Generate and download PDF reports from the findings already captured in your workspace." />
+      <div className="space-y-3">
         {scans.map((scan) => (
           <ReportRow key={scan.scan_id} scan={scan} />
         ))}
+        {scans.length === 0 ? <div className="alert">Run a scan to unlock exportable reports.</div> : null}
       </div>
     </SurfacePanel>
   )
