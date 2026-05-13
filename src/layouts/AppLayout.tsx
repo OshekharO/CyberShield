@@ -25,14 +25,10 @@ export function AppLayout() {
           <div className="mb-6 flex items-center justify-between gap-2">
             <div>
               <p className="cyber-label">CyberShield</p>
-              <GlitchText
-                as="h1"
-                text="OPERATIONS"
-                className="cyber-title mt-1 flex items-center gap-2 text-lg font-semibold tracking-[0.12em]"
-              >
+              <h1 className="cyber-title mt-1 flex items-center gap-2 text-lg font-semibold tracking-[0.12em]">
                 <Shield size={16} className="text-cyan-300" />
-                OPERATIONS
-              </GlitchText>
+                <GlitchText text="OPERATIONS" className="inline-block" />
+              </h1>
             </div>
             <ThemeToggle />
           </div>
