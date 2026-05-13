@@ -24,26 +24,25 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="relative mx-auto mt-10 max-w-md px-4 text-slate-100 sm:mt-16">
-      <div className="absolute -inset-2 -z-10 rounded-3xl bg-gradient-to-r from-cyan-500/25 via-blue-500/20 to-violet-500/25 blur-2xl" />
-      <div className="rounded-3xl border border-white/10 bg-slate-900/85 p-8 shadow-2xl backdrop-blur-xl">
-        <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/90">CyberShield</p>
-        <h1 className="mt-2 text-3xl font-semibold text-white">Create your account</h1>
-        <p className="mt-2 text-sm text-slate-300">Start scanning URLs, domains, emails, and IPs in one dashboard.</p>
+    <div className="mx-auto mt-8 max-w-md px-4 sm:mt-16">
+      <div className="rounded-3xl border border-slate-300/70 bg-white/95 p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900/85">
+        <p className="text-xs uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-300">CyberShield</p>
+        <h1 className="mt-2 text-3xl font-semibold text-slate-900 dark:text-white">Create account</h1>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Start scanning indicators and producing analyst-ready reports.</p>
 
         <div className="mt-6 space-y-3">
           <Input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
           <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          {error && <p className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-300">{error}</p>}
+          {error && <p className="rounded-xl border border-rose-300 bg-rose-50 px-3 py-2 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300">{error}</p>}
           <Button className="w-full" onClick={submit}>
-            Create Account
+            Create account
           </Button>
         </div>
 
-        <p className="mt-5 text-sm text-slate-400">
+        <p className="mt-5 text-sm text-slate-500 dark:text-slate-400">
           Have an account?{' '}
-          <Link to="/login" className="font-medium text-cyan-300 hover:text-cyan-200">
+          <Link to="/login" className="font-medium text-cyan-700 hover:text-cyan-600 dark:text-cyan-300 dark:hover:text-cyan-200">
             Login
           </Link>
         </p>

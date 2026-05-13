@@ -24,7 +24,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={<div className="p-6 text-slate-300">Loading module...</div>}>
+      <Suspense fallback={<div className="p-6 text-slate-600 dark:text-slate-300">Loading module...</div>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
