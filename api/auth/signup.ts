@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
+import { Prisma } from '@prisma/client'
 import { authSchema } from '../_lib/validation.js'
 import { allowMethods, withErrorHandling } from '../_lib/http.js'
 import { prisma } from '../_lib/db.js'
@@ -10,28 +11,42 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
   const body = sanitizeObject((req.body || {}) as Record<string, unknown>)
   const parsed = authSchema.parse(body)
 
-  const exists = await prisma.user.findUnique({ where: { email: parsed.email } })
-  if (exists) {
-    res.status(409).json({ error: 'Email already exists' })
-    return
+  try {
+    const exists = await prisma.user.findUnique({ where: { email: parsed.email } })
+    if (exists) {
+      res.status(409).json({ error: 'Email already exists' })
+      return
+    }
+
+    const passwordHash = await hashPassword(parsed.password)
+    const user = await prisma.user.create({
+      data: {
+        email: parsed.email,
+        passwordHash,
+        name: parsed.name || parsed.email.split('@')[0],
+      },
+    })
+
+    const token = signToken({ userId: user.id, role: user.role })
+    setAuthCookie(res, token)
+
+    res.status(201).json({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    })
+  } catch (error) {
+    if (
+      (error instanceof Prisma.PrismaClientKnownRequestError &&
+        (error.code === 'P2021' || error.code === 'P2022')) ||
+      error instanceof Prisma.PrismaClientInitializationError
+    ) {
+      const dbError = new Error('Database is not initialized. Run Prisma migrations on Supabase and retry.')
+      ;(dbError as Error & { status?: number }).status = 500
+      throw dbError
+    }
+
+    throw error
   }
-
-  const passwordHash = await hashPassword(parsed.password)
-  const user = await prisma.user.create({
-    data: {
-      email: parsed.email,
-      passwordHash,
-      name: parsed.name || parsed.email.split('@')[0],
-    },
-  })
-
-  const token = signToken({ userId: user.id, role: user.role })
-  setAuthCookie(res, token)
-
-  res.status(201).json({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-  })
 })
