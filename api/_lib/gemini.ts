@@ -16,27 +16,22 @@ export const generateThreatSummary = async (payload: Record<string, unknown>) =>
   const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY })
   const prompt = `You are a SOC analyst. Summarize this scan, explain suspicious indicators, and provide mitigation steps. Risk score was already rule-derived; do not change it. Data: ${JSON.stringify(payload)}`
   const configuredModel = env.GEMINI_MODEL.trim()
+  const modelCandidates = Array.from(new Set([configuredModel, DEFAULT_GEMINI_MODEL].filter(Boolean)))
 
-  try {
-    const response = await ai.models.generateContent({
-      model: configuredModel || DEFAULT_GEMINI_MODEL,
-      contents: prompt,
-    })
+  for (const model of modelCandidates) {
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+      })
 
-    return response.text || 'No AI summary generated.'
-  } catch (error) {
-    if (configuredModel && configuredModel !== DEFAULT_GEMINI_MODEL && isModelNotFoundError(error)) {
-      try {
-        const fallback = await ai.models.generateContent({
-          model: DEFAULT_GEMINI_MODEL,
-          contents: prompt,
-        })
-        return fallback.text || 'No AI summary generated.'
-      } catch {
+      return response.text || 'No AI summary generated.'
+    } catch (error) {
+      if (!isModelNotFoundError(error)) {
         return 'AI threat summary is temporarily unavailable.'
       }
     }
-
-    return 'AI threat summary is temporarily unavailable.'
   }
+
+  return 'AI threat summary is temporarily unavailable.'
 }
