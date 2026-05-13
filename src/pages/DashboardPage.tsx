@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { MetricCard } from '../components/MetricCard'
-import { Card } from '../components/ui/card'
+import { HUDHeader } from '../components/ui/hud-header'
+import { SurfacePanel } from '../components/ui/surface-panel'
 import { useScanStore } from '../store/scanStore'
 
 export default function DashboardPage() {
@@ -25,10 +26,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Dashboard</h2>
-        <p className="text-sm text-slate-600 dark:text-slate-300">Monitor scan activity and risk posture at a glance.</p>
-      </div>
+      <HUDHeader title="Dashboard" subtitle="Monitor scan activity and risk posture at a glance." glitch />
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard label="Total scans" value={history.length} />
@@ -37,22 +35,30 @@ export default function DashboardPage() {
         <MetricCard label="Average score" value={metrics.avg} />
       </div>
 
-      <Card>
-        <h3 className="text-base font-semibold text-slate-900 dark:text-white">Risk analytics</h3>
+      <SurfacePanel>
+        <h3 className="cyber-title text-base">Risk analytics</h3>
         <div className="mt-4 h-72 min-w-0 overflow-x-auto">
           <div className="h-full min-w-[360px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="target" stroke="#64748b" />
-                <YAxis stroke="#64748b" />
-                <Tooltip />
-                <Bar dataKey="score" fill="#22d3ee" radius={[8, 8, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(109, 135, 173, 0.35)" />
+                <XAxis dataKey="target" stroke="rgba(155, 181, 219, 0.9)" />
+                <YAxis stroke="rgba(155, 181, 219, 0.9)" />
+                <Tooltip
+                  cursor={{ fill: 'rgba(77, 234, 255, 0.08)' }}
+                  contentStyle={{
+                    border: '1px solid rgba(77, 234, 255, 0.45)',
+                    borderRadius: '8px',
+                    background: 'rgba(8, 14, 33, 0.92)',
+                    color: '#e6efff',
+                  }}
+                />
+                <Bar dataKey="score" fill="#4deaff" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-      </Card>
+      </SurfacePanel>
     </div>
   )
 }

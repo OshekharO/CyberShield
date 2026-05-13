@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { adminService } from '../services/adminService'
-import { Card } from '../components/ui/card'
+import { SurfacePanel } from '../components/ui/surface-panel'
 import { Button } from '../components/ui/button'
+import { HUDHeader } from '../components/ui/hud-header'
+import { DataRow } from '../components/ui/data-row'
+import { TerminalBlock } from '../components/ui/terminal-block'
 
 interface AdminUser {
   id: string
@@ -50,45 +53,41 @@ export default function AdminPage() {
 
   return (
     <div className="space-y-4">
-      <Card>
-        <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Admin Analytics</h2>
+      <SurfacePanel>
+        <HUDHeader title="Admin Analytics" subtitle="Track governance, scan volume, and risk concentration." glitch />
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/50">
-            <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Users</p>
-            <p className="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">{stats?.users ?? 0}</p>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/50">
-            <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Scans</p>
-            <p className="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">{stats?.scans ?? 0}</p>
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/50">
-            <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">High Risk</p>
-            <p className="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">{stats?.highRiskScans ?? 0}</p>
-          </div>
+          <TerminalBlock>
+            <p className="cyber-label">Users</p>
+            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.users ?? 0}</p>
+          </TerminalBlock>
+          <TerminalBlock>
+            <p className="cyber-label">Scans</p>
+            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.scans ?? 0}</p>
+          </TerminalBlock>
+          <TerminalBlock>
+            <p className="cyber-label">High Risk</p>
+            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.highRiskScans ?? 0}</p>
+          </TerminalBlock>
         </div>
-      </Card>
+      </SurfacePanel>
 
-      <Card>
-        <h3 className="text-base font-semibold text-slate-900 dark:text-white">User Management</h3>
+      <SurfacePanel>
+        <HUDHeader title="User Management" subtitle="Review and enforce account access controls." />
         <div className="mt-3 space-y-2">
           {users.map((user) => (
-            <div
+            <DataRow
               key={user.id}
-              className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-950/50"
-            >
-              <div>
-                <p className="text-sm font-medium text-slate-900 dark:text-slate-200">
-                  {user.name} ({user.role})
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => toggleBan(user.id, !user.isBanned)}>
-                {user.isBanned ? 'Unban' : 'Ban'} user
-              </Button>
-            </div>
+              title={`${user.name} (${user.role})`}
+              subtitle={user.email}
+              action={
+                <Button variant={user.isBanned ? 'outline' : 'danger'} size="sm" onClick={() => toggleBan(user.id, !user.isBanned)}>
+                  {user.isBanned ? 'Unban' : 'Ban'} user
+                </Button>
+              }
+            />
           ))}
         </div>
-      </Card>
+      </SurfacePanel>
     </div>
   )
 }

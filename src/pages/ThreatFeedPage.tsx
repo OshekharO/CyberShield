@@ -1,17 +1,20 @@
 import { memo, useMemo, useState } from 'react'
 import { useScanStore } from '../store/scanStore'
 import type { ScanResponse } from '../types'
-import { Card } from '../components/ui/card'
+import { SurfacePanel } from '../components/ui/surface-panel'
 import { Input } from '../components/ui/input'
+import { HUDHeader } from '../components/ui/hud-header'
+import { DataRow } from '../components/ui/data-row'
+import { StatusBadge } from '../components/ui/status-badge'
+import { statusToneFromRisk } from '../components/ui/status-utils'
 
 const ThreatItem = memo(function ThreatItem({ scan }: { scan: ScanResponse }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-950/50">
-      <p className="break-all text-sm font-medium text-slate-900 dark:text-slate-200">{scan.target}</p>
-      <p className="text-xs text-slate-500 dark:text-slate-400">
-        {scan.type.toUpperCase()} • {scan.risk.level}
-      </p>
-    </div>
+    <DataRow
+      title={scan.target}
+      subtitle={scan.type.toUpperCase()}
+      action={<StatusBadge tone={statusToneFromRisk(scan.risk.level)}>{scan.risk.level}</StatusBadge>}
+    />
   )
 })
 
@@ -25,15 +28,14 @@ export default function ThreatFeedPage() {
   )
 
   return (
-    <Card>
-      <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Threat Feed</h2>
-      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Search and review scanned indicators of compromise.</p>
+    <SurfacePanel>
+      <HUDHeader title="Threat Feed" subtitle="Search and review scanned indicators of compromise." glitch />
       <Input className="mt-4" placeholder="Search IOC target" value={query} onChange={(e) => setQuery(e.target.value)} />
       <div className="mt-4 space-y-2">
         {filtered.map((scan) => (
           <ThreatItem key={scan.scan_id} scan={scan} />
         ))}
       </div>
-    </Card>
+    </SurfacePanel>
   )
 }

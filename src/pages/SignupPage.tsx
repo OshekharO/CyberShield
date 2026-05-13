@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
+import { SurfacePanel } from '../components/ui/surface-panel'
+import { HUDHeader } from '../components/ui/hud-header'
 import { useAuthStore } from '../store/authStore'
 import { getApiErrorMessage } from '../utils/apiError'
 
@@ -25,28 +27,35 @@ export default function SignupPage() {
 
   return (
     <div className="mx-auto mt-8 max-w-md px-4 sm:mt-16">
-      <div className="rounded-3xl border border-slate-300/70 bg-white/95 p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900/85">
-        <p className="text-xs uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-300">CyberShield</p>
-        <h1 className="mt-2 text-3xl font-semibold text-slate-900 dark:text-white">Create account</h1>
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Start scanning indicators and producing analyst-ready reports.</p>
+      <SurfacePanel scanline className="p-8">
+        <HUDHeader
+          label="CyberShield"
+          title="Create account"
+          subtitle="Start scanning indicators and producing analyst-ready reports."
+          glitch
+        />
 
         <div className="mt-6 space-y-3">
           <Input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
           <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          {error && <p className="rounded-xl border border-rose-300 bg-rose-50 px-3 py-2 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300">{error}</p>}
+          {error && (
+            <p className="border border-rose-300/45 bg-rose-500/12 px-3 py-2 text-sm text-rose-200 [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)]">
+              {error}
+            </p>
+          )}
           <Button className="w-full" onClick={submit}>
             Create account
           </Button>
         </div>
 
-        <p className="mt-5 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-5 text-sm text-[var(--text-2)]">
           Have an account?{' '}
-          <Link to="/login" className="font-medium text-cyan-700 hover:text-cyan-600 dark:text-cyan-300 dark:hover:text-cyan-200">
+          <Link to="/login" className="font-medium text-cyan-200 hover:text-cyan-100">
             Login
           </Link>
         </p>
-      </div>
+      </SurfacePanel>
     </div>
   )
 }

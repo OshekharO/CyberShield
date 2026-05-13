@@ -1,12 +1,14 @@
-import { Card } from '../components/ui/card'
+import { SurfacePanel } from '../components/ui/surface-panel'
+import { HUDHeader } from '../components/ui/hud-header'
+import { TerminalBlock } from '../components/ui/terminal-block'
 
 export default function SettingsPage() {
   return (
-    <Card>
-      <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Settings</h2>
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-        Configure API keys, provider thresholds, and SOC profile preferences using deployment environment variables.
-      </p>
-    </Card>
+    <SurfacePanel>
+      <HUDHeader title="Settings" subtitle="Configure API keys, provider thresholds, and SOC profile preferences." glitch />
+      <TerminalBlock className="mt-4">
+        Settings are managed via deployment environment variables and secured server-side controls.
+      </TerminalBlock>
+    </SurfacePanel>
   )
 }
