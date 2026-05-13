@@ -7,12 +7,26 @@ interface ThemeState {
   toggleTheme: () => void
 }
 
-const applyTheme = (theme: Theme) => {
-  document.documentElement.classList.toggle('dark', theme === 'dark')
+const STORAGE_KEY = 'cybershield-theme'
+
+const getInitialTheme = (): Theme => {
+  if (typeof window === 'undefined') return 'dark'
+  const stored = window.localStorage.getItem(STORAGE_KEY)
+  if (stored === 'light' || stored === 'dark') return stored
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
+const applyTheme = (theme: Theme) => {
+  if (typeof document === 'undefined') return
+  document.documentElement.classList.toggle('dark', theme === 'dark')
+  window.localStorage.setItem(STORAGE_KEY, theme)
+}
+
+const initialTheme = getInitialTheme()
+applyTheme(initialTheme)
+
 export const useThemeStore = create<ThemeState>((set, get) => ({
-  theme: 'dark',
+  theme: initialTheme,
   toggleTheme: () => {
     const next = get().theme === 'dark' ? 'light' : 'dark'
     applyTheme(next)
