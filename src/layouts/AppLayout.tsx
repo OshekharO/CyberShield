@@ -20,14 +20,14 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen px-4 py-4 sm:px-6 lg:px-10">
-      <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <SurfacePanel className="scanline-overlay p-4 sm:p-5">
+      <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[280px_minmax(0,1fr)] xl:gap-5">
+        <SurfacePanel className="scanline-overlay p-4 sm:p-5 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:overflow-auto">
           <div className="mb-6 flex items-center justify-between gap-2">
             <div>
               <p className="cyber-label">CyberShield</p>
-              <h1 className="cyber-title mt-1 flex items-center gap-2 text-lg font-semibold tracking-[0.12em]">
-                <Shield size={16} className="text-cyan-300" />
-                <GlitchText text="OPERATIONS" className="inline-block" />
+              <h1 className="cyber-title mt-1 flex items-center gap-2 text-lg font-semibold">
+                <Shield size={16} className="text-sky-400" />
+                <GlitchText text="Operations" className="inline-block" />
               </h1>
             </div>
             <ThemeToggle />
@@ -39,10 +39,10 @@ export function AppLayout() {
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 text-sm font-medium transition [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)] ${
+                  `flex items-center gap-3 rounded-xl border px-3 py-2 text-sm font-medium transition ${
                     isActive
-                      ? 'border border-cyan-300/55 bg-cyan-300/16 text-cyan-100 cyber-glow-cyan'
-                      : 'border border-transparent text-[var(--text-1)] hover:border-cyan-300/30 hover:bg-cyan-300/8 hover:text-[var(--text-0)]'
+                      ? 'border-sky-400/50 bg-sky-400/14 text-sky-700 dark:text-sky-100'
+                      : 'border-transparent text-[var(--text-1)] hover:border-[var(--line)] hover:bg-[var(--brand-soft)] hover:text-[var(--text-0)]'
                   }`
                 }
               >
@@ -54,10 +54,10 @@ export function AppLayout() {
               <NavLink
                 to="/admin"
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 text-sm font-medium transition [clip-path:polygon(0.55rem_0,calc(100%-0.55rem)_0,100%_0.55rem,100%_calc(100%-0.55rem),calc(100%-0.55rem)_100%,0.55rem_100%,0_calc(100%-0.55rem),0_0.55rem)] ${
+                  `flex items-center gap-3 rounded-xl border px-3 py-2 text-sm font-medium transition ${
                     isActive
-                      ? 'border border-cyan-300/55 bg-cyan-300/16 text-cyan-100 cyber-glow-cyan'
-                      : 'border border-transparent text-[var(--text-1)] hover:border-cyan-300/30 hover:bg-cyan-300/8 hover:text-[var(--text-0)]'
+                      ? 'border-sky-400/50 bg-sky-400/14 text-sky-700 dark:text-sky-100'
+                      : 'border-transparent text-[var(--text-1)] hover:border-[var(--line)] hover:bg-[var(--brand-soft)] hover:text-[var(--text-0)]'
                   }`
                 }
               >
@@ -77,7 +77,10 @@ export function AppLayout() {
         </SurfacePanel>
 
         <main className="min-w-0 space-y-4">
-          <header className="hud-panel text-sm text-[var(--text-1)]">Live security workspace for real-time threat scanning and reporting.</header>
+          <header className="hero-gradient rounded-2xl border border-[var(--line-strong)] px-4 py-4 text-sm text-[var(--text-1)] shadow-[var(--shadow-soft)] sm:px-5">
+            <p className="cyber-label">Live workspace</p>
+            <p className="mt-1">Real-time threat scanning, triage, and reporting across your security operations workflow.</p>
+          </header>
           <Outlet />
         </main>
       </div>

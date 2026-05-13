@@ -6,7 +6,7 @@ export function ThemeToggle() {
 
   return (
     <button
-      className="inline-flex h-9 w-9 items-center justify-center border border-[var(--line)] bg-[var(--surface-2)] text-[var(--text-1)] transition hover:border-cyan-300/60 hover:text-cyan-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 [clip-path:polygon(0.6rem_0,calc(100%-0.6rem)_0,100%_0.6rem,100%_calc(100%-0.6rem),calc(100%-0.6rem)_100%,0.6rem_100%,0_calc(100%-0.6rem),0_0.6rem)]"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--surface-2)] text-[var(--text-1)] transition hover:border-sky-400/60 hover:bg-[var(--brand-soft)] hover:text-[var(--text-0)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/65"
       onClick={toggleTheme}
       aria-label="Toggle theme"
       type="button"

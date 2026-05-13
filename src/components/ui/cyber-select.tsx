@@ -8,7 +8,7 @@ export const CyberSelect = React.forwardRef<HTMLSelectElement, React.SelectHTMLA
       <select
         ref={ref}
         className={cn(
-          'h-11 w-full appearance-none border border-[var(--line)] bg-[var(--surface-2)] px-3 pr-10 text-sm text-[var(--text-0)] transition focus-visible:border-cyan-300/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 [clip-path:polygon(0.6rem_0,calc(100%-0.6rem)_0,100%_0.6rem,100%_calc(100%-0.6rem),calc(100%-0.6rem)_100%,0.6rem_100%,0_calc(100%-0.6rem),0_0.6rem)]',
+          'h-11 w-full appearance-none rounded-xl border border-[var(--line)] bg-[var(--surface-2)] px-3 pr-10 text-sm text-[var(--text-0)] transition focus-visible:border-sky-400/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/45',
           className,
         )}
         {...props}
