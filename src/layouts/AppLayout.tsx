@@ -27,7 +27,7 @@ export function AppLayout() {
               <p className="cyber-label">CyberShield</p>
               <h1 className="cyber-title mt-1 flex items-center gap-2 text-lg font-semibold">
                 <Shield size={16} className="text-sky-400" />
-                <GlitchText text="Operations" className="inline-block" />
+                <GlitchText text="OPERATIONS" className="inline-block" />
               </h1>
             </div>
             <ThemeToggle />
