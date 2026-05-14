@@ -84,7 +84,7 @@ body::before {
   z-index: -1;
   background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
   background-size: 34px 34px;
-  opacity: 0.75;
+  opacity: 0.14;
 }
 
 img,
