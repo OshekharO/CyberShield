@@ -51,7 +51,8 @@ Single deployment routes:
 
 ## External Provider Integrations
 
-- IP: IPInfo Lite, AbuseIPDB, Fidro
+- IP: IPInfo Lite, AbuseIPDB, Fidro, Antideo IP Health
+  - Antideo uses `https://api.antideo.com/ip/health/<ip>` with `apiKey` header and is locally capped at 10 calls/hour.
 - URL: VirusTotal, DestroyList
 - Email: UserCheck Email API, EmailRep, Fidro Email Validation
 - Domain: RDAP, WhoisXML Subdomains API, Pulsedive, UserCheck Domain API
@@ -104,6 +105,7 @@ Update `.env` and configure:
 - `JWT_SECRET`
 - `IPINFO_TOKEN`
 - `ABUSEIPDB_API_KEY`
+- `ANTIDEO_API_KEY`
 - `VIRUSTOTAL_API_KEY`
 - `DESTROYLIST_BASE_URL`
 - `USERCHECK_API_KEY`

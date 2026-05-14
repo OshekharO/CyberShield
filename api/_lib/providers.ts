@@ -8,6 +8,11 @@ type VirusTotalSubmitResponse = {
 }
 
 const DESTROYLIST_DEFAULT_BASE_URL = 'https://api.destroy.tools'
+const ANTIDEO_HOURLY_LIMIT = 10
+const HOUR_MS = 1000 * 60 * 60
+
+let antideoWindowStart = Date.now()
+let antideoRequestCount = 0
 
 const safeGet = async <T>(request: () => Promise<T>, fallback: T): Promise<T> => {
   try {
@@ -25,6 +30,19 @@ const extractDomain = (value: string) => {
     console.warn('DestroyList domain extraction failed; using raw input')
     return value
   }
+}
+
+const canCallAntideo = () => {
+  const now = Date.now()
+  if (now - antideoWindowStart >= HOUR_MS) {
+    antideoWindowStart = now
+    antideoRequestCount = 0
+  }
+  if (antideoRequestCount >= ANTIDEO_HOURLY_LIMIT) {
+    return false
+  }
+  antideoRequestCount += 1
+  return true
 }
 
 export const providers = {
@@ -52,6 +70,31 @@ export const providers = {
         return data?.data ?? {}
       },
       {},
+    )
+  },
+
+  async antideoIpHealth(ip: string) {
+    if (!env.ANTIDEO_API_KEY) {
+      return { available: false, rate_limited: false, error: 'Missing ANTIDEO_API_KEY' }
+    }
+    if (!canCallAntideo()) {
+      return { available: false, rate_limited: true, error: 'Antideo hourly limit reached' }
+    }
+    return safeGet(
+      async () => {
+        const { data } = await axios.get(`https://api.antideo.com/ip/health/${encodeURIComponent(ip)}`, {
+          headers: { apiKey: env.ANTIDEO_API_KEY },
+          timeout: 10000,
+        })
+        return { available: true, rate_limited: false, ...(data as Record<string, unknown>) }
+      },
+      {
+        available: false,
+        rate_limited: false,
+        error: 'Antideo unavailable',
+        IP: ip,
+        health: { toxic: false, proxy: false, spam: false },
+      },
     )
   },
 

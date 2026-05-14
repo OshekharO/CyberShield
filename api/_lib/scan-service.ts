@@ -21,18 +21,23 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
   let providerData: Record<string, unknown> = {}
 
   if (type === 'ip') {
-    const [ipinfo, abuse, fidro] = await Promise.all([
+    const [ipinfo, abuse, fidro, antideo] = await Promise.all([
       providers.ipinfo(target),
       providers.abuseIpdb(target),
       providers.fidroValidate(target, 'ip'),
+      providers.antideoIpHealth(target),
     ])
+    const antideoHealth = (antideo as { health?: { proxy?: boolean; toxic?: boolean; spam?: boolean } })?.health
 
     signals = {
       abuse_confidence: abuse?.abuseConfidenceScore ?? 0,
-      vpn_proxy: Boolean(fidro?.vpn || fidro?.proxy || fidro?.tor),
-      blacklist_hits: Number(abuse?.totalReports || 0) + Number(fidro?.bad_ip ? 1 : 0),
+      vpn_proxy: Boolean(fidro?.vpn || fidro?.proxy || fidro?.tor || antideoHealth?.proxy),
+      blacklist_hits:
+        Number(abuse?.totalReports || 0) +
+        Number(fidro?.bad_ip ? 1 : 0) +
+        Number(antideoHealth?.toxic || antideoHealth?.spam ? 1 : 0),
     }
-    providerData = { ipinfo, abuseipdb: abuse, fidro }
+    providerData = { ipinfo, abuseipdb: abuse, fidro, antideo }
   }
 
   if (type === 'url') {
