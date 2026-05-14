@@ -100,8 +100,6 @@ Copy `.env.example` to `.env` and configure:
 
 - `DATABASE_URL`
 - `DIRECT_URL`
-- `GEMINI_API_KEY`
-- `GEMINI_MODEL` (optional, defaults to `gemini-2.0-flash`)
 - `JWT_SECRET`
 - `IPINFO_TOKEN`
 - `ABUSEIPDB_API_KEY`

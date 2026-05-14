@@ -1,7 +1,5 @@
 export const env = {
   DATABASE_URL: process.env.DATABASE_URL ?? '',
-  GEMINI_API_KEY: process.env.GEMINI_API_KEY ?? '',
-  GEMINI_MODEL: process.env.GEMINI_MODEL ?? '',
   JWT_SECRET: process.env.JWT_SECRET ?? '',
   IPINFO_TOKEN: process.env.IPINFO_TOKEN ?? '',
   ABUSEIPDB_API_KEY: process.env.ABUSEIPDB_API_KEY ?? '',
