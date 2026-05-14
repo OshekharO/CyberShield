@@ -6,6 +6,8 @@ import { providers } from './providers.js'
 import { calculateRisk } from './scoring.js'
 import type { ScanPayload } from './types.js'
 
+type VirusTotalStats = { malicious?: number; phishing?: number }
+
 const isRecentDomain = (creationDate?: string | null) => {
   if (!creationDate) return false
   const created = new Date(creationDate).getTime()
@@ -41,10 +43,8 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     ])
 
     const vtStats =
-      (vt?.data?.attributes?.stats as { malicious?: number; phishing?: number } | undefined) ??
-      (vt?.data?.attributes?.last_analysis_stats as
-        | { malicious?: number; phishing?: number }
-        | undefined) ??
+      (vt?.data?.attributes?.stats as VirusTotalStats | undefined) ??
+      (vt?.data?.attributes?.last_analysis_stats as VirusTotalStats | undefined) ??
       {}
     const vtMalicious = Number(vtStats.malicious || 0) + Number(vtStats.phishing || 0)
 

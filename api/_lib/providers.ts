@@ -61,16 +61,22 @@ export const providers = {
     return safeGet(
       async () => {
         const body = new URLSearchParams({ url })
-        const submitResponse = await axios.post('https://www.virustotal.com/api/v3/urls', body, {
-          headers: {
-            accept: 'application/json',
-            'x-apikey': env.VIRUSTOTAL_API_KEY,
-            'content-type': 'application/x-www-form-urlencoded',
-          },
-          timeout: 10000,
-        })
-        const submittedData = submitResponse.data?.data as { id?: string } | undefined
-        const analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
+        let analysisId: string | undefined
+        try {
+          const submitResponse = await axios.post('https://www.virustotal.com/api/v3/urls', body, {
+            headers: {
+              accept: 'application/json',
+              'x-apikey': env.VIRUSTOTAL_API_KEY,
+              'content-type': 'application/x-www-form-urlencoded',
+            },
+            timeout: 10000,
+          })
+          const submittedData = submitResponse.data?.data as { id?: string } | undefined
+          analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
+        } catch {
+          analysisId = undefined
+        }
+
         const fallbackUrlId = Buffer.from(url).toString('base64url')
         const lookupId = analysisId || fallbackUrlId
 
