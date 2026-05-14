@@ -22,7 +22,7 @@ const extractDomain = (value: string) => {
     const normalizedValue = value.includes('://') ? value : `http://${value}`
     return new URL(normalizedValue).hostname
   } catch {
-    console.warn('DestroyList domain extraction failed, using raw input value')
+    console.warn(`DestroyList domain extraction failed for value: ${value}; using raw input`)
     return value
   }
 }
@@ -92,7 +92,7 @@ export const providers = {
           const submittedData = (submitResponse.data as VirusTotalSubmitResponse | undefined)?.data
           analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
         } catch {
-          console.warn('VirusTotal URL submission failed, using fallback lookup ID')
+          console.warn('VirusTotal URL submission failed, falling back to base64url lookup')
           analysisId = undefined
         }
 
@@ -113,7 +113,7 @@ export const providers = {
     return safeGet(
       async () => {
         const domain = extractDomain(url)
-        const baseUrl = env.DESTROYLIST_BASE_URL || DESTROYLIST_DEFAULT_BASE_URL
+        const baseUrl = env.DESTROYLIST_BASE_URL?.trim() || DESTROYLIST_DEFAULT_BASE_URL
         const { data } = await axios.get(`${baseUrl}/v1/check`, {
           params: { domain },
           timeout: 10000,

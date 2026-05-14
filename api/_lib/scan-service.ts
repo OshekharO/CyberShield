@@ -46,7 +46,12 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
       (vt?.data?.attributes?.last_analysis_stats as VirusTotalStats | undefined) ??
       {}
     const vtMalicious = Number(vtStats.malicious || 0) + Number(vtStats.phishing || 0)
-    const destroyListed = Boolean(destroy?.threat ?? destroy?.listed)
+    const destroyListed =
+      typeof destroy?.threat === 'boolean'
+        ? destroy.threat
+        : typeof destroy?.listed === 'boolean'
+          ? destroy.listed
+          : false
 
     signals = {
       blacklist_hits: Number(destroyListed ? 1 : 0),
