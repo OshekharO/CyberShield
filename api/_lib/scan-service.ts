@@ -47,9 +47,10 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
       (vt?.data?.attributes?.last_analysis_stats as VirusTotalStats | undefined) ??
       {}
     const vtMalicious = Number(vtStats.malicious || 0) + Number(vtStats.phishing || 0)
+    const destroyListed = Boolean(destroy?.threat ?? destroy?.listed)
 
     signals = {
-      blacklist_hits: Number(urlhaus?.url_status === 'online' ? 1 : 0) + Number(destroy?.listed ? 1 : 0),
+      blacklist_hits: Number(urlhaus?.url_status === 'online' ? 1 : 0) + Number(destroyListed ? 1 : 0),
     }
     providerData = { virustotal: vt, urlhaus, destroylist: destroy, vtMalicious }
   }

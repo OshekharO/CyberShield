@@ -7,11 +7,23 @@ type VirusTotalSubmitResponse = {
   }
 }
 
+const DESTROYLIST_DEFAULT_BASE_URL = 'https://api.destroy.tools'
+
 const safeGet = async <T>(request: () => Promise<T>, fallback: T): Promise<T> => {
   try {
     return await request()
   } catch {
     return fallback
+  }
+}
+
+const extractDomain = (value: string) => {
+  try {
+    const normalizedValue = value.includes('://') ? value : `http://${value}`
+    return new URL(normalizedValue).hostname
+  } catch {
+    console.warn('DestroyList domain extraction failed, using raw input value')
+    return value
   }
 }
 
@@ -79,8 +91,8 @@ export const providers = {
           })
           const submittedData = (submitResponse.data as VirusTotalSubmitResponse | undefined)?.data
           analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
-        } catch (error) {
-          console.warn('VirusTotal URL submission failed, using fallback lookup ID', error)
+        } catch {
+          console.warn('VirusTotal URL submission failed, using fallback lookup ID')
           analysisId = undefined
         }
 
@@ -114,8 +126,10 @@ export const providers = {
   async destroyList(url: string) {
     return safeGet(
       async () => {
-        const { data } = await axios.get(`${env.DESTROYLIST_BASE_URL}/v1/lookup`, {
-          params: { url },
+        const domain = extractDomain(url)
+        const baseUrl = env.DESTROYLIST_BASE_URL || DESTROYLIST_DEFAULT_BASE_URL
+        const { data } = await axios.get(`${baseUrl}/v1/check`, {
+          params: { domain },
           timeout: 10000,
         })
         return data
