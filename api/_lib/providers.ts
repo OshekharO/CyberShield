@@ -22,7 +22,7 @@ const extractDomain = (value: string) => {
     const normalizedValue = value.includes('://') ? value : `http://${value}`
     return new URL(normalizedValue).hostname
   } catch {
-    console.warn(`DestroyList domain extraction failed for value: ${value}; using raw input`)
+    console.warn('DestroyList domain extraction failed; using raw input')
     return value
   }
 }
@@ -181,7 +181,7 @@ export const providers = {
           params: { indicator: domain },
           timeout: 10000,
         })
-        if (typeof data?.error === 'string' && data.error.toLowerCase() === 'indicator not found.') {
+        if (typeof data?.error === 'string' && data.error.toLowerCase().includes('indicator not found')) {
           return { found: false, error: data.error, indicator: domain, risk: 'none' }
         }
         return { found: true, ...(data as Record<string, unknown>) }

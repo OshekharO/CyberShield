@@ -84,8 +84,8 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     const creationDate =
       rdap?.events?.find?.((event: { eventAction?: string; eventDate?: string }) => event.eventAction === 'registration')
         ?.eventDate || null
-    const pulseRisk = typeof pulse?.risk === 'string' ? pulse.risk.toLowerCase() : 'none'
-    const pulseListed = pulseRisk !== '' && pulseRisk !== 'none'
+    const pulseRisk = typeof pulse?.risk === 'string' ? pulse.risk.trim().toLowerCase() || 'none' : 'none'
+    const pulseListed = pulseRisk !== 'none'
 
     signals = {
       recent_domain: isRecentDomain(creationDate),
