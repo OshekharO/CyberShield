@@ -34,8 +34,8 @@ export default function LoginPage() {
   }
 
   return (
-    <Stack component="main" justifyContent="center" sx={{ minHeight: 'calc(100vh - 2rem)', px: 2, py: { xs: 4, sm: 6 } }}>
-      <Box className="mx-auto grid w-full max-w-5xl gap-4 md:grid-cols-[minmax(0,1fr)_420px]">
+    <Stack component="main" justifyContent="center" sx={{ minHeight: 'calc(100vh - 2rem)', px: { xs: 2.5, sm: 3 }, py: { xs: 4, sm: 6 } }}>
+      <Box className="mx-auto grid w-full max-w-5xl gap-5 md:grid-cols-[minmax(0,1fr)_440px]">
         <SurfacePanel className="hero-gradient relative hidden p-8 md:block">
           <svg className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 opacity-30" viewBox="0 0 200 200" fill="none" aria-hidden="true">
             <path d="M43.2,-63.1C57.2,-57.7,70.3,-48.4,76,-35.2C81.7,-22,80.2,-4.9,74.7,9.9C69.2,24.7,59.8,37.2,47.6,47.8C35.4,58.4,20.4,67.2,4.2,70.9C-12,74.5,-24,73,-36,67.5C-48.1,62,-60.1,52.4,-67.6,39.8C-75.2,27.2,-78.3,11.6,-76.4,-2.8C-74.6,-17.2,-67.8,-30.4,-58.4,-41.4C-49,-52.4,-37,-61.3,-24,-66C-11,-70.8,3,-71.3,16.8,-67.9C30.6,-64.5,44.2,-57.1,43.2,-63.1Z" fill="currentColor" />
@@ -64,7 +64,7 @@ export default function LoginPage() {
           </div>
         </SurfacePanel>
 
-        <SurfacePanel scanline className="hero-gradient p-7 sm:p-9">
+        <SurfacePanel scanline className="hero-gradient p-8 sm:p-10">
           <HUDHeader label="CyberShield" title="Welcome back" subtitle="Sign in to access your security operations dashboard." glitch />
 
           <div className="mt-7 space-y-4">
@@ -83,7 +83,7 @@ export default function LoginPage() {
           </div>
 
           <Divider sx={{ my: 3 }} />
-          <p className="text-sm text-[var(--text-2)]">
+          <p className="text-sm leading-6 text-[var(--text-2)]">
             No account?{' '}
             <Link to="/signup" className="font-medium text-sky-500 hover:text-sky-400 dark:text-sky-300 dark:hover:text-sky-200">
               Create one

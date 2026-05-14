@@ -110,6 +110,13 @@ canvas {
     border-radius: 1.1rem;
     box-shadow: var(--shadow-card);
     backdrop-filter: blur(10px);
+    padding: 1.35rem;
+  }
+
+  @media (min-width: 640px) {
+    .cyber-card {
+      padding: 1.65rem;
+    }
   }
 
   .cyber-title {

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Container from '@mui/material/Container'
@@ -45,7 +44,7 @@ export default function LandingPage() {
         backgroundImage: 'radial-gradient(ellipse 80% 55% at 50% -20%, rgba(56,189,248,0.22), transparent)',
       }}
     >
-      <Container sx={{ pt: { xs: 8, sm: 10 }, pb: { xs: 6, sm: 8 } }}>
+      <Container sx={{ pt: { xs: 7, sm: 10 }, pb: { xs: 6, sm: 8 }, px: { xs: 2.5, sm: 3 } }}>
         <Stack spacing={3} alignItems="center" textAlign="center" sx={{ mx: 'auto', maxWidth: 900 }}>
           <Chip
             icon={<AutoAwesomeRounded sx={{ fontSize: 16 }} />}
@@ -101,16 +100,14 @@ export default function LandingPage() {
           </Grid>
         </SurfacePanel>
 
-        <Grid container spacing={2} sx={{ mt: 1 }}>
-          {features.map((feature, index) => (
+        <Grid container spacing={{ xs: 2, md: 2.5 }} sx={{ mt: 1.5 }}>
+          {features.map((feature) => (
             <Grid key={feature.title} size={{ xs: 12, md: 4 }}>
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08, duration: 0.35 }}>
-                <SurfacePanel className="h-full p-6">
-                  <feature.icon color="primary" />
-                  <Typography className="cyber-title mt-3 text-lg">{feature.title}</Typography>
-                  <Typography className="cyber-subtitle mt-2">{feature.desc}</Typography>
-                </SurfacePanel>
-              </motion.div>
+              <SurfacePanel className="h-full p-7 sm:p-8">
+                <feature.icon color="primary" />
+                <Typography className="cyber-title mt-3 text-lg">{feature.title}</Typography>
+                <Typography className="cyber-subtitle mt-2 leading-7">{feature.desc}</Typography>
+              </SurfacePanel>
             </Grid>
           ))}
         </Grid>

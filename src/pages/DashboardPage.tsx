@@ -20,7 +20,7 @@ import { SurfacePanel } from '../components/ui/surface-panel'
 import { useScanStore } from '../store/scanStore'
 
 export default function DashboardPage() {
-  const { history } = useScanStore()
+  const history = useScanStore((s) => s.history)
 
   const chartData = useMemo(
     () =>
@@ -31,20 +31,28 @@ export default function DashboardPage() {
     [history],
   )
 
-  const metrics = useMemo(() => {
-    const high = history.filter((scan) => scan.risk.score >= 65).length
-    const critical = history.filter((scan) => scan.risk.score >= 85).length
-    const avg = Math.round(history.reduce((sum, scan) => sum + scan.risk.score, 0) / Math.max(history.length, 1))
-    return { high, critical, avg }
-  }, [history])
-
-  const levelCounts = useMemo(() => {
+  const { metrics, levelCounts } = useMemo(() => {
     const buckets = { critical: 0, high: 0, medium: 0, low: 0, safe: 0 }
+    let high = 0
+    let critical = 0
+    let total = 0
+
     for (const item of history) {
+      total += item.risk.score
+      if (item.risk.score >= 65) high += 1
+      if (item.risk.score >= 85) critical += 1
       const level = item.risk.level.toLowerCase() as keyof typeof buckets
       if (level in buckets) buckets[level] += 1
     }
-    return buckets
+
+    return {
+      metrics: {
+        high,
+        critical,
+        avg: Math.round(total / Math.max(history.length, 1)),
+      },
+      levelCounts: buckets,
+    }
   }, [history])
 
   const levelRows = [
@@ -69,7 +77,7 @@ export default function DashboardPage() {
         </Stack>
       </SurfacePanel>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={{ xs: 2, md: 2.5 }}>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <MetricCard label="Total scans" value={history.length} />
         </Grid>
@@ -84,7 +92,7 @@ export default function DashboardPage() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={{ xs: 2, md: 2.5 }}>
         <Grid size={{ xs: 12, lg: 8 }}>
           <SurfacePanel className="p-6 sm:p-7">
             <Typography className="cyber-title text-base">Risk analytics</Typography>

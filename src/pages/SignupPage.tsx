@@ -35,9 +35,9 @@ export default function SignupPage() {
   }
 
   return (
-    <Stack component="main" justifyContent="center" sx={{ minHeight: 'calc(100vh - 2rem)', px: 2, py: { xs: 4, sm: 6 } }}>
-      <Box className="mx-auto grid w-full max-w-5xl gap-4 md:grid-cols-[420px_minmax(0,1fr)]">
-        <SurfacePanel scanline className="hero-gradient p-7 sm:p-9">
+    <Stack component="main" justifyContent="center" sx={{ minHeight: 'calc(100vh - 2rem)', px: { xs: 2.5, sm: 3 }, py: { xs: 4, sm: 6 } }}>
+      <Box className="mx-auto grid w-full max-w-5xl gap-5 md:grid-cols-[440px_minmax(0,1fr)]">
+        <SurfacePanel scanline className="hero-gradient p-8 sm:p-10">
           <HUDHeader label="CyberShield" title="Create account" subtitle="Start scanning indicators and producing analyst-ready reports." glitch />
 
           <div className="mt-7 space-y-4">
@@ -60,7 +60,7 @@ export default function SignupPage() {
           </div>
 
           <Divider sx={{ my: 3 }} />
-          <p className="text-sm text-[var(--text-2)]">
+          <p className="text-sm leading-6 text-[var(--text-2)]">
             Have an account?{' '}
             <Link to="/login" className="font-medium text-sky-500 hover:text-sky-400 dark:text-sky-300 dark:hover:text-sky-200">
               Login
