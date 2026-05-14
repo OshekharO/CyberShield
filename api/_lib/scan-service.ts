@@ -41,13 +41,12 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     ])
 
     const vtStats =
-      (vt?.data?.attributes?.stats as { malicious?: number; phishing?: number; suspicious?: number } | undefined) ??
+      (vt?.data?.attributes?.stats as { malicious?: number; phishing?: number } | undefined) ??
       (vt?.data?.attributes?.last_analysis_stats as
-        | { malicious?: number; phishing?: number; suspicious?: number }
+        | { malicious?: number; phishing?: number }
         | undefined) ??
       {}
-    const vtMalicious =
-      Number(vtStats.malicious || 0) + Number(vtStats.phishing || 0) + Number(vtStats.suspicious || 0)
+    const vtMalicious = Number(vtStats.malicious || 0) + Number(vtStats.phishing || 0)
 
     signals = {
       blacklist_hits: Number(urlhaus?.url_status === 'online' ? 1 : 0) + Number(destroy?.listed ? 1 : 0),

@@ -69,7 +69,8 @@ export const providers = {
           },
           timeout: 10000,
         })
-        const analysisId = submitResponse?.data?.data?.id as string | undefined
+        const submittedData = submitResponse.data?.data as { id?: string } | undefined
+        const analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
         const fallbackUrlId = Buffer.from(url).toString('base64url')
         const lookupId = analysisId || fallbackUrlId
 
