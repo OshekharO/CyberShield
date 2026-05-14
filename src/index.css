@@ -357,7 +357,7 @@ a {
   min-height: calc(100vh - 2rem);
   display: grid;
   place-items: center;
-  padding: 2rem 1rem;
+  padding: calc(2rem + env(safe-area-inset-top, 0px)) 1rem 2rem;
 }
 
 .auth-grid {
@@ -418,7 +418,7 @@ a {
 .landing-container {
   max-width: 76rem;
   margin: 0 auto;
-  padding: 2.4rem 1rem 2.2rem;
+  padding: calc(2.4rem + env(safe-area-inset-top, 0px)) 1rem 2.2rem;
   display: grid;
   gap: 1.1rem;
 }
@@ -638,7 +638,7 @@ a {
 
 .app-shell {
   min-height: 100vh;
-  padding: 1.25rem;
+  padding: calc(1.25rem + env(safe-area-inset-top, 0px)) 1.25rem 1.25rem;
 }
 
 .app-grid {
@@ -1056,7 +1056,7 @@ a {
 
 @media (max-width: 1280px) {
   .app-shell {
-    padding: 1rem;
+    padding: calc(1rem + env(safe-area-inset-top, 0px)) 1rem 1rem;
   }
 
   .dashboard-grid {
@@ -1072,7 +1072,7 @@ a {
 
 @media (max-width: 980px) {
   .landing-container {
-    padding-inline: 0.85rem;
+    padding: calc(2rem + env(safe-area-inset-top, 0px)) 0.85rem 2rem;
   }
 
   .cyber-card,
@@ -1094,7 +1094,7 @@ a {
 
 @media (max-width: 760px) {
   .app-shell {
-    padding: 0.75rem;
+    padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 0.75rem 0.75rem;
   }
 
   .page-content {
