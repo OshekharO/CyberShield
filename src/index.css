@@ -104,7 +104,9 @@ a {
 }
 
 .cyber-card {
-  background: linear-gradient(160deg, var(--surface-1), var(--surface-0));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    linear-gradient(160deg, var(--surface-1), var(--surface-0));
   border: 1px solid var(--line);
   border-radius: 1.1rem;
   box-shadow: var(--shadow-card);
@@ -143,7 +145,9 @@ a {
 
 .cyber-list-row {
   border: 1px solid var(--line);
-  background: linear-gradient(145deg, color-mix(in srgb, var(--surface-2) 80%, transparent), var(--surface-1));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    linear-gradient(145deg, color-mix(in srgb, var(--surface-2) 80%, transparent), var(--surface-1));
   border-radius: 0.9rem;
   padding: 1rem;
   display: flex;
@@ -204,7 +208,9 @@ a {
 
 .hud-panel {
   border: 1px solid var(--line);
-  background: linear-gradient(145deg, var(--surface-2), var(--surface-1));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    linear-gradient(145deg, var(--surface-2), var(--surface-1));
   border-radius: 0.95rem;
   padding: 1rem 1.1rem;
   box-shadow: var(--shadow-soft);
@@ -213,7 +219,9 @@ a {
 .terminal-block {
   border: 1px solid var(--line);
   border-radius: 0.9rem;
-  background: linear-gradient(145deg, var(--surface-2), var(--surface-1));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    linear-gradient(145deg, var(--surface-2), var(--surface-1));
   color: var(--text-1);
   padding: 1.1rem;
   line-height: 1.7;
