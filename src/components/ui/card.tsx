@@ -1,6 +1,13 @@
 import type { HTMLAttributes } from 'react'
+import MuiCard from '@mui/material/Card'
 import { cn } from '../../utils/cn'
 
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('cyber-card p-5 sm:p-6', className)} {...props} />
+type CardProps = HTMLAttributes<HTMLDivElement>
+
+export function Card({ className, children, ...props }: CardProps) {
+  return (
+    <MuiCard className={cn('cyber-card p-5 sm:p-6', className)} variant="outlined" elevation={0} {...props}>
+      {children}
+    </MuiCard>
+  )
 }

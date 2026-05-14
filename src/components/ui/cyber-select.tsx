@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ChevronDown } from 'lucide-react'
+import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded'
 import { cn } from '../../utils/cn'
 
 export const CyberSelect = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
@@ -15,7 +15,7 @@ export const CyberSelect = React.forwardRef<HTMLSelectElement, React.SelectHTMLA
       >
         {children}
       </select>
-      <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-2)]" />
+      <ExpandMoreRounded fontSize="small" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-2)]" />
     </div>
   ),
 )

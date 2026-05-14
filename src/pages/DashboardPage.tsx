@@ -1,5 +1,9 @@
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import Chip from '@mui/material/Chip'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import LinearProgress from '@mui/material/LinearProgress'
 import { MetricCard } from '../components/MetricCard'
 import { HUDHeader } from '../components/ui/hud-header'
 import { SurfacePanel } from '../components/ui/surface-panel'
@@ -28,6 +32,11 @@ export default function DashboardPage() {
     <div className="space-y-4">
       <HUDHeader title="Dashboard" subtitle="Monitor scan activity and risk posture at a glance." glitch />
 
+      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+        <Chip size="small" color="primary" label="Live analytics" />
+        <Chip size="small" color="secondary" label="Risk scoring" />
+      </Stack>
+
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard label="Total scans" value={history.length} />
         <MetricCard label="High risk" value={metrics.high} />
@@ -36,7 +45,12 @@ export default function DashboardPage() {
       </div>
 
       <SurfacePanel>
-        <h3 className="cyber-title text-base">Risk analytics</h3>
+        <Typography className="cyber-title text-base">Risk analytics</Typography>
+        <LinearProgress
+          variant="determinate"
+          value={Math.max(0, Math.min(100, metrics.avg))}
+          sx={{ mt: 1.5, height: 8, borderRadius: 999, bgcolor: 'rgba(148,163,184,0.22)' }}
+        />
         <div className="mt-4 h-72 min-w-0 overflow-x-auto">
           <div className="h-full min-w-[360px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -53,7 +67,7 @@ export default function DashboardPage() {
                     color: '#e6efff',
                   }}
                 />
-                <Bar dataKey="score" fill="#4deaff" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="score" fill="#38bdf8" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
