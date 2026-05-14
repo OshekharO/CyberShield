@@ -19,7 +19,7 @@ const CHAT_EVERYWHERE_PROMPT =
   "You are an AI language model named Chat Everywhere, designed to answer user questions as accurately and helpfully as possible. Always be aware of the current date and time, and make sure to generate responses in the exact same language as the user's query. Adapt your responses to match the user's input language and context, maintaining an informative and supportive communication style. Additionally, format all responses using Markdown syntax, regardless of the input format.If the input includes text such as [lang=xxx], the response should not include this text.The current date is 7/19/2024."
 
 export const generateThreatSummary = async (payload: Record<string, unknown>) => {
-  const userMessage = `You are a SOC analyst. Summarize this scan, explain suspicious indicators, and provide mitigation steps. Risk score was already rule-derived; do not change it. Data: ${JSON.stringify(payload)}`
+  const userMessage = `You are a SOC analyst. Summarize this scan, explain suspicious indicators, and provide mitigation steps. Risk score was already rule-derived; do not change it. Respond in plain text only — no markdown, no asterisks, no pound signs, no hyphens as bullets, no bold or italic syntax. Use numbered lists (e.g. 1. 2. 3.) and blank lines to separate sections. Data: ${JSON.stringify(payload)}`
 
   try {
     const response = await axios.post(

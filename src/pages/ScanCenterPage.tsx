@@ -62,7 +62,7 @@ export default function ScanCenterPage() {
       {summary && (
         <TerminalBlock>
           <p className="cyber-label">AI Summary</p>
-          <p className="helper-text">{summary}</p>
+          <p className="helper-text" style={{ whiteSpace: 'pre-wrap' }}>{summary}</p>
         </TerminalBlock>
       )}
 
