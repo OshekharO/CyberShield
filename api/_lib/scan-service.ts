@@ -6,8 +6,6 @@ import { providers } from './providers.js'
 import { calculateRisk } from './scoring.js'
 import type { ScanPayload } from './types.js'
 
-const extractUrlId = (url: string) => Buffer.from(url).toString('base64url')
-
 const isRecentDomain = (creationDate?: string | null) => {
   if (!creationDate) return false
   const created = new Date(creationDate).getTime()
@@ -37,14 +35,19 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
 
   if (type === 'url') {
     const [vt, urlhaus, destroy] = await Promise.all([
-      providers.virusTotal(extractUrlId(target)),
+      providers.virusTotal(target),
       providers.urlHaus(target),
       providers.destroyList(target),
     ])
 
+    const vtStats =
+      (vt?.data?.attributes?.stats as { malicious?: number; phishing?: number; suspicious?: number } | undefined) ??
+      (vt?.data?.attributes?.last_analysis_stats as
+        | { malicious?: number; phishing?: number; suspicious?: number }
+        | undefined) ??
+      {}
     const vtMalicious =
-      Number(vt?.data?.attributes?.last_analysis_stats?.malicious || 0) +
-      Number(vt?.data?.attributes?.last_analysis_stats?.phishing || 0)
+      Number(vtStats.malicious || 0) + Number(vtStats.phishing || 0) + Number(vtStats.suspicious || 0)
 
     signals = {
       blacklist_hits: Number(urlhaus?.url_status === 'online' ? 1 : 0) + Number(destroy?.listed ? 1 : 0),

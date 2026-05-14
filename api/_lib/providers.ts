@@ -57,11 +57,24 @@ export const providers = {
     )
   },
 
-  async virusTotal(urlId: string) {
+  async virusTotal(url: string) {
     return safeGet(
       async () => {
-        const { data } = await axios.get(`https://www.virustotal.com/api/v3/urls/${urlId}`, {
-          headers: { 'x-apikey': env.VIRUSTOTAL_API_KEY },
+        const body = new URLSearchParams({ url })
+        const submitResponse = await axios.post('https://www.virustotal.com/api/v3/urls', body, {
+          headers: {
+            accept: 'application/json',
+            'x-apikey': env.VIRUSTOTAL_API_KEY,
+            'content-type': 'application/x-www-form-urlencoded',
+          },
+          timeout: 10000,
+        })
+        const analysisId = submitResponse?.data?.data?.id as string | undefined
+        const fallbackUrlId = Buffer.from(url).toString('base64url')
+        const lookupId = analysisId || fallbackUrlId
+
+        const { data } = await axios.get(`https://www.virustotal.com/api/v3/urls/${lookupId}`, {
+          headers: { accept: 'application/json', 'x-apikey': env.VIRUSTOTAL_API_KEY },
           timeout: 10000,
         })
         return data
