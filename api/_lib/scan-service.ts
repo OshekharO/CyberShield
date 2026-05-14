@@ -84,10 +84,12 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     const creationDate =
       rdap?.events?.find?.((event: { eventAction?: string; eventDate?: string }) => event.eventAction === 'registration')
         ?.eventDate || null
+    const pulseRisk = typeof pulse?.risk === 'string' ? pulse.risk.toLowerCase() : 'none'
+    const pulseListed = pulseRisk !== '' && pulseRisk !== 'none'
 
     signals = {
       recent_domain: isRecentDomain(creationDate),
-      blacklist_hits: Number(pulse?.risk || 0) > 2 ? 1 : 0,
+      blacklist_hits: Number(pulseListed),
     }
     providerData = { rdap, whoisxml: whois, pulsedive: pulse, usercheck, creationDate }
   }

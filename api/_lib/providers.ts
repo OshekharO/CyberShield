@@ -181,9 +181,12 @@ export const providers = {
           params: { indicator: domain },
           timeout: 10000,
         })
-        return data
+        if (typeof data?.error === 'string' && data.error.toLowerCase() === 'indicator not found.') {
+          return { found: false, error: data.error, indicator: domain, risk: 'none' }
+        }
+        return { found: true, ...(data as Record<string, unknown>) }
       },
-      {},
+      { found: false, error: 'Pulsedive unavailable', indicator: domain, risk: 'none' },
     )
   },
 
