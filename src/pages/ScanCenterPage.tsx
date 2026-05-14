@@ -43,7 +43,7 @@ export default function ScanCenterPage() {
       <HUDHeader title="Scan Center" subtitle="Run IOC scans and receive contextual analyst summaries." glitch />
 
       <SurfacePanel>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-[220px_minmax(0,1fr)_auto]">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[220px_minmax(0,1fr)_180px] md:items-center">
           <CyberSelect value={type} onChange={(e) => setType(e.target.value as ScanType)}>
             {scanTypes.map((scanType) => (
               <option key={scanType} value={scanType}>
@@ -52,11 +52,11 @@ export default function ScanCenterPage() {
             ))}
           </CyberSelect>
           <Input value={target} onChange={(e) => setTarget(e.target.value)} placeholder="Enter IOC target..." />
-          <Button onClick={run} disabled={loading || !target.trim()}>
+          <Button className="w-full md:w-auto" onClick={run} disabled={loading || !target.trim()}>
             {loading ? 'Scanning...' : 'Run scan'}
           </Button>
         </div>
-        {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
+        {error && <p className="mt-4 text-sm text-rose-300">{error}</p>}
       </SurfacePanel>
 
       {summary && (
@@ -68,7 +68,7 @@ export default function ScanCenterPage() {
 
       <SurfacePanel>
         <h3 className="cyber-title text-base">Recent scans</h3>
-        <div className="mt-3 space-y-2">
+        <div className="mt-4 space-y-2.5">
           {recent.map((scan) => (
             <DataRow
               key={scan.scan_id}

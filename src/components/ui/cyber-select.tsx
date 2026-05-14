@@ -1,22 +1,31 @@
 import * as React from 'react'
-import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded'
+import MenuItem from '@mui/material/MenuItem'
+import TextField from '@mui/material/TextField'
 import { cn } from '../../utils/cn'
 
 export const CyberSelect = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
-  ({ className, children, ...props }, ref) => (
-    <div className="relative">
-      <select
-        ref={ref}
-        className={cn(
-          'h-11 w-full appearance-none rounded-xl border border-[var(--line)] bg-[var(--surface-2)] px-3 pr-10 text-sm text-[var(--text-0)] transition focus-visible:border-sky-400/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/45',
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </select>
-      <ExpandMoreRounded fontSize="small" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-2)]" />
-    </div>
+  ({ className, children, value, onChange, disabled, name }, ref) => (
+    <TextField
+      select
+      size="small"
+      fullWidth
+      value={value}
+      onChange={onChange as unknown as React.ChangeEventHandler<HTMLInputElement>}
+      disabled={disabled}
+      name={name}
+      className={cn('[&_.MuiInputBase-input]:text-sm [&_.MuiInputBase-input]:text-[var(--text-0)]', className)}
+      inputRef={ref as unknown as React.Ref<HTMLInputElement>}
+    >
+      {React.Children.map(children, (child) => {
+        if (!React.isValidElement(child) || child.type !== 'option') return child
+        const option = child as React.ReactElement<React.OptionHTMLAttributes<HTMLOptionElement>>
+        return (
+          <MenuItem key={option.props.value?.toString() ?? option.props.children?.toString()} value={option.props.value}>
+            {option.props.children}
+          </MenuItem>
+        )
+      })}
+    </TextField>
   ),
 )
 CyberSelect.displayName = 'CyberSelect'

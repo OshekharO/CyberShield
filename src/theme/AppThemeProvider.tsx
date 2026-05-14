@@ -25,6 +25,11 @@ export function AppThemeProvider({ children }: AppThemeProviderProps) {
         shape: { borderRadius: 12 },
         typography: {
           fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+          h1: { fontWeight: 700, letterSpacing: '-0.02em' },
+          h2: { fontWeight: 700, letterSpacing: '-0.02em' },
+          h3: { fontWeight: 650, letterSpacing: '-0.01em' },
+          body1: { lineHeight: 1.65 },
+          body2: { lineHeight: 1.6 },
         },
         components: {
           MuiCssBaseline: {
@@ -46,12 +51,47 @@ export function AppThemeProvider({ children }: AppThemeProviderProps) {
               },
             },
           },
+          MuiCard: {
+            styleOverrides: {
+              root: {
+                borderRadius: 16,
+              },
+            },
+          },
+          MuiOutlinedInput: {
+            styleOverrides: {
+              root: {
+                borderRadius: 12,
+                minHeight: 48,
+                backgroundColor: mode === 'dark' ? alpha('#0f172a', 0.82) : alpha('#ffffff', 0.95),
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: mode === 'dark' ? 'rgba(148,163,184,0.3)' : 'rgba(148,163,184,0.45)',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: mode === 'dark' ? 'rgba(56,189,248,0.5)' : 'rgba(2,132,199,0.5)',
+                },
+              },
+              input: {
+                paddingTop: 12,
+                paddingBottom: 12,
+              },
+            },
+          },
+          MuiFormLabel: {
+            styleOverrides: {
+              root: {
+                fontSize: '0.9rem',
+                fontWeight: 600,
+              },
+            },
+          },
           MuiButton: {
             styleOverrides: {
               root: {
                 textTransform: 'none',
                 fontWeight: 600,
                 borderRadius: 12,
+                minHeight: 40,
               },
             },
           },
