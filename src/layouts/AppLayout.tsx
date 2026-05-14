@@ -107,6 +107,10 @@ export function AppLayout() {
             <p className="cyber-label">Live workspace</p>
             <p className="helper-text">Real-time threat scanning, triage, and reporting across your security operations workflow.</p>
             <div className="live-tags">
+              <span className="live-tag scan-pulse-tag">
+                <span className="scan-pulse-dot" aria-hidden="true" />
+                Scan pulse
+              </span>
               <span className="live-tag brand">Real-time</span>
               <span className="live-tag brand">AI-assisted</span>
               <span className="live-tag">SOC-ready</span>
