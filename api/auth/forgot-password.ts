@@ -33,7 +33,8 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
     data: { userId: user.id, tokenHash, expiresAt },
   })
 
-  const resetUrl = `${process.env.APP_URL || ''}/reset-password?token=${rawToken}`
+  const appUrl = process.env.APP_URL?.replace(/\/$/, '') ?? ''
+  const resetUrl = `${appUrl}/reset-password?token=${rawToken}`
 
   res.status(200).json({
     message: 'If the email exists, a reset link has been sent.',

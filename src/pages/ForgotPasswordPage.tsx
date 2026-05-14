@@ -15,6 +15,10 @@ export default function ForgotPasswordPage() {
 
   const submit = async () => {
     setError('')
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email address.')
+      return
+    }
     try {
       const data = await authService.forgotPassword(email)
       setSubmitted(true)

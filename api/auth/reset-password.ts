@@ -20,7 +20,6 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
 
   const resetToken = await prisma.passwordResetToken.findUnique({
     where: { tokenHash },
-    include: { user: true },
   })
 
   if (!resetToken || resetToken.expiresAt < new Date()) {
