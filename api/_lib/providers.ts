@@ -109,20 +109,6 @@ export const providers = {
     )
   },
 
-  async urlHaus(url: string) {
-    return safeGet(
-      async () => {
-        const body = new URLSearchParams({ url })
-        const { data } = await axios.post('https://urlhaus-api.abuse.ch/v1/url/', body, {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          timeout: 10000,
-        })
-        return data
-      },
-      {},
-    )
-  },
-
   async destroyList(url: string) {
     return safeGet(
       async () => {

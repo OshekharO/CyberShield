@@ -36,9 +36,8 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
   }
 
   if (type === 'url') {
-    const [vt, urlhaus, destroy] = await Promise.all([
+    const [vt, destroy] = await Promise.all([
       providers.virusTotal(target),
-      providers.urlHaus(target),
       providers.destroyList(target),
     ])
 
@@ -50,9 +49,9 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     const destroyListed = Boolean(destroy?.threat ?? destroy?.listed)
 
     signals = {
-      blacklist_hits: Number(urlhaus?.url_status === 'online' ? 1 : 0) + Number(destroyListed ? 1 : 0),
+      blacklist_hits: Number(destroyListed ? 1 : 0),
     }
-    providerData = { virustotal: vt, urlhaus, destroylist: destroy, vtMalicious }
+    providerData = { virustotal: vt, destroylist: destroy, vtMalicious }
   }
 
   if (type === 'email') {

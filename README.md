@@ -52,7 +52,7 @@ Single deployment routes:
 ## External Provider Integrations
 
 - IP: IPInfo Lite, AbuseIPDB, Fidro
-- URL: VirusTotal, URLHaus, DestroyList
+- URL: VirusTotal, DestroyList
 - Email: UserCheck Email API, EmailRep, Fidro Email Validation
 - Domain: RDAP, WhoisXML Subdomains API, Pulsedive, UserCheck Domain API
 
@@ -96,7 +96,7 @@ Includes enums, relations, indexes, timestamps, and foreign keys.
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and configure:
+Update `.env` and configure:
 
 - `DATABASE_URL`
 - `DIRECT_URL`
@@ -133,7 +133,7 @@ npm run prisma:migrate
 
 1. Push this repository to GitHub.
 2. Import project in Vercel.
-3. Add environment variables from `.env.example`.
+3. Add environment variables from `.env`.
 4. Ensure Supabase Postgres is reachable from Vercel.
 5. Add `DATABASE_URL` and `DIRECT_URL` as GitHub repository secrets so migrations can run in CI.
 6. Push to `main` (or run the workflow manually in Actions) to execute Prisma migrations automatically in GitHub Actions.
