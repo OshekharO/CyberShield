@@ -26,6 +26,11 @@ const links = [
 export function AppLayout() {
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
+  const bottomLinks = links.map(({ to, label, icon }) => ({
+    to,
+    label: label === 'Scan Center' ? 'Scan' : label === 'Threat Feed' ? 'Feed' : label,
+    icon,
+  }))
 
   return (
     <div className="app-shell">
@@ -81,6 +86,23 @@ export function AppLayout() {
         </SurfacePanel>
 
         <main className="main-content">
+          <SurfacePanel className="mobile-topbar">
+            <div className="mobile-topbar-head">
+              <div>
+                <p className="cyber-label">CyberShield</p>
+                <p className="cyber-title" style={{ fontSize: '1rem' }}>
+                  <GlitchText text="OPERATIONS" className="inline-block" />
+                </p>
+              </div>
+              <div className="mobile-topbar-actions">
+                <ThemeToggle />
+                <Button variant="ghost" size="sm" startIcon={<LogOut size={14} />} onClick={() => void logout()}>
+                  Sign out
+                </Button>
+              </div>
+            </div>
+          </SurfacePanel>
+
           <header className="live-header hero-gradient">
             <p className="cyber-label">Live workspace</p>
             <p className="helper-text">Real-time threat scanning, triage, and reporting across your security operations workflow.</p>
@@ -95,6 +117,15 @@ export function AppLayout() {
           </div>
         </main>
       </div>
+
+      <nav className="bottom-nav" aria-label="Primary mobile navigation">
+        {bottomLinks.map(({ to, label, icon: Icon }) => (
+          <NavLink key={to} to={to} className={({ isActive }) => `bottom-nav-link${isActive ? ' active' : ''}`}>
+            <Icon size={16} />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   )
 }
