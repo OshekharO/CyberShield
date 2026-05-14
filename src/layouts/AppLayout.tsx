@@ -1,5 +1,4 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { Grow } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
@@ -118,24 +117,22 @@ export function AppLayout() {
           </Box>
         </SurfacePanel>
 
-        <main className="min-w-0 space-y-5">
-          <Grow in timeout={350}>
-            <header className="hero-gradient relative overflow-hidden rounded-2xl border border-[var(--line-strong)] px-5 py-5 text-sm text-[var(--text-1)] shadow-[var(--shadow-soft)] sm:px-6">
-              <svg className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 opacity-30" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-                <path d="M43.2,-63.1C57.2,-57.7,70.3,-48.4,76,-35.2C81.7,-22,80.2,-4.9,74.7,9.9C69.2,24.7,59.8,37.2,47.6,47.8C35.4,58.4,20.4,67.2,4.2,70.9C-12,74.5,-24,73,-36,67.5C-48.1,62,-60.1,52.4,-67.6,39.8C-75.2,27.2,-78.3,11.6,-76.4,-2.8C-74.6,-17.2,-67.8,-30.4,-58.4,-41.4C-49,-52.4,-37,-61.3,-24,-66C-11,-70.8,3,-71.3,16.8,-67.9C30.6,-64.5,44.2,-57.1,43.2,-63.1Z" fill="currentColor" />
-              </svg>
-              <Typography className="cyber-label">Live workspace</Typography>
-              <Typography sx={{ mt: 1, color: 'text.secondary' }}>
-                Real-time threat scanning, triage, and reporting across your security operations workflow.
-              </Typography>
-              <Stack direction="row" spacing={1} sx={{ mt: 1.5, flexWrap: 'wrap' }}>
-                <Chip size="small" color="primary" label="Real-time" />
-                <Chip size="small" color="secondary" label="AI-assisted" />
-                <Chip size="small" label="SOC-ready" variant="outlined" />
-              </Stack>
-            </header>
-          </Grow>
-          <div className="px-0.5 sm:px-0">
+        <main className="min-w-0 space-y-6">
+          <header className="hero-gradient relative overflow-hidden rounded-2xl border border-[var(--line-strong)] px-5 py-5 text-sm text-[var(--text-1)] shadow-[var(--shadow-soft)] sm:px-6">
+            <svg className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 opacity-30" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+              <path d="M43.2,-63.1C57.2,-57.7,70.3,-48.4,76,-35.2C81.7,-22,80.2,-4.9,74.7,9.9C69.2,24.7,59.8,37.2,47.6,47.8C35.4,58.4,20.4,67.2,4.2,70.9C-12,74.5,-24,73,-36,67.5C-48.1,62,-60.1,52.4,-67.6,39.8C-75.2,27.2,-78.3,11.6,-76.4,-2.8C-74.6,-17.2,-67.8,-30.4,-58.4,-41.4C-49,-52.4,-37,-61.3,-24,-66C-11,-70.8,3,-71.3,16.8,-67.9C30.6,-64.5,44.2,-57.1,43.2,-63.1Z" fill="currentColor" />
+            </svg>
+            <Typography className="cyber-label">Live workspace</Typography>
+            <Typography sx={{ mt: 1, color: 'text.secondary' }}>
+              Real-time threat scanning, triage, and reporting across your security operations workflow.
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ mt: 1.5, flexWrap: 'wrap' }}>
+              <Chip size="small" color="primary" label="Real-time" />
+              <Chip size="small" color="secondary" label="AI-assisted" />
+              <Chip size="small" label="SOC-ready" variant="outlined" />
+            </Stack>
+          </header>
+          <div className="px-1.5 sm:px-2">
             <Outlet />
           </div>
         </main>

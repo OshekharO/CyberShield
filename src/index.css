@@ -89,7 +89,7 @@ body::before {
   background-image: linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
   background-size: 34px 34px;
-  mask-image: radial-gradient(circle at center, black 38%, transparent 100%);
+  opacity: 0.75;
 }
 
 img,
@@ -109,7 +109,7 @@ canvas {
     border: 1px solid var(--line);
     border-radius: 1.1rem;
     box-shadow: var(--shadow-card);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(4px);
     padding: 1.35rem;
   }
 

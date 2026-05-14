@@ -66,7 +66,7 @@ export default function DashboardPage() {
   const recent = useMemo(() => history.slice(0, 6), [history])
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 px-1 sm:px-0">
       <SurfacePanel className="p-6 sm:p-7">
         <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.5}>
           <HUDHeader title="Dashboard" subtitle="Monitor scan activity, risk trends, and recent intelligence updates." glitch />
@@ -77,7 +77,7 @@ export default function DashboardPage() {
         </Stack>
       </SurfacePanel>
 
-      <Grid container spacing={{ xs: 2, md: 2.5 }}>
+      <Grid container spacing={{ xs: 2.5, md: 3 }}>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <MetricCard label="Total scans" value={history.length} />
         </Grid>
@@ -92,7 +92,7 @@ export default function DashboardPage() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={{ xs: 2, md: 2.5 }}>
+      <Grid container spacing={{ xs: 2.5, md: 3 }}>
         <Grid size={{ xs: 12, lg: 8 }}>
           <SurfacePanel className="p-6 sm:p-7">
             <Typography className="cyber-title text-base">Risk analytics</Typography>
