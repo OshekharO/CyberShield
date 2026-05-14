@@ -36,9 +36,9 @@ export function AppLayout() {
   const logout = useAuthStore((s) => s.logout)
 
   return (
-    <Box className="min-h-screen px-4 py-4 sm:px-6 lg:px-10">
-      <Box className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[290px_minmax(0,1fr)] xl:gap-5">
-        <SurfacePanel className="scanline-overlay p-4 sm:p-5 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)] lg:overflow-auto">
+    <Box className="min-h-screen px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
+      <Box className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[290px_minmax(0,1fr)] xl:gap-6">
+        <SurfacePanel className="scanline-overlay p-5 sm:p-6 lg:sticky lg:top-5 lg:h-[calc(100vh-2.5rem)] lg:overflow-auto">
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
             <Box>
               <Typography className="cyber-label">CyberShield</Typography>
@@ -118,9 +118,9 @@ export function AppLayout() {
           </Box>
         </SurfacePanel>
 
-        <main className="min-w-0 space-y-4">
+        <main className="min-w-0 space-y-5">
           <Grow in timeout={350}>
-            <header className="hero-gradient relative overflow-hidden rounded-2xl border border-[var(--line-strong)] px-4 py-4 text-sm text-[var(--text-1)] shadow-[var(--shadow-soft)] sm:px-5">
+            <header className="hero-gradient relative overflow-hidden rounded-2xl border border-[var(--line-strong)] px-5 py-5 text-sm text-[var(--text-1)] shadow-[var(--shadow-soft)] sm:px-6">
               <svg className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 opacity-30" viewBox="0 0 200 200" fill="none" aria-hidden="true">
                 <path d="M43.2,-63.1C57.2,-57.7,70.3,-48.4,76,-35.2C81.7,-22,80.2,-4.9,74.7,9.9C69.2,24.7,59.8,37.2,47.6,47.8C35.4,58.4,20.4,67.2,4.2,70.9C-12,74.5,-24,73,-36,67.5C-48.1,62,-60.1,52.4,-67.6,39.8C-75.2,27.2,-78.3,11.6,-76.4,-2.8C-74.6,-17.2,-67.8,-30.4,-58.4,-41.4C-49,-52.4,-37,-61.3,-24,-66C-11,-70.8,3,-71.3,16.8,-67.9C30.6,-64.5,44.2,-57.1,43.2,-63.1Z" fill="currentColor" />
               </svg>
@@ -135,7 +135,9 @@ export function AppLayout() {
               </Stack>
             </header>
           </Grow>
-          <Outlet />
+          <div className="px-0.5 sm:px-0">
+            <Outlet />
+          </div>
         </main>
       </Box>
     </Box>

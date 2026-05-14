@@ -58,8 +58,8 @@ export default function DashboardPage() {
   const recent = useMemo(() => history.slice(0, 6), [history])
 
   return (
-    <div className="space-y-4">
-      <SurfacePanel className="p-5 sm:p-6">
+    <div className="space-y-5">
+      <SurfacePanel className="p-6 sm:p-7">
         <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.5}>
           <HUDHeader title="Dashboard" subtitle="Monitor scan activity, risk trends, and recent intelligence updates." glitch />
           <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
@@ -86,7 +86,7 @@ export default function DashboardPage() {
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, lg: 8 }}>
-          <SurfacePanel>
+          <SurfacePanel className="p-6 sm:p-7">
             <Typography className="cyber-title text-base">Risk analytics</Typography>
             <LinearProgress
               variant="determinate"
@@ -109,7 +109,7 @@ export default function DashboardPage() {
                         color: '#e6efff',
                       }}
                     />
-                    <Bar dataKey="score" fill="#38bdf8" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="score" fill="#38bdf8" radius={[6, 6, 0, 0]} isAnimationActive={false} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -118,7 +118,7 @@ export default function DashboardPage() {
         </Grid>
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <SurfacePanel className="h-full">
+          <SurfacePanel className="h-full p-6 sm:p-7">
             <Typography className="cyber-title text-base">Risk distribution</Typography>
             <Stack spacing={1.4} sx={{ mt: 2 }}>
               {levelRows.map((row) => {
@@ -148,11 +148,19 @@ export default function DashboardPage() {
         </Grid>
       </Grid>
 
-      <SurfacePanel>
+      <SurfacePanel className="overflow-hidden p-6 sm:p-7">
         <Typography className="cyber-title text-base">Recent activity</Typography>
         <Divider sx={{ my: 1.5 }} />
-        <TableContainer>
-          <Table size="small">
+        <TableContainer className="rounded-xl border border-[var(--line)]">
+          <Table
+            size="small"
+            sx={{
+              '& .MuiTableCell-root': {
+                px: { xs: 1.5, sm: 2 },
+                py: 1.4,
+              },
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Target</TableCell>
