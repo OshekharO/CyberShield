@@ -6,9 +6,9 @@ export function ProtectedRoute() {
   const { user, loading } = useAuthStore()
   if (loading) {
     return (
-      <div className="p-6 sm:p-8">
+      <div style={{ padding: '1.5rem' }}>
         <TerminalBlock>
-          <p className="text-sm text-[var(--text-1)]">Initializing secure session...</p>
+          <p className="cyber-subtitle">Initializing secure session...</p>
         </TerminalBlock>
       </div>
     )

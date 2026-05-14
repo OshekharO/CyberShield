@@ -1,117 +1,260 @@
 import { Link } from 'react-router-dom'
-import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
-import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import SecurityRounded from '@mui/icons-material/SecurityRounded'
-import InsightsRounded from '@mui/icons-material/InsightsRounded'
-import HubRounded from '@mui/icons-material/HubRounded'
-import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded'
-import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded'
-import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded'
+import {
+  ArrowRight,
+  Shield,
+  ChartNoAxesCombined,
+  Network,
+  Sparkles,
+  CheckCircle2,
+  Activity,
+  Headset,
+  Gauge,
+  Mail,
+  Phone,
+  Building2,
+} from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { SurfacePanel } from '../components/ui/surface-panel'
 
 const features = [
   {
-    icon: SecurityRounded,
+    icon: Shield,
     title: 'Threat Intelligence',
     desc: 'Scan URL, email, IP, and domain indicators in one unified analyst workspace.',
   },
   {
-    icon: InsightsRounded,
+    icon: ChartNoAxesCombined,
     title: 'Analyst Insights',
     desc: 'Convert scan outcomes into actionable triage summaries with AI-assisted context.',
   },
   {
-    icon: HubRounded,
+    icon: Network,
     title: 'Operational Ready',
     desc: 'Deploy role-based workflows for security teams with production-ready guardrails.',
   },
 ]
 
-const highlights = ['IOC scan orchestration', 'SOC-ready reports', 'Role-based operations', 'Modern MUI design system']
+const highlights = ['IOC scan orchestration', 'SOC-ready reports', 'Role-based operations', 'Custom CSS SOC design']
+
+const detailCards = [
+  {
+    icon: Activity,
+    title: 'Unified command view',
+    desc: 'Live scan telemetry, recent activity, and threat posture in one operational canvas.',
+  },
+  {
+    icon: Gauge,
+    title: 'Risk-first prioritization',
+    desc: 'Score-driven workflows help analysts move from detection to triage faster.',
+  },
+  {
+    icon: Headset,
+    title: 'Analyst workflow support',
+    desc: 'Built for SOC teams who need fast context, repeatable checks, and clean reporting.',
+  },
+]
+
+const testimonials = [
+  {
+    quote:
+      'CyberShield made IOC triage dramatically faster for our team. We now move from scan to report in minutes instead of hours.',
+    name: 'Riya Sharma',
+    role: 'SOC Lead, SentinelOps',
+  },
+  {
+    quote: 'The dashboard gives us exactly what we need at a glance, even during incident peaks and high alert windows.',
+    name: 'David Kim',
+    role: 'Threat Analyst, BlueGrid',
+  },
+  {
+    quote: 'Simple, clean, and operationally useful. The workflows feel purpose-built for security operations centers.',
+    name: 'Noah Patel',
+    role: 'Security Manager, ArcWave',
+  },
+]
+
+const faqItems = [
+  {
+    question: 'What indicators can we scan with CyberShield?',
+    answer: 'You can scan IPs, URLs, domains, and email indicators from a single scan center workflow.',
+  },
+  {
+    question: 'Is CyberShield suitable for small and large SOC teams?',
+    answer: 'Yes. The layout and workflows scale from compact teams to larger operations with role-based controls.',
+  },
+  {
+    question: 'Can we export analyst-ready reports?',
+    answer: 'Yes. Scan records can be exported to PDF reports for operational reviews and stakeholder sharing.',
+  },
+  {
+    question: 'Does the interface support responsive screens and browser zoom?',
+    answer: 'Yes. The UI uses fluid grids and media-query tuning to keep content readable across breakpoints and zoom levels.',
+  },
+]
+
+const footerLinks = {
+  Product: ['Scan Center', 'Threat Feed', 'Reports', 'Dashboard'],
+  Resources: ['Documentation', 'Playbooks', 'FAQ', 'Status'],
+  Company: ['About', 'Careers', 'Contact', 'Privacy'],
+}
 
 export default function LandingPage() {
   return (
-    <Box
-      id="hero"
-      sx={{
-        width: '100%',
-        backgroundRepeat: 'no-repeat',
-        backgroundImage: 'radial-gradient(ellipse 80% 55% at 50% -20%, rgba(56,189,248,0.22), transparent)',
-      }}
-    >
-      <Container sx={{ pt: { xs: 7, sm: 10 }, pb: { xs: 6, sm: 8 }, px: { xs: 2.5, sm: 3 } }}>
-        <Stack spacing={3} alignItems="center" textAlign="center" sx={{ mx: 'auto', maxWidth: 900 }}>
-          <Chip
-            icon={<AutoAwesomeRounded sx={{ fontSize: 16 }} />}
-            label="Enterprise security operations"
-            variant="outlined"
-            sx={{
-              borderColor: 'rgba(56, 189, 248, 0.38)',
-              color: 'text.secondary',
-              bgcolor: 'rgba(56, 189, 248, 0.1)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-            }}
-          />
+    <div className="landing-shell" id="hero">
+      <div className="landing-container">
+        <section className="hero">
+          <p className="status-chip status-low" style={{ margin: '0 auto' }}>
+            <Sparkles size={12} />
+            Enterprise security operations
+          </p>
 
-          <Typography className="cyber-title" sx={{ fontSize: 'clamp(2.2rem, 8vw, 4rem)', lineHeight: 1.08 }}>
-            CyberShield for modern
-            <Typography component="span" sx={{ color: 'primary.main', fontSize: 'inherit', fontWeight: 'inherit' }}>
-              {' '}SOC teams
-            </Typography>
-          </Typography>
+          <h1 className="cyber-title hero-title">
+            CyberShield for modern <span>SOC teams</span>
+          </h1>
 
-          <Typography className="cyber-subtitle" sx={{ maxWidth: 760, fontSize: { xs: '1rem', md: '1.1rem' } }}>
-            Monitor, scan, triage, and report from a single intelligence-driven command center inspired by MUI’s scalable product templates.
-          </Typography>
+          <p className="cyber-subtitle" style={{ maxWidth: '47rem', margin: '0 auto' }}>
+            Monitor, scan, triage, and report from a single intelligence-driven command center with a custom cyber SaaS interface.
+          </p>
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} useFlexGap>
+          <div className="hero-actions">
             <Link to="/signup">
-              <Button className="cyber-glow-cyan" endIcon={<ArrowForwardRounded fontSize="small" />}>
+              <Button className="cyber-glow-cyan" endIcon={<ArrowRight size={14} />}>
                 Start free
               </Button>
             </Link>
             <Link to="/login">
               <Button variant="outline">Sign in</Button>
             </Link>
-          </Stack>
-        </Stack>
+          </div>
+        </section>
 
-        <SurfacePanel scanline className="hero-gradient relative mt-8 overflow-hidden p-6 sm:p-8">
-          <svg className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 opacity-25" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-            <path d="M35.7,-59.4C47.1,-54.9,57.7,-47.3,64.2,-36.9C70.6,-26.4,72.9,-13.2,73.2,0.2C73.5,13.7,71.7,27.3,64.8,37.3C57.8,47.2,45.8,53.4,34,61.3C22.2,69.2,11.1,78.8,-1.7,81.7C-14.5,84.6,-29.1,80.7,-41,72.8C-53,64.8,-62.3,52.8,-68.7,39.5C-75.1,26.1,-78.5,13,-76.4,1.2C-74.4,-10.7,-66.9,-21.5,-60.5,-33.5C-54.2,-45.5,-49,-58.6,-39.4,-64.2C-29.9,-69.8,-14.9,-67.9,-1.4,-65.5C12.2,-63.1,24.4,-60.2,35.7,-59.4Z" fill="currentColor" />
-          </svg>
-          <Grid container spacing={2}>
-            {highlights.map((item) => (
-              <Grid key={item} size={{ xs: 12, sm: 6 }}>
-                <div className="hud-panel flex items-center gap-2.5">
-                  <CheckCircleRounded color="primary" fontSize="small" />
-                  <Typography className="cyber-subtitle">{item}</Typography>
-                </div>
-              </Grid>
-            ))}
-          </Grid>
+        <SurfacePanel scanline className="hero-gradient landing-highlights">
+          {highlights.map((item) => (
+            <div key={item} className="hud-panel highlight-item">
+              <CheckCircle2 size={15} className="icon-muted" />
+              <p className="cyber-subtitle">{item}</p>
+            </div>
+          ))}
         </SurfacePanel>
 
-        <Grid container spacing={{ xs: 2, md: 2.5 }} sx={{ mt: 1.5 }}>
+        <section className="feature-grid">
           {features.map((feature) => (
-            <Grid key={feature.title} size={{ xs: 12, md: 4 }}>
-              <SurfacePanel className="h-full p-7 sm:p-8">
-                <feature.icon color="primary" />
-                <Typography className="cyber-title mt-3 text-lg">{feature.title}</Typography>
-                <Typography className="cyber-subtitle mt-2 leading-7">{feature.desc}</Typography>
-              </SurfacePanel>
-            </Grid>
+            <SurfacePanel key={feature.title} className="feature-card">
+              <feature.icon size={20} className="feature-icon" />
+              <h2 className="cyber-title" style={{ fontSize: '1.2rem', marginTop: '0.8rem' }}>
+                {feature.title}
+              </h2>
+              <p className="cyber-subtitle" style={{ marginTop: '0.5rem' }}>
+                {feature.desc}
+              </p>
+            </SurfacePanel>
           ))}
-        </Grid>
-      </Container>
-    </Box>
+        </section>
+
+        <section className="landing-section-grid">
+          {detailCards.map((item) => (
+            <SurfacePanel key={item.title} className="landing-detail-card">
+              <item.icon size={18} className="feature-icon" />
+              <h3 className="cyber-title landing-card-title">{item.title}</h3>
+              <p className="cyber-subtitle">{item.desc}</p>
+            </SurfacePanel>
+          ))}
+        </section>
+
+        <section className="landing-two-col">
+          <SurfacePanel>
+            <p className="cyber-label">Testimonials</p>
+            <h2 className="cyber-title landing-section-title">Trusted by cyber operations teams</h2>
+            <div className="landing-testimonials">
+              {testimonials.map((item) => (
+                <article key={item.name} className="hud-panel landing-testimonial-card">
+                  <p className="cyber-subtitle">“{item.quote}”</p>
+                  <p className="landing-testimonial-name">{item.name}</p>
+                  <p className="landing-testimonial-role">{item.role}</p>
+                </article>
+              ))}
+            </div>
+          </SurfacePanel>
+
+          <SurfacePanel>
+            <p className="cyber-label">FAQ</p>
+            <h2 className="cyber-title landing-section-title">Questions security teams ask</h2>
+            <div className="landing-faq-list">
+              {faqItems.map((item) => (
+                <details key={item.question} className="landing-faq-item">
+                  <summary>{item.question}</summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </SurfacePanel>
+        </section>
+
+        <section className="landing-two-col">
+          <SurfacePanel>
+            <p className="cyber-label">Contact</p>
+            <h2 className="cyber-title landing-section-title">Talk to the CyberShield team</h2>
+            <p className="cyber-subtitle">Send your SOC requirements and we’ll help map the best workflow setup for your team.</p>
+            <form className="landing-contact-form" onSubmit={(e) => e.preventDefault()}>
+              <label className="form-field" htmlFor="contactName">
+                <span className="form-label">Name</span>
+                <input id="contactName" className="cyber-input" placeholder="Jane Doe" />
+              </label>
+              <label className="form-field" htmlFor="contactEmail">
+                <span className="form-label">Email</span>
+                <input id="contactEmail" type="email" className="cyber-input" placeholder="you@company.com" />
+              </label>
+              <label className="form-field" htmlFor="contactMsg">
+                <span className="form-label">Message</span>
+                <textarea id="contactMsg" className="cyber-input landing-contact-textarea" placeholder="Tell us what your SOC needs..." />
+              </label>
+              <Button className="w-full" type="submit">
+                Send message
+              </Button>
+            </form>
+          </SurfacePanel>
+
+          <SurfacePanel className="landing-contact-details">
+            <h2 className="cyber-title landing-section-title">Reach us directly</h2>
+            <div className="landing-contact-item">
+              <Mail size={16} className="icon-muted" />
+              <span>ops@cybershield.example</span>
+            </div>
+            <div className="landing-contact-item">
+              <Phone size={16} className="icon-muted" />
+              <span>+1 (555) 010-1420</span>
+            </div>
+            <div className="landing-contact-item">
+              <Building2 size={16} className="icon-muted" />
+              <span>Cyber Operations District, SecOps Tower</span>
+            </div>
+            <p className="cyber-subtitle">Available Monday-Friday, 09:00-18:00 UTC for product and deployment queries.</p>
+          </SurfacePanel>
+        </section>
+
+        <footer className="landing-footer">
+          <SurfacePanel className="landing-footer-panel">
+            <div>
+              <p className="cyber-label">CyberShield</p>
+              <p className="cyber-subtitle">Built for SaaS-style cyber SOC operations, threat triage, and analyst reporting workflows.</p>
+            </div>
+            <div className="landing-footer-links">
+              {Object.entries(footerLinks).map(([group, links]) => (
+                <div key={group}>
+                  <p className="landing-footer-heading">{group}</p>
+                  <ul>
+                    {links.map((item) => (
+                      <li key={item}>
+                        <a href="#">{item}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </SurfacePanel>
+        </footer>
+      </div>
+    </div>
   )
 }

@@ -52,28 +52,34 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="stack-4">
       <SurfacePanel>
         <HUDHeader title="Admin Analytics" subtitle="Track governance, scan volume, and risk concentration." glitch />
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <div style={{ marginTop: '0.75rem', display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
           <TerminalBlock>
             <p className="cyber-label">Users</p>
-            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.users ?? 0}</p>
+            <p className="metric-value" style={{ marginTop: '0.35rem' }}>
+              {stats?.users ?? 0}
+            </p>
           </TerminalBlock>
           <TerminalBlock>
             <p className="cyber-label">Scans</p>
-            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.scans ?? 0}</p>
+            <p className="metric-value" style={{ marginTop: '0.35rem' }}>
+              {stats?.scans ?? 0}
+            </p>
           </TerminalBlock>
           <TerminalBlock>
             <p className="cyber-label">High Risk</p>
-            <p className="mt-1 text-2xl font-semibold text-[var(--text-0)]">{stats?.highRiskScans ?? 0}</p>
+            <p className="metric-value" style={{ marginTop: '0.35rem' }}>
+              {stats?.highRiskScans ?? 0}
+            </p>
           </TerminalBlock>
         </div>
       </SurfacePanel>
 
       <SurfacePanel>
         <HUDHeader title="User Management" subtitle="Review and enforce account access controls." />
-        <div className="mt-3 space-y-2">
+        <div className="stack-2 mt-3">
           {users.map((user) => (
             <DataRow
               key={user.id}

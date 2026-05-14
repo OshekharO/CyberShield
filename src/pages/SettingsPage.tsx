@@ -6,9 +6,7 @@ export default function SettingsPage() {
   return (
     <SurfacePanel>
       <HUDHeader title="Settings" subtitle="Configure API keys, provider thresholds, and SOC profile preferences." glitch />
-      <TerminalBlock className="mt-4">
-        Settings are managed via deployment environment variables and secured server-side controls.
-      </TerminalBlock>
+      <TerminalBlock className="mt-4">Settings are managed via deployment environment variables and secured server-side controls.</TerminalBlock>
     </SurfacePanel>
   )
 }

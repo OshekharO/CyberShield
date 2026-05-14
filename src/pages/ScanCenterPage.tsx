@@ -39,11 +39,11 @@ export default function ScanCenterPage() {
   }, [addResult, target, type])
 
   return (
-    <div className="space-y-4">
+    <div className="stack-4">
       <HUDHeader title="Scan Center" subtitle="Run IOC scans and receive contextual analyst summaries." glitch />
 
       <SurfacePanel>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-[220px_minmax(0,1fr)_180px] md:items-center">
+        <div style={{ display: 'grid', gap: '0.8rem', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
           <CyberSelect value={type} onChange={(e) => setType(e.target.value as ScanType)}>
             {scanTypes.map((scanType) => (
               <option key={scanType} value={scanType}>
@@ -52,23 +52,25 @@ export default function ScanCenterPage() {
             ))}
           </CyberSelect>
           <Input value={target} onChange={(e) => setTarget(e.target.value)} placeholder="Enter IOC target..." />
-          <Button className="w-full md:w-auto" onClick={run} disabled={loading || !target.trim()}>
+          <Button className="w-full" onClick={run} disabled={loading || !target.trim()}>
             {loading ? 'Scanning...' : 'Run scan'}
           </Button>
         </div>
-        {error && <p className="mt-4 text-sm text-rose-300">{error}</p>}
+        {error && <p className="form-error mt-3">{error}</p>}
       </SurfacePanel>
 
       {summary && (
         <TerminalBlock>
           <p className="cyber-label">AI Summary</p>
-          <p className="mt-2 text-sm text-[var(--text-1)]">{summary}</p>
+          <p className="helper-text" style={{ whiteSpace: 'pre-wrap' }}>{summary}</p>
         </TerminalBlock>
       )}
 
       <SurfacePanel>
-        <h3 className="cyber-title text-base">Recent scans</h3>
-        <div className="mt-4 space-y-2.5">
+        <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
+          Recent scans
+        </h3>
+        <div className="stack-2 mt-4">
           {recent.map((scan) => (
             <DataRow
               key={scan.scan_id}
