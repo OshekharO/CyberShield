@@ -55,7 +55,7 @@ Single deployment routes:
 - URL: VirusTotal, DestroyList
 - Email: UserCheck Email API, EmailRep, Fidro Email Validation
 - Domain: RDAP, WhoisXML Subdomains API, Pulsedive, UserCheck Domain API
-  - Pulsedive uses `https://pulsedive.com/api/indicator.php?indicator=<domain>` and treats API `error: Indicator not found` responses as non-listed.
+  - Pulsedive uses `https://pulsedive.com/api/indicator.php?indicator=<domain>`, treats API `error: Indicator not found` responses as non-listed, and counts only `high`/`critical` Pulsedive risk as a blacklist hit.
 
 ## Risk Scoring Engine
 

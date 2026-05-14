@@ -91,8 +91,9 @@ export const providers = {
           })
           const submittedData = (submitResponse.data as VirusTotalSubmitResponse | undefined)?.data
           analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
-        } catch {
-          console.warn('VirusTotal URL submission failed, falling back to base64url lookup')
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'unknown error'
+          console.warn(`VirusTotal URL submission failed (${message}), falling back to base64url lookup`)
           analysisId = undefined
         }
 
