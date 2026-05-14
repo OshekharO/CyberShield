@@ -111,7 +111,7 @@ function drawCertifiedBadge(page: PDFPage, regular: PDFFont, bold: PDFFont) {
   // background
   page.drawRectangle({ x: bx, y: by, width: bw, height: bh, color: C.badgeBg })
   // shield icon row of stars (decorative)
-  const stars = '★ ★ ★ ★ ★'
+  const stars = '* * * * *'
   const sw = regular.widthOfTextAtSize(stars, 8)
   page.drawText(stars, { x: bx + bw / 2 - sw / 2, y: by + bh - 14, size: 8, font: regular, color: C.accent })
   // Badge title
