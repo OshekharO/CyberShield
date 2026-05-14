@@ -76,6 +76,12 @@ export default function LoginPage() {
           </div>
 
           <p className="auth-actions">
+            <Link to="/forgot-password" className="cyber-link">
+              Forgot password?
+            </Link>
+          </p>
+
+          <p className="auth-actions">
             No account?{' '}
             <Link to="/signup" className="cyber-link">
               Create one
