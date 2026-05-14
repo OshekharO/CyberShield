@@ -915,6 +915,7 @@ a {
 .dashboard-grid {
   display: grid;
   gap: 1rem;
+  min-width: 0;
 }
 
 .dashboard-metrics {
@@ -937,6 +938,12 @@ a {
 .dashboard-panels {
   display: grid;
   gap: 1rem;
+}
+
+.dashboard-grid > *,
+.dashboard-metrics > *,
+.dashboard-panels > * {
+  min-width: 0;
 }
 
 @media (min-width: 1180px) {
@@ -1004,6 +1011,7 @@ a {
   overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 0.8rem;
+  max-width: 100%;
 }
 
 .cyber-table {
@@ -1198,7 +1206,7 @@ a {
   }
 
   .table-wrap {
-    margin-inline: -0.2rem;
+    margin-inline: 0;
   }
 
   .cyber-table {
