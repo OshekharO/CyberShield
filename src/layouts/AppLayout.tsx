@@ -26,11 +26,14 @@ const links = [
 export function AppLayout() {
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
-  const bottomLinks = links.map(({ to, label, icon }) => ({
-    to,
-    label: label === 'Scan Center' ? 'Scan' : label === 'Threat Feed' ? 'Feed' : label,
-    icon,
-  }))
+  const bottomLinks = [
+    ...links.map(({ to, label, icon }) => ({
+      to,
+      label,
+      icon,
+    })),
+    ...(user?.role === 'ADMIN' ? [{ to: '/admin', label: 'Admin', icon: Shield }] : []),
+  ]
 
   return (
     <div className="app-shell">
@@ -122,11 +125,16 @@ export function AppLayout() {
         </main>
       </div>
 
-      <nav className="bottom-nav" aria-label="Primary mobile navigation">
+      <nav className={`bottom-nav${user?.role === 'ADMIN' ? ' with-admin' : ''}`} aria-label="Primary mobile navigation">
         {bottomLinks.map(({ to, label, icon: Icon }) => (
-          <NavLink key={to} to={to} className={({ isActive }) => `bottom-nav-link${isActive ? ' active' : ''}`}>
+          <NavLink
+            key={to}
+            to={to}
+            title={label}
+            aria-label={label}
+            className={({ isActive }) => `bottom-nav-link${isActive ? ' active' : ''}`}
+          >
             <Icon size={16} />
-            <span>{label}</span>
           </NavLink>
         ))}
       </nav>

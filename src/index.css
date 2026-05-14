@@ -816,25 +816,14 @@ a {
 
 .bottom-nav-link {
   display: inline-flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.24rem;
   width: 100%;
   min-width: 0;
   color: var(--text-2);
-  font-size: 0.73rem;
-  font-weight: 600;
-  min-height: 3.15rem;
+  min-height: 2.8rem;
   border-radius: 0.6rem;
   border: 1px solid transparent;
-}
-
-.bottom-nav-link span {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .bottom-nav-link.active {
@@ -1260,6 +1249,10 @@ a {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.35rem;
     overflow: hidden;
+  }
+
+  .bottom-nav.with-admin {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
