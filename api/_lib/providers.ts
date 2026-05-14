@@ -1,6 +1,12 @@
 import axios from 'axios'
 import { env } from './env.js'
 
+type VirusTotalSubmitResponse = {
+  data?: {
+    id?: string
+  }
+}
+
 const safeGet = async <T>(request: () => Promise<T>, fallback: T): Promise<T> => {
   try {
     return await request()
@@ -71,9 +77,10 @@ export const providers = {
             },
             timeout: 10000,
           })
-          const submittedData = submitResponse.data?.data as { id?: string } | undefined
+          const submittedData = (submitResponse.data as VirusTotalSubmitResponse | undefined)?.data
           analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
-        } catch {
+        } catch (error) {
+          console.warn('VirusTotal URL submission failed, using fallback lookup ID', error)
           analysisId = undefined
         }
 
