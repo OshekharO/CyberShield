@@ -66,7 +66,7 @@ export default function DashboardPage() {
   const recent = useMemo(() => history.slice(0, 6), [history])
 
   return (
-    <div className="space-y-6 px-1 sm:px-0 mb-3 mt-3">
+    <div className="space-y-6 px-1 sm:px-0">
       <SurfacePanel className="p-6 sm:p-7">
         <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} gap={1.5}>
           <HUDHeader title="Dashboard" subtitle="Monitor scan activity, risk trends, and recent intelligence updates." glitch />
@@ -94,7 +94,7 @@ export default function DashboardPage() {
 
       <Grid container spacing={{ xs: 2.5, md: 3 }}>
         <Grid size={{ xs: 12, lg: 8 }}>
-          <SurfacePanel className="p-6 sm:p-7 mt-3">
+          <SurfacePanel className="p-6 sm:p-7">
             <Typography className="cyber-title text-base">Risk analytics</Typography>
             <LinearProgress
               variant="determinate"
@@ -126,7 +126,7 @@ export default function DashboardPage() {
         </Grid>
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <SurfacePanel className="h-full p-6 sm:p-7 mt-3">
+          <SurfacePanel className="h-full p-6 sm:p-7">
             <Typography className="cyber-title text-base">Risk distribution</Typography>
             <Stack spacing={1.4} sx={{ mt: 2 }}>
               {levelRows.map((row) => {
@@ -156,7 +156,7 @@ export default function DashboardPage() {
         </Grid>
       </Grid>
 
-      <SurfacePanel className="overflow-hidden p-6 sm:p-7 mt-3">
+      <SurfacePanel className="overflow-hidden p-6 sm:p-7">
         <Typography className="cyber-title text-base">Recent activity</Typography>
         <Divider sx={{ my: 1.5 }} />
         <TableContainer className="rounded-xl border border-[var(--line)]">
