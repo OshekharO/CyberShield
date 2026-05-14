@@ -1,12 +1,48 @@
 import axios from 'axios'
 import { env } from './env.js'
 
+type VirusTotalSubmitResponse = {
+  data?: {
+    id?: string
+  }
+}
+
+const DESTROYLIST_DEFAULT_BASE_URL = 'https://api.destroy.tools'
+const ANTIDEO_HOURLY_LIMIT = 10
+const HOUR_MS = 1000 * 60 * 60
+
+let antideoWindowStart = Date.now()
+let antideoRequestCount = 0
+
 const safeGet = async <T>(request: () => Promise<T>, fallback: T): Promise<T> => {
   try {
     return await request()
   } catch {
     return fallback
   }
+}
+
+const extractDomain = (value: string) => {
+  try {
+    const normalizedValue = value.includes('://') ? value : `http://${value}`
+    return new URL(normalizedValue).hostname
+  } catch {
+    console.warn('DestroyList domain extraction failed; using raw input')
+    return value
+  }
+}
+
+const canCallAntideo = () => {
+  const now = Date.now()
+  if (now - antideoWindowStart >= HOUR_MS) {
+    antideoWindowStart = now
+    antideoRequestCount = 0
+  }
+  if (antideoRequestCount >= ANTIDEO_HOURLY_LIMIT) {
+    return false
+  }
+  antideoRequestCount += 1
+  return true
 }
 
 export const providers = {
@@ -37,6 +73,31 @@ export const providers = {
     )
   },
 
+  async antideoIpHealth(ip: string) {
+    if (!env.ANTIDEO_API_KEY) {
+      return { available: false, rate_limited: false, error: 'Missing ANTIDEO_API_KEY' }
+    }
+    if (!canCallAntideo()) {
+      return { available: false, rate_limited: true, error: 'Antideo hourly limit reached' }
+    }
+    return safeGet(
+      async () => {
+        const { data } = await axios.get(`https://api.antideo.com/ip/health/${encodeURIComponent(ip)}`, {
+          headers: { apiKey: env.ANTIDEO_API_KEY },
+          timeout: 10000,
+        })
+        return { available: true, rate_limited: false, ...(data as Record<string, unknown>) }
+      },
+      {
+        available: false,
+        rate_limited: false,
+        error: 'Antideo unavailable',
+        IP: ip,
+        health: { toxic: false, proxy: false, spam: false },
+      },
+    )
+  },
+
   async fidroValidate(value: string, type: 'ip' | 'email') {
     return safeGet(
       async () => {
@@ -57,25 +118,33 @@ export const providers = {
     )
   },
 
-  async virusTotal(urlId: string) {
-    return safeGet(
-      async () => {
-        const { data } = await axios.get(`https://www.virustotal.com/api/v3/urls/${urlId}`, {
-          headers: { 'x-apikey': env.VIRUSTOTAL_API_KEY },
-          timeout: 10000,
-        })
-        return data
-      },
-      {},
-    )
-  },
-
-  async urlHaus(url: string) {
+  async virusTotal(url: string) {
     return safeGet(
       async () => {
         const body = new URLSearchParams({ url })
-        const { data } = await axios.post('https://urlhaus-api.abuse.ch/v1/url/', body, {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        let analysisId: string | undefined
+        try {
+          const submitResponse = await axios.post('https://www.virustotal.com/api/v3/urls', body, {
+            headers: {
+              accept: 'application/json',
+              'x-apikey': env.VIRUSTOTAL_API_KEY,
+              'content-type': 'application/x-www-form-urlencoded',
+            },
+            timeout: 10000,
+          })
+          const submittedData = (submitResponse.data as VirusTotalSubmitResponse | undefined)?.data
+          analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'unknown error'
+          console.warn(`VirusTotal URL submission failed (${message}), falling back to base64url lookup`)
+          analysisId = undefined
+        }
+
+        const fallbackUrlId = Buffer.from(url).toString('base64url')
+        const lookupId = analysisId || fallbackUrlId
+
+        const { data } = await axios.get(`https://www.virustotal.com/api/v3/urls/${lookupId}`, {
+          headers: { accept: 'application/json', 'x-apikey': env.VIRUSTOTAL_API_KEY },
           timeout: 10000,
         })
         return data
@@ -87,8 +156,10 @@ export const providers = {
   async destroyList(url: string) {
     return safeGet(
       async () => {
-        const { data } = await axios.get(`${env.DESTROYLIST_BASE_URL}/v1/lookup`, {
-          params: { url },
+        const domain = extractDomain(url)
+        const baseUrl = env.DESTROYLIST_BASE_URL?.trim() || DESTROYLIST_DEFAULT_BASE_URL
+        const { data } = await axios.get(`${baseUrl}/v1/check`, {
+          params: { domain },
           timeout: 10000,
         })
         return data
@@ -154,9 +225,12 @@ export const providers = {
           params: { indicator: domain },
           timeout: 10000,
         })
-        return data
+        if (typeof data?.error === 'string' && data.error.toLowerCase().includes('indicator not found')) {
+          return { found: false, error: data.error, indicator: domain, risk: 'none' }
+        }
+        return { found: true, ...(data as Record<string, unknown>) }
       },
-      {},
+      { found: false, error: 'Pulsedive unavailable', indicator: domain, risk: 'none' },
     )
   },
 

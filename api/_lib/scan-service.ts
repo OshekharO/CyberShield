@@ -6,7 +6,7 @@ import { providers } from './providers.js'
 import { calculateRisk } from './scoring.js'
 import type { ScanPayload } from './types.js'
 
-const extractUrlId = (url: string) => Buffer.from(url).toString('base64url')
+type VirusTotalStats = { malicious?: number; phishing?: number }
 
 const isRecentDomain = (creationDate?: string | null) => {
   if (!creationDate) return false
@@ -21,35 +21,47 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
   let providerData: Record<string, unknown> = {}
 
   if (type === 'ip') {
-    const [ipinfo, abuse, fidro] = await Promise.all([
+    const [ipinfo, abuse, fidro, antideo] = await Promise.all([
       providers.ipinfo(target),
       providers.abuseIpdb(target),
       providers.fidroValidate(target, 'ip'),
+      providers.antideoIpHealth(target),
     ])
+    const antideoHealth = (antideo as { health?: { proxy?: boolean; toxic?: boolean; spam?: boolean } })?.health
 
     signals = {
       abuse_confidence: abuse?.abuseConfidenceScore ?? 0,
-      vpn_proxy: Boolean(fidro?.vpn || fidro?.proxy || fidro?.tor),
-      blacklist_hits: Number(abuse?.totalReports || 0) + Number(fidro?.bad_ip ? 1 : 0),
+      vpn_proxy: Boolean(fidro?.vpn || fidro?.proxy || fidro?.tor || antideoHealth?.proxy),
+      blacklist_hits:
+        Number(abuse?.totalReports || 0) +
+        Number(fidro?.bad_ip ? 1 : 0) +
+        Number(antideoHealth?.toxic || antideoHealth?.spam ? 1 : 0),
     }
-    providerData = { ipinfo, abuseipdb: abuse, fidro }
+    providerData = { ipinfo, abuseipdb: abuse, fidro, antideo }
   }
 
   if (type === 'url') {
-    const [vt, urlhaus, destroy] = await Promise.all([
-      providers.virusTotal(extractUrlId(target)),
-      providers.urlHaus(target),
+    const [vt, destroy] = await Promise.all([
+      providers.virusTotal(target),
       providers.destroyList(target),
     ])
 
-    const vtMalicious =
-      Number(vt?.data?.attributes?.last_analysis_stats?.malicious || 0) +
-      Number(vt?.data?.attributes?.last_analysis_stats?.phishing || 0)
+    const vtStats =
+      (vt?.data?.attributes?.stats as VirusTotalStats | undefined) ??
+      (vt?.data?.attributes?.last_analysis_stats as VirusTotalStats | undefined) ??
+      {}
+    const vtMalicious = Number(vtStats.malicious || 0) + Number(vtStats.phishing || 0)
+    const destroyListed =
+      typeof destroy?.threat === 'boolean'
+        ? destroy.threat
+        : typeof destroy?.listed === 'boolean'
+          ? destroy.listed
+          : false
 
     signals = {
-      blacklist_hits: Number(urlhaus?.url_status === 'online' ? 1 : 0) + Number(destroy?.listed ? 1 : 0),
+      blacklist_hits: Number(destroyListed ? 1 : 0),
     }
-    providerData = { virustotal: vt, urlhaus, destroylist: destroy, vtMalicious }
+    providerData = { virustotal: vt, destroylist: destroy, vtMalicious }
   }
 
   if (type === 'email') {
@@ -77,10 +89,13 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     const creationDate =
       rdap?.events?.find?.((event: { eventAction?: string; eventDate?: string }) => event.eventAction === 'registration')
         ?.eventDate || null
+    const pulseRiskRaw = typeof pulse?.risk === 'string' ? pulse.risk.trim().toLowerCase() : ''
+    const pulseRisk = pulseRiskRaw === '' ? 'none' : pulseRiskRaw
+    const pulseListed = pulseRisk === 'high' || pulseRisk === 'critical'
 
     signals = {
       recent_domain: isRecentDomain(creationDate),
-      blacklist_hits: Number(pulse?.risk || 0) > 2 ? 1 : 0,
+      blacklist_hits: Number(pulseListed),
     }
     providerData = { rdap, whoisxml: whois, pulsedive: pulse, usercheck, creationDate }
   }
