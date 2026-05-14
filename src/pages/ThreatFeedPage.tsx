@@ -22,16 +22,13 @@ export default function ThreatFeedPage() {
   const { history } = useScanStore()
   const [query, setQuery] = useState('')
 
-  const filtered = useMemo(
-    () => history.filter((item) => item.target.toLowerCase().includes(query.toLowerCase())),
-    [history, query],
-  )
+  const filtered = useMemo(() => history.filter((item) => item.target.toLowerCase().includes(query.toLowerCase())), [history, query])
 
   return (
     <SurfacePanel>
       <HUDHeader title="Threat Feed" subtitle="Search and review scanned indicators of compromise." glitch />
       <Input className="mt-4" placeholder="Search IOC target" value={query} onChange={(e) => setQuery(e.target.value)} />
-      <div className="mt-4 space-y-2">
+      <div className="stack-2 mt-4">
         {filtered.map((scan) => (
           <ThreatItem key={scan.scan_id} scan={scan} />
         ))}

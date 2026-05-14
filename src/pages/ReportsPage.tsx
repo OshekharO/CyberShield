@@ -30,7 +30,7 @@ export default function ReportsPage() {
   return (
     <SurfacePanel>
       <HUDHeader title="Reports" subtitle="Export detailed PDF reports from recorded scans." glitch />
-      <div className="mt-4 space-y-2">
+      <div className="stack-2 mt-4">
         {scans.map((scan) => (
           <ReportRow key={scan.scan_id} scan={scan} />
         ))}

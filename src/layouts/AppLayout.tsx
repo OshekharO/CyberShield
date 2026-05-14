@@ -1,21 +1,14 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import DashboardRounded from '@mui/icons-material/DashboardRounded'
-import SearchRounded from '@mui/icons-material/SearchRounded'
-import FeedRounded from '@mui/icons-material/FeedRounded'
-import SummarizeRounded from '@mui/icons-material/SummarizeRounded'
-import SettingsRounded from '@mui/icons-material/SettingsRounded'
-import AdminPanelSettingsRounded from '@mui/icons-material/AdminPanelSettingsRounded'
-import VerifiedUserRounded from '@mui/icons-material/VerifiedUserRounded'
-import ExitToAppRounded from '@mui/icons-material/ExitToAppRounded'
+import {
+  LayoutDashboard,
+  Search,
+  Rss,
+  FileText,
+  Settings,
+  Shield,
+  ShieldCheck,
+  LogOut,
+} from 'lucide-react'
 import { ThemeToggle } from '../components/ThemeToggle'
 import { useAuthStore } from '../store/authStore'
 import { Button } from '../components/ui/button'
@@ -23,11 +16,11 @@ import { GlitchText } from '../components/ui/glitch-text'
 import { SurfacePanel } from '../components/ui/surface-panel'
 
 const links = [
-  { to: '/dashboard', label: 'Dashboard', icon: DashboardRounded },
-  { to: '/scan-center', label: 'Scan Center', icon: SearchRounded },
-  { to: '/threat-feed', label: 'Threat Feed', icon: FeedRounded },
-  { to: '/reports', label: 'Reports', icon: SummarizeRounded },
-  { to: '/settings', label: 'Settings', icon: SettingsRounded },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/scan-center', label: 'Scan Center', icon: Search },
+  { to: '/threat-feed', label: 'Threat Feed', icon: Rss },
+  { to: '/reports', label: 'Reports', icon: FileText },
+  { to: '/settings', label: 'Settings', icon: Settings },
 ]
 
 export function AppLayout() {
@@ -35,108 +28,73 @@ export function AppLayout() {
   const logout = useAuthStore((s) => s.logout)
 
   return (
-    <Box className="min-h-screen px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
-      <Box className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[290px_minmax(0,1fr)] xl:gap-6">
-        <SurfacePanel className="scanline-overlay p-5 sm:p-6 lg:sticky lg:top-5 lg:h-[calc(100vh-2.5rem)] lg:overflow-auto">
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
-            <Box>
-              <Typography className="cyber-label">CyberShield</Typography>
-              <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 1 }}>
-                <Avatar sx={{ width: 24, height: 24, bgcolor: 'primary.main' }}>
-                  <VerifiedUserRounded sx={{ fontSize: 14 }} />
-                </Avatar>
-                <Typography className="cyber-title" sx={{ fontSize: '1rem', fontWeight: 700 }}>
+    <div className="app-shell">
+      <div className="app-grid">
+        <SurfacePanel className="sidebar scanline-overlay">
+          <div className="sidebar-head">
+            <div>
+              <p className="cyber-label">CyberShield</p>
+              <div className="brand-title">
+                <span className="brand-dot" aria-hidden="true">
+                  <ShieldCheck size={14} />
+                </span>
+                <p className="cyber-title" style={{ fontSize: '1rem' }}>
                   <GlitchText text="OPERATIONS" className="inline-block" />
-                </Typography>
-              </Stack>
-            </Box>
+                </p>
+              </div>
+            </div>
             <ThemeToggle />
-          </Stack>
+          </div>
 
-          <List disablePadding sx={{ display: 'grid', gap: 0.8 }}>
+          <ul className="nav-list">
             {links.map(({ to, label, icon: Icon }) => (
-              <NavLink key={to} to={to} style={{ textDecoration: 'none' }}>
-                {({ isActive }) => (
-                  <ListItemButton
-                    sx={{
-                      borderRadius: 2,
-                      border: '1px solid',
-                      borderColor: isActive ? 'primary.main' : 'transparent',
-                      bgcolor: isActive ? 'rgba(56, 189, 248, 0.14)' : 'transparent',
-                      color: isActive ? 'primary.main' : 'text.secondary',
-                      transition: 'all 160ms ease',
-                      '&:hover': { borderColor: 'divider', bgcolor: 'rgba(56, 189, 248, 0.08)', color: 'text.primary' },
-                    }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 34, color: 'inherit' }}>
-                      <Icon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary={label} primaryTypographyProps={{ fontSize: '0.92rem', fontWeight: 600 }} />
-                  </ListItemButton>
-                )}
-              </NavLink>
+              <li key={to}>
+                <NavLink to={to} className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+                  <Icon size={16} />
+                  <span>{label}</span>
+                </NavLink>
+              </li>
             ))}
 
             {user?.role === 'ADMIN' && (
-              <NavLink to="/admin" style={{ textDecoration: 'none' }}>
-                {({ isActive }) => (
-                  <ListItemButton
-                    sx={{
-                      borderRadius: 2,
-                      border: '1px solid',
-                      borderColor: isActive ? 'primary.main' : 'transparent',
-                      bgcolor: isActive ? 'rgba(56, 189, 248, 0.14)' : 'transparent',
-                      color: isActive ? 'primary.main' : 'text.secondary',
-                    }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 34, color: 'inherit' }}>
-                      <AdminPanelSettingsRounded fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Admin" primaryTypographyProps={{ fontSize: '0.92rem', fontWeight: 600 }} />
-                  </ListItemButton>
-                )}
-              </NavLink>
+              <li>
+                <NavLink to="/admin" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+                  <Shield size={16} />
+                  <span>Admin</span>
+                </NavLink>
+              </li>
             )}
-          </List>
+          </ul>
 
-          <Box className="hud-panel" sx={{ mt: 3 }}>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
-              <Avatar sx={{ width: 34, height: 34 }}>{(user?.name ?? 'U').slice(0, 1).toUpperCase()}</Avatar>
-              <Box sx={{ minWidth: 0 }}>
-                <Typography noWrap fontSize="0.9rem" fontWeight={600} color="text.primary">
-                  {user?.name}
-                </Typography>
-                <Typography noWrap fontSize="0.75rem" color="text.secondary">
-                  {user?.email}
-                </Typography>
-              </Box>
-            </Stack>
-            <Button type="button" variant="ghost" size="sm" className="w-full justify-start" startIcon={<ExitToAppRounded fontSize="small" />} onClick={() => void logout()}>
+          <div className="hud-panel profile-box">
+            <div className="profile-head">
+              <span className="profile-avatar">{(user?.name ?? 'U').slice(0, 1).toUpperCase()}</span>
+              <div className="profile-meta">
+                <p className="profile-name">{user?.name}</p>
+                <p className="profile-email">{user?.email}</p>
+              </div>
+            </div>
+            <Button variant="ghost" size="sm" className="w-full" startIcon={<LogOut size={14} />} onClick={() => void logout()}>
               Sign out
             </Button>
-          </Box>
+          </div>
         </SurfacePanel>
 
-        <main className="min-w-0 space-y-6">
-          <header className="hero-gradient relative overflow-hidden rounded-2xl border border-[var(--line-strong)] px-5 py-5 text-sm text-[var(--text-1)] shadow-[var(--shadow-soft)] sm:px-6">
-            <svg className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 opacity-30" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-              <path d="M43.2,-63.1C57.2,-57.7,70.3,-48.4,76,-35.2C81.7,-22,80.2,-4.9,74.7,9.9C69.2,24.7,59.8,37.2,47.6,47.8C35.4,58.4,20.4,67.2,4.2,70.9C-12,74.5,-24,73,-36,67.5C-48.1,62,-60.1,52.4,-67.6,39.8C-75.2,27.2,-78.3,11.6,-76.4,-2.8C-74.6,-17.2,-67.8,-30.4,-58.4,-41.4C-49,-52.4,-37,-61.3,-24,-66C-11,-70.8,3,-71.3,16.8,-67.9C30.6,-64.5,44.2,-57.1,43.2,-63.1Z" fill="currentColor" />
-            </svg>
-            <Typography className="cyber-label">Live workspace</Typography>
-            <Typography sx={{ mt: 1, color: 'text.secondary' }}>
-              Real-time threat scanning, triage, and reporting across your security operations workflow.
-            </Typography>
-            <Stack direction="row" spacing={1} sx={{ mt: 1.5, flexWrap: 'wrap' }}>
-              <Chip size="small" color="primary" label="Real-time" />
-              <Chip size="small" color="secondary" label="AI-assisted" />
-              <Chip size="small" label="SOC-ready" variant="outlined" />
-            </Stack>
+        <main className="main-content">
+          <header className="live-header hero-gradient">
+            <p className="cyber-label">Live workspace</p>
+            <p className="helper-text">Real-time threat scanning, triage, and reporting across your security operations workflow.</p>
+            <div className="live-tags">
+              <span className="live-tag brand">Real-time</span>
+              <span className="live-tag brand">AI-assisted</span>
+              <span className="live-tag">SOC-ready</span>
+            </div>
           </header>
-          <div className="px-1.5 sm:px-2">
+          <div className="page-content">
             <Outlet />
           </div>
         </main>
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }
