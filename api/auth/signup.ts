@@ -1,10 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { Prisma } from '@prisma/client'
-import { authSchema } from '../_lib/validation.js'
-import { allowMethods, withErrorHandling } from '../_lib/http.js'
-import { prisma } from '../_lib/db.js'
-import { hashPassword, setAuthCookie, signToken } from '../_lib/auth.js'
-import { sanitizeObject } from '../_lib/security.js'
+import { authSchema } from '../../lib/api/validation.js'
+import { allowMethods, withErrorHandling } from '../../lib/api/http.js'
+import { prisma } from '../../lib/api/db.js'
+import { hashPassword, setAuthCookie, signToken } from '../../lib/api/auth.js'
+import { sanitizeObject } from '../../lib/api/security.js'
 
 export default withErrorHandling(async (req: VercelRequest, res: VercelResponse) => {
   allowMethods(['POST'], req)

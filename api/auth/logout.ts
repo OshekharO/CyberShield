@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { clearAuthCookie } from '../_lib/auth.js'
-import { allowMethods, withErrorHandling } from '../_lib/http.js'
+import { clearAuthCookie } from '../../lib/api/auth.js'
+import { allowMethods, withErrorHandling } from '../../lib/api/http.js'
 
 export default withErrorHandling(async (req: VercelRequest, res: VercelResponse) => {
   allowMethods(['POST'], req)

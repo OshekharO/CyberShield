@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { allowMethods, withErrorHandling } from '../_lib/http.js'
-import { requireAuth } from '../_lib/guards.js'
+import { allowMethods, withErrorHandling } from '../../lib/api/http.js'
+import { requireAuth } from '../../lib/api/guards.js'
 
 export default withErrorHandling(async (req: VercelRequest, res: VercelResponse) => {
   allowMethods(['GET'], req)

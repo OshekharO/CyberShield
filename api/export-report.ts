@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from 'pdf-lib'
-import { allowMethods, withErrorHandling } from './_lib/http.js'
-import { requireAuth } from './_lib/guards.js'
-import { prisma } from './_lib/db.js'
+import { allowMethods, withErrorHandling } from '../lib/api/http.js'
+import { requireAuth } from '../lib/api/guards.js'
+import { prisma } from '../lib/api/db.js'
 
 // ─── Layout constants ────────────────────────────────────────────────────────
 const PAGE_W = 595
@@ -244,34 +244,38 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
 
   // ── Signals ───────────────────────────────────────────────────────────────
   const result = scan.results?.[0]
-  const rawData = result?.rawData as Record<string, unknown> | null | undefined
-  if (rawData) {
+  const signalData = result?.signals as Record<string, unknown> | null | undefined
+  const providerData = result?.providers as Record<string, unknown> | null | undefined
+  const fidro = providerData?.fidro as Record<string, unknown> | null | undefined
+  const usercheck = providerData?.usercheck as Record<string, unknown> | null | undefined
+  const emailrep = providerData?.emailrep as Record<string, unknown> | null | undefined
+  if (signalData) {
     sectionHeader('Signals')
-    const signals: Record<string, string> = {
-      'Breach Count':   String((rawData.breachCount   as number | undefined) ?? 0),
-      'Blacklist Hits': String((rawData.blacklistHits as number | undefined) ?? 0),
-      'Spam Score':     String((rawData.spamScore     as number | undefined) ?? 'N/A'),
+    const signalFields: Record<string, string> = {
+      'Breach Count': String((signalData.breach_count as number | undefined) ?? (signalData.breachCount as number | undefined) ?? (emailrep?.references as number | undefined) ?? 0),
+      'Blacklist Hits': String((signalData.blacklist_hits as number | undefined) ?? (signalData.blacklistHits as number | undefined) ?? 0),
+      'Spam Score': String((signalData.spam_score as number | undefined) ?? (signalData.spamScore as number | undefined) ?? 'N/A'),
     }
-    for (const [lbl, val] of Object.entries(signals)) {
+    for (const [lbl, val] of Object.entries(signalFields)) {
       labelValue(lbl, val)
     }
   }
 
   // ── Provider Details ──────────────────────────────────────────────────────
-  if (rawData) {
+  if (providerData || fidro || usercheck || emailrep) {
     sectionHeader('Provider Details')
     const providerFields: Array<[string, unknown]> = [
-      ['Status',          rawData.statusCode ?? rawData.status],
-      ['Normalized',      rawData.normalizedEmail ?? rawData.normalizedTarget],
-      ['Domain',          rawData.domain],
-      ['Domain Age',      rawData.domainAge != null ? `${rawData.domainAge} days` : undefined],
-      ['Disposable',      rawData.isDisposable != null ? (rawData.isDisposable ? 'Yes' : 'No') : undefined],
-      ['Public Domain',   rawData.isPublicDomain != null ? (rawData.isPublicDomain ? 'Yes' : 'No') : undefined],
-      ['Role Account',    rawData.isRoleAccount != null ? (rawData.isRoleAccount ? 'Yes' : 'No') : undefined],
-      ['Spam',            rawData.isSpam != null ? (rawData.isSpam ? 'Yes' : 'No') : undefined],
-      ['MX Providers',    Array.isArray(rawData.mxProviders) ? (rawData.mxProviders as string[]).join(', ') : undefined],
-      ['Confidence',      rawData.confidence != null ? `${rawData.confidence}%` : undefined],
-      ['Provider',        rawData.provider as string | undefined],
+      ['Status', providerData?.statusCode ?? providerData?.status],
+      ['Normalized', providerData?.normalizedEmail ?? providerData?.normalizedTarget],
+      ['Domain', providerData?.domain],
+      ['Domain Age', providerData?.domainAge != null ? `${providerData.domainAge} days` : undefined],
+      ['Disposable', fidro?.disposable_email != null ? (fidro.disposable_email ? 'Yes' : 'No') : undefined],
+      ['Public Domain', fidro?.public_domain != null ? (fidro.public_domain ? 'Yes' : 'No') : undefined],
+      ['Role Account', fidro?.role_account != null ? (fidro.role_account ? 'Yes' : 'No') : undefined],
+      ['Spam', usercheck?.spam != null ? (usercheck.spam ? 'Yes' : 'No') : undefined],
+      ['MX Providers', Array.isArray(fidro?.mx_providers) ? (fidro.mx_providers as string[]).join(', ') : undefined],
+      ['Confidence', usercheck?.confidence != null ? `${usercheck.confidence}%` : undefined],
+      ['Provider', providerData?.provider as string | undefined],
     ]
     for (const [lbl, val] of providerFields) {
       if (val !== undefined && val !== null && val !== '') {

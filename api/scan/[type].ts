@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { allowMethods, withErrorHandling } from '../_lib/http.js'
-import { requireAuth } from '../_lib/guards.js'
-import { targetSchema } from '../_lib/validation.js'
-import { runScan } from '../_lib/scan-service.js'
-import { sanitizeInput } from '../_lib/security.js'
+import { allowMethods, withErrorHandling } from '../../lib/api/http.js'
+import { requireAuth } from '../../lib/api/guards.js'
+import { targetSchema } from '../../lib/api/validation.js'
+import { runScan } from '../../lib/api/scan-service.js'
+import { sanitizeInput } from '../../lib/api/security.js'
 
 type ScanType = 'ip' | 'url' | 'email' | 'domain'
 

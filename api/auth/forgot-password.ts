@@ -1,9 +1,9 @@
 import { createHash, randomBytes } from 'crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
-import { allowMethods, withErrorHandling } from '../_lib/http.js'
-import { prisma } from '../_lib/db.js'
-import { sanitizeObject } from '../_lib/security.js'
+import { allowMethods, withErrorHandling } from '../../lib/api/http.js'
+import { prisma } from '../../lib/api/db.js'
+import { sanitizeObject } from '../../lib/api/security.js'
 
 const schema = z.object({ email: z.string().email() })
 

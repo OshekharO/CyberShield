@@ -1,10 +1,10 @@
 import { createHash } from 'crypto'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
-import { allowMethods, withErrorHandling } from '../_lib/http.js'
-import { prisma } from '../_lib/db.js'
-import { hashPassword } from '../_lib/auth.js'
-import { sanitizeObject } from '../_lib/security.js'
+import { allowMethods, withErrorHandling } from '../../lib/api/http.js'
+import { prisma } from '../../lib/api/db.js'
+import { hashPassword } from '../../lib/api/auth.js'
+import { sanitizeObject } from '../../lib/api/security.js'
 
 const schema = z.object({
   token: z.string().min(1),
