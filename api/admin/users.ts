@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { UserRole } from '@prisma/client'
-import { allowMethods, withErrorHandling } from '../_lib/http.js'
+import { allowMethods, parsePagination, setPrivateCache, withErrorHandling } from '../_lib/http.js'
 import { requireAuth, requireRole } from '../_lib/guards.js'
 import { prisma } from '../_lib/db.js'
 
@@ -35,12 +35,30 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
     } else {
       await prisma.blockedUser.deleteMany({ where: { userId } })
     }
+
+    res.status(200).json({ ok: true })
+    return
   }
 
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, email: true, role: true, isBanned: true, createdAt: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const { page, limit, skip } = parsePagination(req, { page: 1, limit: 25, maxLimit: 100 })
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true, isBanned: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.user.count(),
+  ])
 
-  res.status(200).json(users)
+  setPrivateCache(res, 15, 30)
+  res.status(200).json({
+    users,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+    },
+  })
 })

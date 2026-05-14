@@ -21,4 +21,5 @@ export interface ScanResponse {
   }
   signals: Record<string, unknown>
   providers: Record<string, unknown>
+  ai_summary?: string
 }

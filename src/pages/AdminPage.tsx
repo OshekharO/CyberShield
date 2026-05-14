@@ -23,10 +23,11 @@ interface AdminStats {
 export default function AdminPage() {
   const [users, setUsers] = useState<AdminUser[]>([])
   const [stats, setStats] = useState<AdminStats | null>(null)
+  const [error, setError] = useState('')
 
   const load = async () => {
-    const [loadedUsers, loadedStats] = await Promise.all([adminService.users(), adminService.stats()])
-    setUsers(loadedUsers as AdminUser[])
+    const [loadedUsers, loadedStats] = await Promise.all([adminService.users({ page: 1, limit: 25 }), adminService.stats()])
+    setUsers((loadedUsers?.users ?? []) as AdminUser[])
     setStats(loadedStats as AdminStats)
   }
 
@@ -34,10 +35,15 @@ export default function AdminPage() {
     let active = true
 
     const loadInitial = async () => {
-      const [loadedUsers, loadedStats] = await Promise.all([adminService.users(), adminService.stats()])
-      if (!active) return
-      setUsers(loadedUsers as AdminUser[])
-      setStats(loadedStats as AdminStats)
+      try {
+        const [loadedUsers, loadedStats] = await Promise.all([adminService.users({ page: 1, limit: 25 }), adminService.stats()])
+        if (!active) return
+        setUsers((loadedUsers?.users ?? []) as AdminUser[])
+        setStats(loadedStats as AdminStats)
+      } catch {
+        if (!active) return
+        setError('Failed to load admin data.')
+      }
     }
 
     void loadInitial()
@@ -47,8 +53,16 @@ export default function AdminPage() {
   }, [])
 
   const toggleBan = async (userId: string, ban: boolean) => {
-    await adminService.updateBanStatus(userId, ban)
-    await load()
+    const previousUsers = users
+    setError('')
+    setUsers((current) => current.map((user) => (user.id === userId ? { ...user, isBanned: ban } : user)))
+    try {
+      await adminService.updateBanStatus(userId, ban)
+      void load()
+    } catch {
+      setUsers(previousUsers)
+      setError('Failed to update user status.')
+    }
   }
 
   return (
@@ -79,6 +93,7 @@ export default function AdminPage() {
 
       <SurfacePanel>
         <HUDHeader title="User Management" subtitle="Review and enforce account access controls." />
+        {error && <p className="form-error mt-3">{error}</p>}
         <div className="stack-2 mt-3">
           {users.map((user) => (
             <DataRow
