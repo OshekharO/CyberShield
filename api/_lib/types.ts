@@ -16,4 +16,5 @@ export interface ScanPayload {
   risk: RiskAssessment
   signals: Record<string, unknown>
   providers: Record<string, unknown>
+  ai_summary?: string
 }

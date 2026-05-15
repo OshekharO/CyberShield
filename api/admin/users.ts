@@ -9,6 +9,11 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
   const user = await requireAuth(req)
   requireRole(UserRole.ADMIN, user.role)
 
+  const pageRaw = Array.isArray(req.query.page) ? req.query.page[0] : req.query.page
+  const pageSizeRaw = Array.isArray(req.query.pageSize) ? req.query.pageSize[0] : req.query.pageSize
+  const page = Math.max(1, Number.parseInt(String(pageRaw || '1'), 10) || 1)
+  const pageSize = Math.min(100, Math.max(1, Number.parseInt(String(pageSizeRaw || '25'), 10) || 25))
+
   if (req.method === 'POST') {
     const { userId, ban, reason } = (req.body || {}) as {
       userId?: string
@@ -37,10 +42,23 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
     }
   }
 
-  const users = await prisma.user.findMany({
-    select: { id: true, name: true, email: true, role: true, isBanned: true, createdAt: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const [total, users] = await Promise.all([
+    prisma.user.count(),
+    prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true, isBanned: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ])
 
-  res.status(200).json(users)
+  res.status(200).json({
+    users,
+    pagination: {
+      total,
+      page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(total / pageSize)),
+    },
+  })
 })

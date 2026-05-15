@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from 'pdf-lib'
+import { PDFDocument, StandardFonts, degrees, rgb, type PDFFont, type PDFPage } from 'pdf-lib'
 import { allowMethods, withErrorHandling } from './_lib/http.js'
 import { requireAuth } from './_lib/guards.js'
 import { prisma } from './_lib/db.js'
@@ -30,6 +30,8 @@ const C = {
   critical:   rgb(0.78, 0.10, 0.10),
   badgeBg:    rgb(0.94, 0.96, 1.0),
   badgeBorder: rgb(0.29, 0.56, 1.0),
+  stampInk:   rgb(0.78, 0.10, 0.10),
+  stampFill:  rgb(1.0, 0.95, 0.95),
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -76,6 +78,7 @@ function wrapText(text: string, font: PDFFont, size: number, maxWidth: number): 
 /** Draw the branded header bar on a page. */
 function drawHeader(page: PDFPage, regular: PDFFont, bold: PDFFont) {
   page.drawRectangle({ x: 0, y: PAGE_H - HEADER_H, width: PAGE_W, height: HEADER_H, color: C.headerBg })
+  page.drawRectangle({ x: 0, y: PAGE_H - HEADER_H, width: PAGE_W, height: 2, color: C.accent })
   // Logo text
   page.drawText('CyberShield', { x: MARGIN, y: PAGE_H - 34, size: 18, font: bold, color: C.white })
   const logoW = bold.widthOfTextAtSize('CyberShield', 18)
@@ -93,6 +96,7 @@ function drawHeader(page: PDFPage, regular: PDFFont, bold: PDFFont) {
 /** Draw the footer bar on a page. */
 function drawFooter(page: PDFPage, regular: PDFFont, pageNum: number, totalPages: number, generatedAt: string) {
   page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: FOOTER_H, color: C.footerBg })
+  page.drawRectangle({ x: 0, y: FOOTER_H - 1, width: PAGE_W, height: 1, color: C.accent })
   page.drawText(`Generated: ${generatedAt}`, { x: MARGIN, y: 13, size: 7.5, font: regular, color: C.muted })
   const pageLabel = `Page ${pageNum} of ${totalPages}`
   const pw = regular.widthOfTextAtSize(pageLabel, 7.5)
@@ -105,27 +109,32 @@ function drawFooter(page: PDFPage, regular: PDFFont, pageNum: number, totalPages
 
 /** Draw the certified badge at bottom-right of the last page. */
 function drawCertifiedBadge(page: PDFPage, regular: PDFFont, bold: PDFFont) {
-  const bw = 130, bh = 52, bx = PAGE_W - MARGIN - bw, by = FOOTER_H + 8
-  // outer border
-  page.drawRectangle({ x: bx - 1, y: by - 1, width: bw + 2, height: bh + 2, color: C.badgeBorder })
-  // background
-  page.drawRectangle({ x: bx, y: by, width: bw, height: bh, color: C.badgeBg })
-  // shield icon row of stars (decorative)
-  const stars = '★ ★ ★ ★ ★'
-  const sw = regular.widthOfTextAtSize(stars, 8)
-  page.drawText(stars, { x: bx + bw / 2 - sw / 2, y: by + bh - 14, size: 8, font: regular, color: C.accent })
-  // Badge title
-  const title = 'VERIFIED REPORT'
-  const tw = bold.widthOfTextAtSize(title, 8.5)
-  page.drawText(title, { x: bx + bw / 2 - tw / 2, y: by + bh - 26, size: 8.5, font: bold, color: C.headerBg })
-  // Sub-line
-  const sub = 'CyberShield X Certified'
-  const subw = regular.widthOfTextAtSize(sub, 7)
-  page.drawText(sub, { x: bx + bw / 2 - subw / 2, y: by + bh - 38, size: 7, font: regular, color: C.muted })
-  // Date stamp
+  const centerX = PAGE_W - MARGIN - 62
+  const centerY = FOOTER_H + 62
+  const outer = 56
+  const inner = 44
+
+  page.drawCircle({ x: centerX, y: centerY, size: outer, color: C.stampFill, borderColor: C.stampInk, borderWidth: 2 })
+  page.drawCircle({ x: centerX, y: centerY, size: inner, borderColor: C.stampInk, borderWidth: 1 })
+
+  const mark = 'CERTIFIED'
+  const markW = bold.widthOfTextAtSize(mark, 14)
+  page.drawText(mark, {
+    x: centerX - markW / 2,
+    y: centerY - 7,
+    size: 14,
+    font: bold,
+    color: C.stampInk,
+    rotate: degrees(16),
+  })
+
+  const sub = 'CYBERSHIELD VERIFIED'
+  const subW = regular.widthOfTextAtSize(sub, 6.5)
+  page.drawText(sub, { x: centerX - subW / 2, y: centerY + 20, size: 6.5, font: regular, color: C.stampInk })
+
   const ds = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-  const dw = regular.widthOfTextAtSize(ds, 7)
-  page.drawText(ds, { x: bx + bw / 2 - dw / 2, y: by + 6, size: 7, font: regular, color: C.muted })
+  const dsW = regular.widthOfTextAtSize(ds, 6.5)
+  page.drawText(ds, { x: centerX - dsW / 2, y: centerY - 28, size: 6.5, font: regular, color: C.stampInk })
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
@@ -153,6 +162,8 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
   const pdf = await PDFDocument.create()
   const regular = await pdf.embedFont(StandardFonts.Helvetica)
   const bold    = await pdf.embedFont(StandardFonts.HelveticaBold)
+  const italic  = await pdf.embedFont(StandardFonts.HelveticaOblique)
+  const mono    = await pdf.embedFont(StandardFonts.Courier)
 
   const generatedAt = new Date().toLocaleString('en-GB', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -196,6 +207,7 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
     ensureSpace(28)
     y -= 6
     currentPage.drawRectangle({ x: MARGIN, y: y - 2, width: CONTENT_W, height: 20, color: C.headerBg })
+    currentPage.drawRectangle({ x: MARGIN, y: y - 2, width: CONTENT_W, height: 1, color: C.accent })
     currentPage.drawText(title.toUpperCase(), { x: MARGIN + 8, y: y + 3, size: 9, font: bold, color: C.white })
     y -= 20 + 6
   }
@@ -206,13 +218,18 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
     y -= 8
   }
 
-  function labelValue(label: string, value: string, labelW = 140) {
+  function labelValue(label: string, value: string, labelW = 140, valueFont: PDFFont = regular, valueColor = C.ink) {
     ensureSpace(16)
     currentPage.drawText(label, { x: MARGIN, y, size: 9.5, font: bold, color: C.muted })
-    wrappedText(value, MARGIN + labelW, CONTENT_W - labelW, 9.5, regular, C.ink)
+    wrappedText(value, MARGIN + labelW, CONTENT_W - labelW, 9.5, valueFont, valueColor)
   }
 
   // ── Cover / overview block ─────────────────────────────────────────────────
+  y -= 4
+
+  // Cover typography
+  text('THREAT INTELLIGENCE DOSSIER', MARGIN, 10, bold, C.accent)
+  wrappedText(`Type: ${scan.type.toUpperCase()} • Generated for incident response and governance workflows`, MARGIN, CONTENT_W, 9, italic, C.muted, 4)
   y -= 4
 
   // Large scan target
@@ -233,7 +250,7 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
 
   // ── Scan Metadata ──────────────────────────────────────────────────────────
   sectionHeader('Scan Details')
-  labelValue('Scan ID',      scan.id)
+  labelValue('Scan ID',      scan.id, 140, mono, C.ink)
   labelValue('Target',       scan.target)
   labelValue('Scan Type',    scan.type)
   labelValue('Risk Level',   rLevel)

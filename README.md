@@ -111,6 +111,9 @@ Update `.env` and configure:
 - `USERCHECK_API_KEY`
 - `FIDRO_API_KEY`
 - `WHOISXML_API_KEY`
+- `CRON_SECRET` (or `RETENTION_CRON_SECRET`)
+- `API_LOG_RETENTION_DAYS` (optional, default: `30`)
+- `SCAN_RESULT_RETENTION_DAYS` (optional, default: `30`)
 
 > `DATABASE_URL` and `DIRECT_URL` are configured for Supabase Postgres.
 
@@ -141,6 +144,8 @@ npm run prisma:migrate
 5. Add `DATABASE_URL` and `DIRECT_URL` as GitHub repository secrets so migrations can run in CI.
 6. Push to `main` (or run the workflow manually in Actions) to execute Prisma migrations automatically in GitHub Actions.
 7. Deploy after migrations complete successfully.
+8. Set `CRON_SECRET` in Vercel to secure scheduled retention cleanup requests.
+9. Retention cleanup is scheduled weekly at `03:00 UTC` on Sunday via `vercel.json`.
 
 `vercel.json` is included for SPA rewrites + `/api` function routing under one project.
 
