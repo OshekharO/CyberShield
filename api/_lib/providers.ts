@@ -94,7 +94,7 @@ export const providers = {
         error: 'Antideo unavailable',
         IP: ip,
         health: { toxic: false, proxy: false, spam: false },
-      },
+      } as { available: boolean; rate_limited: boolean; error: string; IP: string; health: { toxic: boolean; proxy: boolean; spam: boolean } },
     )
   },
 

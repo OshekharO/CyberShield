@@ -29,8 +29,7 @@ export default function ScanCenterPage() {
     try {
       const result = await scanService.runScan(type, target)
       addResult(result)
-      const ai = await scanService.aiSummary(result)
-      setSummary(ai.summary)
+      setSummary(result.ai_summary ?? '')
     } catch {
       setError('Scan failed. Verify target format and API credentials.')
     } finally {

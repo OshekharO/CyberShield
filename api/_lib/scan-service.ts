@@ -4,9 +4,63 @@ import { generateThreatSummary } from './gemini.js'
 import { logApiUsage } from './logger.js'
 import { providers } from './providers.js'
 import { calculateRisk } from './scoring.js'
-import type { ScanPayload } from './types.js'
+import type { ScanPayload, RiskLevel } from './types.js'
 
 type VirusTotalStats = { malicious?: number; phishing?: number }
+const SCAN_CACHE_TTL_MS = 1000 * 60 * 15
+const MAX_PROVIDER_SNAPSHOT_FIELDS = 12
+type ProviderHealthSnapshot = { providers?: string[]; availableCount?: number } | null
+
+const formatRiskLevel = (level: ScanType | string): RiskLevel => {
+  const normalized = String(level).toUpperCase()
+  if (normalized === 'LOW_RISK') return 'Low Risk'
+  if (normalized === 'MEDIUM_RISK') return 'Medium Risk'
+  if (normalized === 'HIGH_RISK') return 'High Risk'
+  if (normalized === 'CRITICAL') return 'Critical'
+  if (normalized === 'SAFE') return 'Safe'
+  return 'Safe'
+}
+
+const compactProviderData = (providerData: Record<string, unknown>) => {
+  const compact: Record<string, unknown> = {}
+  const providerEntries = Object.entries(providerData)
+
+  for (const [provider, value] of providerEntries) {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      compact[provider] = value
+      continue
+    }
+
+    const primitiveSnapshot: Record<string, unknown> = {}
+    const entries = Object.entries(value as Record<string, unknown>)
+    for (const [key, entryValue] of entries) {
+      if (Object.keys(primitiveSnapshot).length >= MAX_PROVIDER_SNAPSHOT_FIELDS) break
+      if (entryValue === null) {
+        primitiveSnapshot[key] = null
+        continue
+      }
+      if (['string', 'number', 'boolean'].includes(typeof entryValue)) {
+        primitiveSnapshot[key] = entryValue
+        continue
+      }
+      if (Array.isArray(entryValue)) {
+        primitiveSnapshot[key] = {
+          count: entryValue.length,
+          sample: entryValue.slice(0, 3).map((item) => (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean' ? item : null)),
+        }
+      }
+    }
+
+    compact[provider] = primitiveSnapshot
+  }
+
+  return compact
+}
+
+const normalizeMatchedRules = (value: unknown) => {
+  if (!Array.isArray(value)) return []
+  return value.filter((item): item is string => typeof item === 'string')
+}
 
 const isRecentDomain = (creationDate?: string | null) => {
   if (!creationDate) return false
@@ -17,6 +71,55 @@ const isRecentDomain = (creationDate?: string | null) => {
 
 export const runScan = async (userId: string, type: ScanPayload['type'], target: string) => {
   const start = Date.now()
+
+  const cachedScan = await prisma.scan.findFirst({
+    where: {
+      userId,
+      target,
+      type: type.toUpperCase() as ScanType,
+      createdAt: {
+        gte: new Date(Date.now() - SCAN_CACHE_TTL_MS),
+      },
+    },
+    include: {
+      results: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  if (cachedScan && cachedScan.results.length > 0) {
+    const latestResult = cachedScan.results[0]
+    const cachedProviderHealth = latestResult.providerHealth as ProviderHealthSnapshot
+    const providerCount = Array.isArray(cachedProviderHealth?.providers) ? cachedProviderHealth.providers.length : 0
+    const availableCount = typeof cachedProviderHealth?.availableCount === 'number' ? cachedProviderHealth.availableCount : 0
+    const providerConfidence = providerCount > 0 ? Math.round((availableCount / providerCount) * 100) : 0
+    await logApiUsage({
+      endpoint: `/api/scan/${type}`,
+      method: 'POST',
+      statusCode: 200,
+      latencyMs: Date.now() - start,
+      requestMeta: { target, type, cached: true },
+    })
+
+    return {
+      scan_id: cachedScan.id,
+      target,
+      type,
+      risk: {
+        score: cachedScan.riskScore,
+        level: formatRiskLevel(cachedScan.riskLevel),
+        matched_rules: normalizeMatchedRules(cachedScan.matchedRules),
+        provider_confidence: providerConfidence,
+      },
+      signals: (latestResult.signals as Record<string, unknown>) || {},
+      providers: (latestResult.providers as Record<string, unknown>) || {},
+      ai_summary: latestResult.aiSummary || undefined,
+    } satisfies ScanPayload
+  }
+
   let signals: Record<string, unknown> = {}
   let providerData: Record<string, unknown> = {}
 
@@ -122,7 +225,7 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
         | 'MEDIUM_RISK'
         | 'HIGH_RISK'
         | 'CRITICAL',
-      matchedRules: risk.matched_rules,
+      matchedRules: normalizeMatchedRules(risk.matched_rules),
     },
   })
 
@@ -132,7 +235,7 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     data: {
       scanId: scan.id,
       signals: signals as Prisma.InputJsonValue,
-      providers: providerData as Prisma.InputJsonValue,
+      providers: compactProviderData(providerData) as Prisma.InputJsonValue,
       aiSummary,
       providerHealth: {
         providers: Object.keys(providerData),
@@ -167,8 +270,12 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
     scan_id: scan.id,
     target,
     type,
-    risk,
+    risk: {
+      ...risk,
+      matched_rules: normalizeMatchedRules(risk.matched_rules),
+    },
     signals,
     providers: providerData,
+    ai_summary: aiSummary,
   } satisfies ScanPayload
 }

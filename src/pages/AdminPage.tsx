@@ -20,13 +20,23 @@ interface AdminStats {
   highRiskScans: number
 }
 
+interface PaginationInfo {
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
+
 export default function AdminPage() {
   const [users, setUsers] = useState<AdminUser[]>([])
   const [stats, setStats] = useState<AdminStats | null>(null)
+  const [page, setPage] = useState(1)
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null)
 
   const load = async () => {
-    const [loadedUsers, loadedStats] = await Promise.all([adminService.users(), adminService.stats()])
-    setUsers(loadedUsers as AdminUser[])
+    const [loadedUsers, loadedStats] = await Promise.all([adminService.users(page, 25), adminService.stats()])
+    setUsers((loadedUsers as { users: AdminUser[] }).users)
+    setPagination((loadedUsers as { pagination: PaginationInfo }).pagination)
     setStats(loadedStats as AdminStats)
   }
 
@@ -34,9 +44,10 @@ export default function AdminPage() {
     let active = true
 
     const loadInitial = async () => {
-      const [loadedUsers, loadedStats] = await Promise.all([adminService.users(), adminService.stats()])
+      const [loadedUsers, loadedStats] = await Promise.all([adminService.users(page, 25), adminService.stats()])
       if (!active) return
-      setUsers(loadedUsers as AdminUser[])
+      setUsers((loadedUsers as { users: AdminUser[] }).users)
+      setPagination((loadedUsers as { pagination: PaginationInfo }).pagination)
       setStats(loadedStats as AdminStats)
     }
 
@@ -44,7 +55,7 @@ export default function AdminPage() {
     return () => {
       active = false
     }
-  }, [])
+  }, [page])
 
   const toggleBan = async (userId: string, ban: boolean) => {
     await adminService.updateBanStatus(userId, ban)
@@ -92,6 +103,24 @@ export default function AdminPage() {
               }
             />
           ))}
+        </div>
+        <div style={{ marginTop: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
+          <p className="helper-text">
+            Page {pagination?.page ?? 1} of {pagination?.totalPages ?? 1} ({pagination?.total ?? 0} users)
+          </p>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <Button variant="outline" size="sm" disabled={(pagination?.page ?? 1) <= 1} onClick={() => setPage((p) => p - 1)}>
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={(pagination?.page ?? 1) >= (pagination?.totalPages ?? 1)}
+              onClick={() => setPage((p) => p + 1)}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </SurfacePanel>
     </div>
