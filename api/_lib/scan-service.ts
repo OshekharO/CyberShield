@@ -4,25 +4,21 @@ import { generateThreatSummary } from './gemini.js'
 import { logApiUsage } from './logger.js'
 import { providers } from './providers.js'
 import { calculateRisk } from './scoring.js'
-import type { ScanPayload } from './types.js'
+import type { ScanPayload, RiskLevel } from './types.js'
 
 type VirusTotalStats = { malicious?: number; phishing?: number }
 const SCAN_CACHE_TTL_MS = 1000 * 60 * 15
 const MAX_PROVIDER_SNAPSHOT_FIELDS = 12
 type ProviderHealthSnapshot = { providers?: string[]; availableCount?: number } | null
 
-const formatRiskLevel = (level: ScanType | string) => {
+const formatRiskLevel = (level: ScanType | string): RiskLevel => {
   const normalized = String(level).toUpperCase()
   if (normalized === 'LOW_RISK') return 'Low Risk'
   if (normalized === 'MEDIUM_RISK') return 'Medium Risk'
   if (normalized === 'HIGH_RISK') return 'High Risk'
   if (normalized === 'CRITICAL') return 'Critical'
   if (normalized === 'SAFE') return 'Safe'
-  if (!normalized) return 'Unknown'
-  return normalized
-    .split('_')
-    .map((part) => `${part.slice(0, 1)}${part.slice(1).toLowerCase()}`)
-    .join(' ')
+  return 'Safe'
 }
 
 const compactProviderData = (providerData: Record<string, unknown>) => {

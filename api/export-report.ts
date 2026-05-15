@@ -261,7 +261,7 @@ export default withErrorHandling(async (req: VercelRequest, res: VercelResponse)
 
   // ── Signals ───────────────────────────────────────────────────────────────
   const result = scan.results?.[0]
-  const rawData = result?.rawData as Record<string, unknown> | null | undefined
+  const rawData = result?.signals as Record<string, unknown> | null | undefined
   if (rawData) {
     sectionHeader('Signals')
     const signals: Record<string, string> = {
