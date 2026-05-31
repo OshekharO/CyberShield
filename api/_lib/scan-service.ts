@@ -52,6 +52,15 @@ const compactProviderData = (providerData: Record<string, unknown>) => {
       }
     }
 
+    if (Object.keys(primitiveSnapshot).length === 0) {
+      const sourceKeys = entries.length
+      primitiveSnapshot.available = sourceKeys > 0
+      primitiveSnapshot.info =
+        sourceKeys > 0
+          ? 'Provider response contained nested-only fields; primitive summary unavailable'
+          : 'Provider returned no details'
+    }
+
     compact[provider] = primitiveSnapshot
   }
 
@@ -61,6 +70,23 @@ const compactProviderData = (providerData: Record<string, unknown>) => {
 const normalizeMatchedRules = (value: unknown) => {
   if (!Array.isArray(value)) return []
   return value.filter((item): item is string => typeof item === 'string')
+}
+
+const normalizeProviderPayload = (providerData: Record<string, unknown>) => {
+  const normalized: Record<string, unknown> = {}
+
+  for (const [provider, value] of Object.entries(providerData)) {
+    if (value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) {
+      normalized[provider] = {
+        available: false,
+        info: 'Provider did not return details for this scan',
+      }
+      continue
+    }
+    normalized[provider] = value
+  }
+
+  return normalized
 }
 
 const getProviderHealth = (providerData: Record<string, unknown>) => {
@@ -123,7 +149,7 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
         provider_confidence: providerConfidence,
       },
       signals: (latestResult.signals as Record<string, unknown>) || {},
-      providers: (latestResult.providers as Record<string, unknown>) || {},
+      providers: normalizeProviderPayload((latestResult.providers as Record<string, unknown>) || {}),
       ai_summary: latestResult.aiSummary || undefined,
     } satisfies ScanPayload
   }
@@ -287,7 +313,7 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
       matched_rules: normalizeMatchedRules(risk.matched_rules),
     },
     signals,
-    providers: providerData,
+    providers: normalizeProviderPayload(providerData),
     ai_summary: aiSummary,
   } satisfies ScanPayload
 }
