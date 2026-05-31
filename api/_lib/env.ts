@@ -5,6 +5,7 @@ export const env = {
   ABUSEIPDB_API_KEY: process.env.ABUSEIPDB_API_KEY ?? '',
   ANTIDEO_API_KEY: process.env.ANTIDEO_API_KEY ?? '',
   VIRUSTOTAL_API_KEY: process.env.VIRUSTOTAL_API_KEY ?? '',
+  IPQUALITYSCORE_API_KEY: process.env.IPQUALITYSCORE_API_KEY ?? '',
   DESTROYLIST_BASE_URL: process.env.DESTROYLIST_BASE_URL ?? '',
   USERCHECK_API_KEY: process.env.USERCHECK_API_KEY ?? '',
   FIDRO_API_KEY: process.env.FIDRO_API_KEY ?? '',
