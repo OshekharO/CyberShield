@@ -7,7 +7,7 @@ type VirusTotalSubmitResponse = {
   }
 }
 
-const DESTROYLIST_DEFAULT_BASE_URL = 'https://cors-bypasser-pro.vercel.app/proxy?url=https://api.destroy.tools'
+const DESTROYLIST_DEFAULT_BASE_URL = 'https://cors-bypasser-pro.vercel.app/proxy?url='
 const ANTIDEO_HOURLY_LIMIT = 10
 const HOUR_MS = 1000 * 60 * 60
 const IPQUALITYSCORE_DEFAULT_BASE_URL = 'https://www.ipqualityscore.com/api/json/url'

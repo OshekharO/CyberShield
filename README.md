@@ -57,7 +57,7 @@ Configure a `.env` file with:
 - `ANTIDEO_API_KEY`
 - `VIRUSTOTAL_API_KEY`
 - `IPQUALITYSCORE_API_KEY`
-- `DESTROYLIST_BASE_URL` (default proxy-friendly value: `https://cors-bypasser-pro.vercel.app/proxy?url=https://api.destroy.tools`)
+- `DESTROYLIST_BASE_URL` (default proxy base: `https://cors-bypasser-pro.vercel.app/proxy?url=`)
 - `USERCHECK_API_KEY`
 - `FIDRO_API_KEY`
 - `WHOISXML_API_KEY`
