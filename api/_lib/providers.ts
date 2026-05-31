@@ -58,6 +58,14 @@ const extractDomain = (value: string) => {
   }
 }
 
+const isLikelyDomainInput = (value: string) => {
+  const trimmed = value.trim()
+  if (trimmed.includes('://')) return false
+  if (trimmed.includes('/')) return false
+  if (trimmed.includes('?') || trimmed.includes('#')) return false
+  return trimmed.length > 0
+}
+
 const canCallAntideo = () => {
   const now = Date.now()
   if (now - antideoWindowStart >= HOUR_MS) {
@@ -152,6 +160,15 @@ export const providers = {
       return { available: false, error: 'Missing VIRUSTOTAL_API_KEY' }
     }
     try {
+      if (isLikelyDomainInput(url)) {
+        const domain = extractDomain(url)
+        const { data } = await axios.get(`https://www.virustotal.com/api/v3/domains/${encodeURIComponent(domain)}`, {
+          headers: { accept: 'application/json', 'x-apikey': env.VIRUSTOTAL_API_KEY },
+          timeout: 10000,
+        })
+        return { available: true, ...(data as Record<string, unknown>) }
+      }
+
       const body = new URLSearchParams({ url })
       let analysisId: string | undefined
       try {
@@ -180,6 +197,18 @@ export const providers = {
       })
       return { available: true, ...(data as Record<string, unknown>) }
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
+        try {
+          const domain = extractDomain(url)
+          const { data } = await axios.get(`https://www.virustotal.com/api/v3/domains/${encodeURIComponent(domain)}`, {
+            headers: { accept: 'application/json', 'x-apikey': env.VIRUSTOTAL_API_KEY },
+            timeout: 10000,
+          })
+          return { available: true, ...(data as Record<string, unknown>) }
+        } catch (fallbackError) {
+          return toProviderError('VirusTotal', fallbackError)
+        }
+      }
       return toProviderError('VirusTotal', error)
     }
   },

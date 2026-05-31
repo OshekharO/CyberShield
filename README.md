@@ -54,6 +54,7 @@ Single deployment routes:
 - IP: IPInfo Lite, AbuseIPDB, Fidro, Antideo IP Health
   - Antideo uses `https://api.antideo.com/ip/health/<ip>` with `apiKey` header and is locally capped at 10 calls/hour.
 - URL: VirusTotal, DestroyList
+  - VirusTotal uses URL scans for full URLs and automatically uses `GET /api/v3/domains/{domain}` when target input is domain-only.
 - Email: UserCheck Email API, EmailRep, Fidro Email Validation
 - Domain: RDAP, WhoisXML Subdomains API, Pulsedive, UserCheck Domain API
   - Pulsedive uses `https://pulsedive.com/api/indicator.php?indicator=<domain>`, treats API `error: Indicator not found` responses as non-listed, and counts only `high`/`critical` Pulsedive risk as a blacklist hit.
