@@ -7,7 +7,7 @@ type VirusTotalSubmitResponse = {
   }
 }
 
-const DESTROYLIST_DEFAULT_BASE_URL = 'https://api.destroy.tools'
+const DESTROYLIST_DEFAULT_BASE_URL = 'https://cors-bypasser-pro.vercel.app/proxy?url=https://api.destroy.tools'
 const ANTIDEO_HOURLY_LIMIT = 10
 const HOUR_MS = 1000 * 60 * 60
 const IPQUALITYSCORE_DEFAULT_BASE_URL = 'https://www.ipqualityscore.com/api/json/url'
@@ -217,10 +217,12 @@ export const providers = {
     return safeProviderGet('DestroyList', async () => {
       const domain = extractDomain(url)
       const baseUrl = env.DESTROYLIST_BASE_URL?.trim() || DESTROYLIST_DEFAULT_BASE_URL
-      const { data } = await axios.get(`${baseUrl}/v1/check`, {
-        params: { domain },
-        timeout: 10000,
-      })
+      const isProxyBase = baseUrl.includes('/proxy?url=')
+      const requestUrl = isProxyBase ? baseUrl : `${baseUrl}/v1/check`
+      const params = isProxyBase
+        ? { url: `https://api.destroy.tools/v1/check?domain=${encodeURIComponent(domain)}` }
+        : { domain }
+      const { data } = await axios.get(requestUrl, { params, timeout: 10000 })
       return (data as Record<string, unknown>) ?? {}
     })
   },

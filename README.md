@@ -1,28 +1,71 @@
-# CyberShield X
+# 🛡️ CyberShield X
 
-Production-grade full-stack AI-assisted cybersecurity platform deployable as a **single Vercel project**.
+A full-stack, AI-assisted cybersecurity platform built for fast threat checks on **IP, URL, email, and domains**.
 
-## Stack
+## ✨ What you can do
 
-- Frontend: React + TypeScript + Vite + TailwindCSS + React Router + Axios + Zustand + Framer Motion + shadcn/ui-style component foundation + Recharts
-- Backend: Vercel Serverless Functions (`/api`) + Node.js + TypeScript
-- Database: PostgreSQL via **Supabase Postgres** + Prisma ORM
-- Auth: JWT + secure HTTP-only cookies + RBAC (Admin/User)
-- AI: Google Gemini API
+- 🔐 Sign up/login with secure auth (JWT + HTTP-only cookies)
+- 🧪 Run threat scans for IPs, URLs, emails, and domains
+- 🤖 Get AI-generated security summaries
+- 📊 Monitor stats and logs from the admin panel
+- 📄 Export scan reports as PDF
 
-## Architecture
+## 🧱 Tech Stack
+
+- **Frontend:** React + TypeScript + Vite + TailwindCSS
+- **Backend:** Vercel Serverless Functions (`/api`) + Node.js + TypeScript
+- **Database:** Supabase Postgres + Prisma ORM
+- **Auth:** JWT + RBAC (Admin/User)
+- **AI:** Google Gemini API
+
+## 📁 Project Structure
 
 ```txt
-/src     -> Frontend SPA
-/api     -> Vercel serverless functions
-/prisma  -> Prisma schema
+/src      Frontend SPA
+/api      Vercel serverless functions
+/prisma   Prisma schema
 ```
 
-Single deployment routes:
-- `/dashboard`, `/scan-center`, `/admin`
-- `/api/auth/login`, `/api/scan/ip`, `/api/admin/stats`, etc.
+## 🚀 Quick Start (Local)
 
-## Implemented APIs
+```bash
+npm install
+npm run prisma:generate
+npm run prisma:migrate
+npm run dev
+```
+
+> `prisma generate` creates the Prisma client only.  
+> Run migrations at least once for each new database.
+
+## ✅ Validation Commands
+
+```bash
+npm run lint
+npm run build
+```
+
+## 🔧 Environment Variables
+
+Configure a `.env` file with:
+
+- `DATABASE_URL`
+- `DIRECT_URL`
+- `JWT_SECRET`
+- `IPINFO_TOKEN`
+- `ABUSEIPDB_API_KEY`
+- `ANTIDEO_API_KEY`
+- `VIRUSTOTAL_API_KEY`
+- `IPQUALITYSCORE_API_KEY`
+- `DESTROYLIST_BASE_URL` (default proxy-friendly value: `https://cors-bypasser-pro.vercel.app/proxy?url=https://api.destroy.tools`)
+- `USERCHECK_API_KEY`
+- `FIDRO_API_KEY`
+- `WHOISXML_API_KEY`
+- `CRON_SECRET` (or `RETENTION_CRON_SECRET`)
+- `API_LOG_RETENTION_DAYS` (optional, default `30`)
+- `SCAN_RESULT_RETENTION_DAYS` (optional, default `30`)
+
+## 🌐 API Highlights
 
 ### Auth
 - `POST /api/auth/signup`
@@ -47,114 +90,21 @@ Single deployment routes:
 - `GET /api/admin/logs`
 
 ### Reports
-- `GET /api/export-report?scanId=...` (PDF)
+- `GET /api/export-report?scanId=...`
 
-## External Provider Integrations
+## 📦 Deploy to Vercel
 
-- IP: IPInfo Lite, AbuseIPDB, Fidro, Antideo IP Health
-  - Antideo uses `https://api.antideo.com/ip/health/<ip>` with `apiKey` header and is locally capped at 10 calls/hour.
-- URL: VirusTotal, DestroyList
-  - VirusTotal uses URL scans for full URLs and automatically uses `GET /api/v3/domains/{domain}` when target input is domain-only.
-- Email: UserCheck Email API, EmailRep, Fidro Email Validation
-- Domain: RDAP, WhoisXML Subdomains API, Pulsedive, UserCheck Domain API
-  - Pulsedive uses `https://pulsedive.com/api/indicator.php?indicator=<domain>`, treats API `error: Indicator not found` responses as non-listed, and counts only `high`/`critical` Pulsedive risk as a blacklist hit.
+1. Push the repo to GitHub
+2. Import it in Vercel
+3. Add all environment variables
+4. Ensure Supabase is reachable from Vercel
+5. Set GitHub repo secrets for DB migration
+6. Deploy and verify scan + auth routes
 
-## Risk Scoring Engine
+## 🔒 Security Notes
 
-Rule-based scoring (never AI-based risk determination):
-- Inputs: abuse confidence, blacklist hits, phishing indicators, disposable email flags, Fidro risk, VirusTotal malicious detections, recent domain registration
-- Outputs:
-  - Levels: Safe / Low Risk / Medium Risk / High Risk / Critical
-  - `matched_rules`
-  - provider confidence score
-
-## API Response Shape
-
-```json
-{
-  "scan_id": "",
-  "target": "",
-  "type": "",
-  "risk": {
-    "score": 0,
-    "level": "",
-    "matched_rules": []
-  },
-  "signals": {},
-  "providers": {}
-}
-```
-
-## Prisma Models
-
-- `users`
-- `scans`
-- `scan_results`
-- `api_logs`
-- `threat_reports`
-- `blocked_users`
-- `settings`
-
-Includes enums, relations, indexes, timestamps, and foreign keys.
-
-## Environment Variables
-
-Update `.env` and configure:
-
-- `DATABASE_URL`
-- `DIRECT_URL`
-- `JWT_SECRET`
-- `IPINFO_TOKEN`
-- `ABUSEIPDB_API_KEY`
-- `ANTIDEO_API_KEY`
-- `VIRUSTOTAL_API_KEY`
-- `IPQUALITYSCORE_API_KEY`
-- `DESTROYLIST_BASE_URL`
-- `USERCHECK_API_KEY`
-- `FIDRO_API_KEY`
-- `WHOISXML_API_KEY`
-- `CRON_SECRET` (or `RETENTION_CRON_SECRET`)
-- `API_LOG_RETENTION_DAYS` (optional, default: `30`)
-- `SCAN_RESULT_RETENTION_DAYS` (optional, default: `30`)
-
-> `DATABASE_URL` and `DIRECT_URL` are configured for Supabase Postgres.
-
-## Local Setup
-
-```bash
-npm install
-npm run prisma:generate
-npm run prisma:migrate
-npm run dev
-```
-
-> `prisma generate` only creates the Prisma client. It does **not** create tables in Supabase.
-> You must run migrations at least once for every new database.
-
-For database migration deployment (production):
-
-```bash
-npm run prisma:migrate
-```
-
-## Deploy to Vercel
-
-1. Push this repository to GitHub.
-2. Import project in Vercel.
-3. Add environment variables from `.env`.
-4. Ensure Supabase Postgres is reachable from Vercel.
-5. Add `DATABASE_URL` and `DIRECT_URL` as GitHub repository secrets so migrations can run in CI.
-6. Push to `main` (or run the workflow manually in Actions) to execute Prisma migrations automatically in GitHub Actions.
-7. Deploy after migrations complete successfully.
-8. Set `CRON_SECRET` in Vercel to secure scheduled retention cleanup requests.
-9. Retention cleanup is scheduled weekly at `03:00 UTC` on Sunday via `vercel.json`.
-
-`vercel.json` is included for SPA rewrites + `/api` function routing under one project.
-
-## Security Notes
-
-- Password hashing with bcrypt
-- JWT in HTTP-only secure cookies
-- Role-based auth guards for admin APIs
-- Input sanitization and validation (zod)
-- API logging for monitoring/analytics
+- Passwords are hashed with bcrypt
+- JWT is stored in secure HTTP-only cookies
+- Role checks protect admin routes
+- Inputs are validated and sanitized
+- API logs support monitoring and auditing
