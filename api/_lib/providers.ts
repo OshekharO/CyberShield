@@ -23,6 +23,30 @@ const safeGet = async <T>(request: () => Promise<T>, fallback: T): Promise<T> =>
   }
 }
 
+const toProviderError = (provider: string, error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status
+    const message =
+      (typeof error.response?.data === 'object' &&
+      error.response?.data &&
+      'message' in (error.response.data as Record<string, unknown>) &&
+      typeof (error.response.data as Record<string, unknown>).message === 'string'
+        ? (error.response.data as Record<string, unknown>).message
+        : error.message) || `${provider} unavailable`
+
+    return {
+      available: false,
+      error: message,
+      ...(typeof status === 'number' ? { status_code: status } : {}),
+    }
+  }
+
+  return {
+    available: false,
+    error: error instanceof Error ? error.message : `${provider} unavailable`,
+  }
+}
+
 const extractDomain = (value: string) => {
   try {
     const normalizedValue = value.includes('://') ? value : `http://${value}`
@@ -120,53 +144,54 @@ export const providers = {
   },
 
   async virusTotal(url: string) {
-    return safeGet(
-      async () => {
-        const body = new URLSearchParams({ url })
-        let analysisId: string | undefined
-        try {
-          const submitResponse = await axios.post('https://www.virustotal.com/api/v3/urls', body, {
-            headers: {
-              accept: 'application/json',
-              'x-apikey': env.VIRUSTOTAL_API_KEY,
-              'content-type': 'application/x-www-form-urlencoded',
-            },
-            timeout: 10000,
-          })
-          const submittedData = (submitResponse.data as VirusTotalSubmitResponse | undefined)?.data
-          analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
-        } catch (error) {
-          const message = error instanceof Error ? error.message : 'unknown error'
-          console.warn(`VirusTotal URL submission failed (${message}), falling back to base64url lookup`)
-          analysisId = undefined
-        }
-
-        const fallbackUrlId = Buffer.from(url).toString('base64url')
-        const lookupId = analysisId || fallbackUrlId
-
-        const { data } = await axios.get(`https://www.virustotal.com/api/v3/urls/${lookupId}`, {
-          headers: { accept: 'application/json', 'x-apikey': env.VIRUSTOTAL_API_KEY },
+    if (!env.VIRUSTOTAL_API_KEY) {
+      return { available: false, error: 'Missing VIRUSTOTAL_API_KEY' }
+    }
+    try {
+      const body = new URLSearchParams({ url })
+      let analysisId: string | undefined
+      try {
+        const submitResponse = await axios.post('https://www.virustotal.com/api/v3/urls', body, {
+          headers: {
+            accept: 'application/json',
+            'x-apikey': env.VIRUSTOTAL_API_KEY,
+            'content-type': 'application/x-www-form-urlencoded',
+          },
           timeout: 10000,
         })
-        return data
-      },
-      {},
-    )
+        const submittedData = (submitResponse.data as VirusTotalSubmitResponse | undefined)?.data
+        analysisId = typeof submittedData?.id === 'string' ? submittedData.id : undefined
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'unknown error'
+        console.warn(`VirusTotal URL submission failed (${message}), falling back to base64url lookup`)
+        analysisId = undefined
+      }
+
+      const fallbackUrlId = Buffer.from(url).toString('base64url')
+      const lookupId = analysisId || fallbackUrlId
+
+      const { data } = await axios.get(`https://www.virustotal.com/api/v3/urls/${lookupId}`, {
+        headers: { accept: 'application/json', 'x-apikey': env.VIRUSTOTAL_API_KEY },
+        timeout: 10000,
+      })
+      return { available: true, ...(data as Record<string, unknown>) }
+    } catch (error) {
+      return toProviderError('VirusTotal', error)
+    }
   },
 
   async destroyList(url: string) {
-    return safeGet(
-      async () => {
-        const domain = extractDomain(url)
-        const baseUrl = env.DESTROYLIST_BASE_URL?.trim() || DESTROYLIST_DEFAULT_BASE_URL
-        const { data } = await axios.get(`${baseUrl}/v1/check`, {
-          params: { domain },
-          timeout: 10000,
-        })
-        return data
-      },
-      {},
-    )
+    try {
+      const domain = extractDomain(url)
+      const baseUrl = env.DESTROYLIST_BASE_URL?.trim() || DESTROYLIST_DEFAULT_BASE_URL
+      const { data } = await axios.get(`${baseUrl}/v1/check`, {
+        params: { domain },
+        timeout: 10000,
+      })
+      return { available: true, ...(data as Record<string, unknown>) }
+    } catch (error) {
+      return toProviderError('DestroyList', error)
+    }
   },
 
   async ipQualityScoreUrl(url: string) {

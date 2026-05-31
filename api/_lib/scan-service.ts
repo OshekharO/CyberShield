@@ -10,6 +10,7 @@ type VirusTotalStats = { malicious?: number; phishing?: number }
 const SCAN_CACHE_TTL_MS = 1000 * 60 * 15
 const MAX_PROVIDER_SNAPSHOT_FIELDS = 12
 type ProviderHealthSnapshot = { providers?: string[]; availableCount?: number } | null
+type ProviderStatusPayload = { available?: boolean }
 
 const formatRiskLevel = (level: ScanType | string): RiskLevel => {
   const normalized = String(level).toUpperCase()
@@ -60,6 +61,13 @@ const compactProviderData = (providerData: Record<string, unknown>) => {
 const normalizeMatchedRules = (value: unknown) => {
   if (!Array.isArray(value)) return []
   return value.filter((item): item is string => typeof item === 'string')
+}
+
+const getProviderHealth = (providerData: Record<string, unknown>) => {
+  const providerEntries = Object.entries(providerData).filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
+  const providers = providerEntries.map(([provider]) => provider)
+  const availableCount = providerEntries.filter(([, value]) => (value as ProviderStatusPayload).available !== false).length
+  return { providers, availableCount }
 }
 
 const isRecentDomain = (creationDate?: string | null) => {
@@ -236,17 +244,16 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
 
   const aiSummary = await generateThreatSummary({ target, type, risk, signals, providerData })
 
+  const providerHealth = getProviderHealth(providerData)
+
   await prisma.scanResult.create({
-    data: {
-      scanId: scan.id,
-      signals: signals as Prisma.InputJsonValue,
-      providers: compactProviderData(providerData) as Prisma.InputJsonValue,
-      aiSummary,
-      providerHealth: {
-        providers: Object.keys(providerData),
-        availableCount: Object.values(providerData).filter(Boolean).length,
-      },
-    },
+  data: {
+    scanId: scan.id,
+    signals: signals as Prisma.InputJsonValue,
+    providers: compactProviderData(providerData) as Prisma.InputJsonValue,
+    aiSummary,
+    providerHealth,
+  },
   })
 
   await prisma.threatReport.create({
