@@ -10,6 +10,7 @@ type VirusTotalSubmitResponse = {
 const DESTROYLIST_DEFAULT_BASE_URL = 'https://api.destroy.tools'
 const ANTIDEO_HOURLY_LIMIT = 10
 const HOUR_MS = 1000 * 60 * 60
+const IPQUALITYSCORE_DEFAULT_BASE_URL = 'https://www.ipqualityscore.com/api/json/url'
 
 let antideoWindowStart = Date.now()
 let antideoRequestCount = 0
@@ -165,6 +166,24 @@ export const providers = {
         return data
       },
       {},
+    )
+  },
+
+  async ipQualityScoreUrl(url: string) {
+    if (!env.IPQUALITYSCORE_API_KEY) {
+      return { available: false, error: 'Missing IPQUALITYSCORE_API_KEY' }
+    }
+    return safeGet(
+      async () => {
+        const { data } = await axios.get(
+          `${IPQUALITYSCORE_DEFAULT_BASE_URL}/${encodeURIComponent(env.IPQUALITYSCORE_API_KEY)}/${encodeURIComponent(url)}`,
+          {
+            timeout: 10000,
+          },
+        )
+        return { available: true, ...(data as Record<string, unknown>) }
+      },
+      { available: false, error: 'IPQualityScore unavailable' },
     )
   },
 

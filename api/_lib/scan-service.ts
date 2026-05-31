@@ -144,9 +144,10 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
   }
 
   if (type === 'url') {
-    const [vt, destroy] = await Promise.all([
+    const [vt, destroy, ipqualityscore] = await Promise.all([
       providers.virusTotal(target),
       providers.destroyList(target),
+      providers.ipQualityScoreUrl(target),
     ])
 
     const vtStats =
@@ -160,11 +161,13 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
         : typeof destroy?.listed === 'boolean'
           ? destroy.listed
           : false
+    const ipqsUnsafe = Boolean(ipqualityscore?.unsafe)
+    const ipqsThreatSignals = [ipqualityscore?.phishing, ipqualityscore?.malware, ipqualityscore?.suspicious, ipqualityscore?.spamming].filter(Boolean).length
 
     signals = {
-      blacklist_hits: Number(destroyListed ? 1 : 0),
+      blacklist_hits: Number(destroyListed ? 1 : 0) + Number(ipqsUnsafe ? 1 : 0),
     }
-    providerData = { virustotal: vt, destroylist: destroy, vtMalicious }
+    providerData = { virustotal: vt, destroylist: destroy, ipqualityscore, vtMalicious, ipqsThreatSignals }
   }
 
   if (type === 'email') {
@@ -206,7 +209,9 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
   const risk = calculateRisk({
     abuseConfidence: Number(signals.abuse_confidence || 0),
     blacklistHits: Number(signals.blacklist_hits || 0),
-    phishingIndicators: Number((providerData as { vtMalicious?: number }).vtMalicious || 0),
+    phishingIndicators:
+      Number((providerData as { vtMalicious?: number }).vtMalicious || 0) +
+      Number((providerData as { ipqsThreatSignals?: number }).ipqsThreatSignals || 0),
     disposableEmail: Boolean((providerData as { fidro?: { disposable_email?: boolean } }).fidro?.disposable_email),
     fidroRisk: Number((providerData as { fidro?: { risk_score?: number } }).fidro?.risk_score || 0),
     virusTotalMalicious: Number((providerData as { vtMalicious?: number }).vtMalicious || 0),
