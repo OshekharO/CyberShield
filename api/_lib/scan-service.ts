@@ -10,6 +10,7 @@ type VirusTotalStats = { malicious?: number; phishing?: number }
 const SCAN_CACHE_TTL_MS = 1000 * 60 * 15
 const MAX_PROVIDER_SNAPSHOT_FIELDS = 12
 type ProviderHealthSnapshot = { providers?: string[]; availableCount?: number } | null
+type ProviderStatusPayload = { available?: boolean }
 
 const formatRiskLevel = (level: ScanType | string): RiskLevel => {
   const normalized = String(level).toUpperCase()
@@ -51,6 +52,15 @@ const compactProviderData = (providerData: Record<string, unknown>) => {
       }
     }
 
+    if (Object.keys(primitiveSnapshot).length === 0) {
+      const sourceKeys = entries.length
+      primitiveSnapshot.available = sourceKeys > 0
+      primitiveSnapshot.info =
+        sourceKeys > 0
+          ? 'Provider response contained nested-only fields; primitive summary unavailable'
+          : 'Provider returned no details'
+    }
+
     compact[provider] = primitiveSnapshot
   }
 
@@ -60,6 +70,30 @@ const compactProviderData = (providerData: Record<string, unknown>) => {
 const normalizeMatchedRules = (value: unknown) => {
   if (!Array.isArray(value)) return []
   return value.filter((item): item is string => typeof item === 'string')
+}
+
+const normalizeProviderPayload = (providerData: Record<string, unknown>) => {
+  const normalized: Record<string, unknown> = {}
+
+  for (const [provider, value] of Object.entries(providerData)) {
+    if (value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) {
+      normalized[provider] = {
+        available: false,
+        info: 'Provider did not return details for this scan',
+      }
+      continue
+    }
+    normalized[provider] = value
+  }
+
+  return normalized
+}
+
+const getProviderHealth = (providerData: Record<string, unknown>) => {
+  const providerEntries = Object.entries(providerData).filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
+  const providers = providerEntries.map(([provider]) => provider)
+  const availableCount = providerEntries.filter(([, value]) => (value as ProviderStatusPayload).available !== false).length
+  return { providers, availableCount }
 }
 
 const isRecentDomain = (creationDate?: string | null) => {
@@ -115,7 +149,7 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
         provider_confidence: providerConfidence,
       },
       signals: (latestResult.signals as Record<string, unknown>) || {},
-      providers: (latestResult.providers as Record<string, unknown>) || {},
+      providers: normalizeProviderPayload((latestResult.providers as Record<string, unknown>) || {}),
       ai_summary: latestResult.aiSummary || undefined,
     } satisfies ScanPayload
   }
@@ -236,17 +270,16 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
 
   const aiSummary = await generateThreatSummary({ target, type, risk, signals, providerData })
 
+  const providerHealth = getProviderHealth(providerData)
+
   await prisma.scanResult.create({
-    data: {
-      scanId: scan.id,
-      signals: signals as Prisma.InputJsonValue,
-      providers: compactProviderData(providerData) as Prisma.InputJsonValue,
-      aiSummary,
-      providerHealth: {
-        providers: Object.keys(providerData),
-        availableCount: Object.values(providerData).filter(Boolean).length,
-      },
-    },
+  data: {
+    scanId: scan.id,
+    signals: signals as Prisma.InputJsonValue,
+    providers: compactProviderData(providerData) as Prisma.InputJsonValue,
+    aiSummary,
+    providerHealth,
+  },
   })
 
   await prisma.threatReport.create({
@@ -280,7 +313,7 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
       matched_rules: normalizeMatchedRules(risk.matched_rules),
     },
     signals,
-    providers: providerData,
+    providers: normalizeProviderPayload(providerData),
     ai_summary: aiSummary,
   } satisfies ScanPayload
 }
