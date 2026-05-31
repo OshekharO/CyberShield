@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Radar } from 'lucide-react'
 import { MetricCard } from '../components/MetricCard'
 import { HUDHeader } from '../components/ui/hud-header'
@@ -8,15 +7,6 @@ import { useScanStore } from '../store/scanStore'
 
 export default function DashboardPage() {
   const history = useScanStore((s) => s.history)
-
-  const chartData = useMemo(
-    () =>
-      history.slice(0, 8).map((scan) => ({
-        target: scan.target.slice(0, 14),
-        score: scan.risk.score,
-      })),
-    [history],
-  )
 
   const { metrics, levelCounts } = useMemo(() => {
     const buckets = { critical: 0, high: 0, medium: 0, low: 0, safe: 0 }
@@ -74,34 +64,6 @@ export default function DashboardPage() {
       </div>
 
       <div className="dashboard-panels">
-        <SurfacePanel>
-          <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
-            Risk analytics
-          </h3>
-          <div className="progress-track">
-            <div className="progress-bar" style={{ width: `${Math.max(0, Math.min(100, metrics.avg))}%` }} />
-          </div>
-          <div style={{ marginTop: '1rem', height: '18rem', minWidth: 0 }}>
-            <ResponsiveContainer width="100%" height="100%" debounce={120}>
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(109, 135, 173, 0.35)" />
-                <XAxis dataKey="target" stroke="rgba(155, 181, 219, 0.9)" />
-                <YAxis stroke="rgba(155, 181, 219, 0.9)" />
-                <Tooltip
-                  cursor={{ fill: 'rgba(77, 234, 255, 0.08)' }}
-                  contentStyle={{
-                    border: '1px solid rgba(77, 234, 255, 0.45)',
-                    borderRadius: '8px',
-                    background: 'rgba(8, 14, 33, 0.92)',
-                    color: '#e6efff',
-                  }}
-                />
-                <Bar dataKey="score" fill="#38bdf8" radius={[6, 6, 0, 0]} isAnimationActive={false} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </SurfacePanel>
-
         <SurfacePanel>
           <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
             Risk distribution
