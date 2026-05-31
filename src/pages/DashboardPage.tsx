@@ -81,26 +81,24 @@ export default function DashboardPage() {
           <div className="progress-track">
             <div className="progress-bar" style={{ width: `${Math.max(0, Math.min(100, metrics.avg))}%` }} />
           </div>
-          <div style={{ marginTop: '1rem', height: '18rem', minWidth: 0, overflowX: 'auto' }}>
-            <div style={{ height: '100%', minWidth: '22rem' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(109, 135, 173, 0.35)" />
-                  <XAxis dataKey="target" stroke="rgba(155, 181, 219, 0.9)" />
-                  <YAxis stroke="rgba(155, 181, 219, 0.9)" />
-                  <Tooltip
-                    cursor={{ fill: 'rgba(77, 234, 255, 0.08)' }}
-                    contentStyle={{
-                      border: '1px solid rgba(77, 234, 255, 0.45)',
-                      borderRadius: '8px',
-                      background: 'rgba(8, 14, 33, 0.92)',
-                      color: '#e6efff',
-                    }}
-                  />
-                  <Bar dataKey="score" fill="#38bdf8" radius={[6, 6, 0, 0]} isAnimationActive={false} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+          <div style={{ marginTop: '1rem', height: '18rem', minWidth: 0 }}>
+            <ResponsiveContainer width="100%" height="100%" debounce={120}>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(109, 135, 173, 0.35)" />
+                <XAxis dataKey="target" stroke="rgba(155, 181, 219, 0.9)" />
+                <YAxis stroke="rgba(155, 181, 219, 0.9)" />
+                <Tooltip
+                  cursor={{ fill: 'rgba(77, 234, 255, 0.08)' }}
+                  contentStyle={{
+                    border: '1px solid rgba(77, 234, 255, 0.45)',
+                    borderRadius: '8px',
+                    background: 'rgba(8, 14, 33, 0.92)',
+                    color: '#e6efff',
+                  }}
+                />
+                <Bar dataKey="score" fill="#38bdf8" radius={[6, 6, 0, 0]} isAnimationActive={false} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </SurfacePanel>
 
