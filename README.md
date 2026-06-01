@@ -61,6 +61,7 @@ Configure a `.env` file with:
 - `USERCHECK_API_KEY`
 - `FIDRO_API_KEY`
 - `WHOISXML_API_KEY`
+- `BLACKLISTCHECKER_API_KEY`
 - `CRON_SECRET` (or `RETENTION_CRON_SECRET`)
 - `API_LOG_RETENTION_DAYS` (optional, default `30`)
 - `SCAN_RESULT_RETENTION_DAYS` (optional, default `30`)

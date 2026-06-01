@@ -11,6 +11,7 @@ const DESTROYLIST_DEFAULT_BASE_URL = 'https://cors-bypasser-pro.vercel.app/proxy
 const ANTIDEO_HOURLY_LIMIT = 10
 const HOUR_MS = 1000 * 60 * 60
 const IPQUALITYSCORE_DEFAULT_BASE_URL = 'https://www.ipqualityscore.com/api/json/url'
+const BLACKLISTCHECKER_BASE_URL = 'https://api.blacklistchecker.com'
 
 let antideoWindowStart = Date.now()
 let antideoRequestCount = 0
@@ -260,6 +261,23 @@ export const providers = {
   async emailRep(email: string) {
     return safeProviderGet('EmailRep', async () => {
       const { data } = await axios.get(`https://emailrep.io/${encodeURIComponent(email)}`, {
+        timeout: 10000,
+      })
+      return (data as Record<string, unknown>) ?? {}
+    })
+  },
+
+  async blacklistCheckerEmail(email: string) {
+    if (!env.BLACKLISTCHECKER_API_KEY) {
+      return { available: false, error: 'Missing BLACKLISTCHECKER_API_KEY' }
+    }
+    return safeProviderGet('BlacklistChecker', async () => {
+      const authHeader = Buffer.from(env.BLACKLISTCHECKER_API_KEY).toString('base64')
+      const { data } = await axios.get(`${BLACKLISTCHECKER_BASE_URL}/check/${encodeURIComponent(email)}`, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Basic ${authHeader}`,
+        },
         timeout: 10000,
       })
       return (data as Record<string, unknown>) ?? {}

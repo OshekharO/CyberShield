@@ -205,17 +205,25 @@ export const runScan = async (userId: string, type: ScanPayload['type'], target:
   }
 
   if (type === 'email') {
-    const [usercheck, emailrep, fidro] = await Promise.all([
+    const [usercheck, emailrep, fidro, blacklistchecker] = await Promise.all([
       providers.userCheckEmail(target),
       providers.emailRep(target),
       providers.fidroValidate(target, 'email'),
+      providers.blacklistCheckerEmail(target),
     ])
+
+    const blacklistCheckerDetections =
+      typeof blacklistchecker?.detections === 'number'
+        ? blacklistchecker.detections
+        : Array.isArray(blacklistchecker?.blacklists)
+          ? blacklistchecker.blacklists.filter((item) => Boolean(item?.detected)).length
+          : 0
 
     signals = {
       breach_count: Number(emailrep?.references || 0),
-      blacklist_hits: Number(usercheck?.blocklisted ? 1 : 0),
+      blacklist_hits: Number(usercheck?.blocklisted ? 1 : 0) + Number(blacklistCheckerDetections || 0),
     }
-    providerData = { usercheck, emailrep, fidro }
+    providerData = { usercheck, emailrep, fidro, blacklistchecker }
   }
 
   if (type === 'domain') {
