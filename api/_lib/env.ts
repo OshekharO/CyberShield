@@ -10,6 +10,7 @@ export const env = {
   USERCHECK_API_KEY: process.env.USERCHECK_API_KEY ?? '',
   FIDRO_API_KEY: process.env.FIDRO_API_KEY ?? '',
   WHOISXML_API_KEY: process.env.WHOISXML_API_KEY ?? '',
+  BLACKLISTCHECKER_API_KEY: process.env.BLACKLISTCHECKER_API_KEY ?? '',
 }
 
 export const requireEnv = (key: keyof typeof env) => {
