@@ -629,10 +629,32 @@ export default withErrorHandling(
     if (rawData) {
       sectionHeader('Signals')
 
-      const signals: Record<string, string> = {
-        'Breach Count': sanitizeText(rawData.breachCount ?? 0),
-        'Blacklist Hits': sanitizeText(rawData.blacklistHits ?? 0),
-        'Spam Score': sanitizeText(rawData.spamScore ?? 'N/A'),
+      const breachCount = rawData.breach_count ?? rawData.breachCount
+      const blacklistHits = rawData.blacklist_hits ?? rawData.blacklistHits
+      const abuseConfidence = rawData.abuse_confidence ?? rawData.abuseConfidence
+      const vpnProxy = rawData.vpn_proxy ?? rawData.vpnProxy
+      const recentDomain = rawData.recent_domain ?? rawData.recentDomain
+
+      const signals: Record<string, string> = {}
+
+      if (abuseConfidence !== undefined) {
+        signals['Abuse Confidence'] = `${sanitizeText(abuseConfidence)}%`
+      }
+      if (vpnProxy !== undefined) {
+        signals['VPN / Proxy Detected'] = vpnProxy ? 'Yes' : 'No'
+      }
+      if (breachCount !== undefined) {
+        signals['Breach Count'] = sanitizeText(breachCount)
+      }
+      if (blacklistHits !== undefined) {
+        signals['Blacklist Hits'] = sanitizeText(blacklistHits)
+      }
+      if (recentDomain !== undefined) {
+        signals['Recent Domain'] = recentDomain ? 'Yes (registered < 90 days ago)' : 'No'
+      }
+
+      if (Object.keys(signals).length === 0) {
+        signals['Status'] = 'No specific threat signals flagged'
       }
 
       for (const [label, value] of Object.entries(signals)) {

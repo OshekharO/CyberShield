@@ -103,8 +103,10 @@ const isRecentDomain = (creationDate?: string | null) => {
   return created >= threshold
 }
 
-export const runScan = async (userId: string, type: ScanPayload['type'], target: string) => {
+export const runScan = async (userId: string, type: ScanPayload['type'], rawTarget: string) => {
   const start = Date.now()
+  const trimmed = rawTarget.trim()
+  const target = type === 'email' || type === 'domain' ? trimmed.toLowerCase() : trimmed
 
   const cachedScan = await prisma.scan.findFirst({
     where: {
