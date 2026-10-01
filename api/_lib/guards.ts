@@ -11,7 +11,15 @@ export const requireAuth = async (req: VercelRequest) => {
     throw err
   }
 
-  const payload = verifyToken(token)
+  let payload
+  try {
+    payload = verifyToken(token)
+  } catch {
+    const err = new Error('Unauthorized')
+    ;(err as Error & { status?: number }).status = 401
+    throw err
+  }
+
   const user = await prisma.user.findUnique({ where: { id: payload.userId } })
   if (!user || user.isBanned) {
     const err = new Error('Access denied')

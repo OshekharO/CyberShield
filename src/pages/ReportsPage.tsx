@@ -8,6 +8,7 @@ import { HUDHeader } from '../components/ui/hud-header'
 import { DataRow } from '../components/ui/data-row'
 import { StatusBadge } from '../components/ui/status-badge'
 import { statusToneFromRisk } from '../components/ui/status-utils'
+import { TerminalBlock } from '../components/ui/terminal-block'
 
 const ReportRow = memo(function ReportRow({ scan }: { scan: ScanResponse }) {
   return (
@@ -31,9 +32,15 @@ export default function ReportsPage() {
     <SurfacePanel>
       <HUDHeader title="Reports" subtitle="Export detailed PDF reports from recorded scans." glitch />
       <div className="stack-2 mt-4">
-        {scans.map((scan) => (
-          <ReportRow key={scan.scan_id} scan={scan} />
-        ))}
+        {scans.length > 0 ? (
+          scans.map((scan) => <ReportRow key={scan.scan_id} scan={scan} />)
+        ) : (
+          <TerminalBlock className="mt-2">
+            <p className="helper-text">
+              No scan reports available to export. Run an IOC scan in the Scan Center to generate intelligence reports.
+            </p>
+          </TerminalBlock>
+        )}
       </div>
     </SurfacePanel>
   )

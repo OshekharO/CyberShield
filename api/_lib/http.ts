@@ -19,9 +19,13 @@ export const withErrorHandling = (handler: Handler): Handler => {
     try {
       await handler(req, res)
     } catch (error) {
-      const status = (error as Error & { status?: number }).status || 500
+      const err = error as Error & { status?: number; name?: string }
+      let status = err.status || 500
+      if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+        status = 401
+      }
       res.status(status).json({
-        error: (error as Error).message || 'Internal server error',
+        error: err.message || 'Internal server error',
       })
     }
   }
