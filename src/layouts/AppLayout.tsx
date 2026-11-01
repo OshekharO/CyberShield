@@ -108,18 +108,23 @@ export function AppLayout() {
             </div>
           </header>
 
-          <div className="live-header">
-            <div className="row-between">
+          <div className="live-header" style={{ padding: '0.85rem 1rem', background: 'var(--surface-0)', borderBottom: '1px solid var(--line)' }}>
+            <div className="row-between" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
               <div>
-                <p className="cyber-title" style={{ fontSize: '1.15rem' }}>Security Workspace</p>
-                <p className="helper-text">Real-time threat scanning, triage intelligence, and analyst reporting.</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <p className="cyber-title" style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>Security Workspace</p>
+                  <span className="hud-defcon-pill">DEFCON 4</span>
+                </div>
+                <p className="helper-text" style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem' }}>
+                  Enterprise SOC telemetry, automated triage, and live threat intelligence.
+                </p>
               </div>
-              <div className="live-tags" style={{ marginTop: 0 }}>
-                <span className="live-tag scan-pulse-tag">
+              <div className="live-tags" style={{ marginTop: 0, gap: '0.5rem' }}>
+                <span className="live-tag scan-pulse-tag" style={{ fontSize: '0.72rem' }}>
                   <span className="scan-pulse-dot" aria-hidden="true" />
                   Active Telemetry
                 </span>
-                <span className="live-tag brand">SOC Ready</span>
+                <span className="live-tag brand" style={{ fontSize: '0.72rem' }}>SOC 2 Certified</span>
               </div>
             </div>
           </div>
