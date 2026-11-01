@@ -46,28 +46,31 @@ export default function DashboardPage() {
     <div className="dashboard-grid">
       <SurfacePanel>
         <div className="panel-title-row">
-          <HUDHeader title="Dashboard" subtitle="Monitor scan activity, risk trends, and recent intelligence updates." glitch />
-          <div className="live-tags">
+          <HUDHeader title="Operations Dashboard" subtitle="Live threat detection telemetry, risk distribution, and historical scans." />
+          <div className="live-tags" style={{ marginTop: 0 }}>
             <span className="live-tag brand">
-              <Radar size={12} /> Live analytics
+              <Radar size={13} /> Real-time Feed
             </span>
-            <span className="live-tag brand">Risk scoring</span>
+            <span className="live-tag">Automated Scoring</span>
           </div>
         </div>
       </SurfacePanel>
 
       <div className="dashboard-metrics">
-        <MetricCard label="Total scans" value={history.length} />
-        <MetricCard label="High risk" value={metrics.high} />
-        <MetricCard label="Critical" value={metrics.critical} />
-        <MetricCard label="Average score" value={metrics.avg} />
+        <MetricCard label="Total Scans Executed" value={history.length} />
+        <MetricCard label="High Risk Detections" value={metrics.high} />
+        <MetricCard label="Critical Threats" value={metrics.critical} />
+        <MetricCard label="Average Risk Score" value={metrics.avg} />
       </div>
 
       <div className="dashboard-panels">
         <SurfacePanel>
-          <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
-            Risk distribution
-          </h3>
+          <div className="row-between" style={{ marginBottom: '0.75rem' }}>
+            <h3 className="cyber-title" style={{ fontSize: '0.95rem' }}>
+              Risk Distribution Breakdown
+            </h3>
+            <span className="helper-text">{history.length} Total records</span>
+          </div>
           <div className="progress-list">
             {levelRows.map((row) => {
               const pct = Math.round((row.value / Math.max(history.length, 1)) * 100)
@@ -75,7 +78,7 @@ export default function DashboardPage() {
                 <div className="progress-list-row" key={row.label}>
                   <div className="progress-list-meta">
                     <span>{row.label}</span>
-                    <span>{row.value}</span>
+                    <span>{row.value} ({pct}%)</span>
                   </div>
                   <div className="progress-track" style={{ marginTop: 0 }}>
                     <div className="progress-bar" style={{ width: `${pct}%`, background: row.color }} />
@@ -88,33 +91,44 @@ export default function DashboardPage() {
       </div>
 
       <SurfacePanel>
-        <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
-          Recent activity
-        </h3>
-        <div className="table-wrap">
-          <table className="cyber-table">
-            <thead>
-              <tr>
-                <th>Target</th>
-                <th>Type</th>
-                <th className="align-right">Score</th>
-                <th className="align-right">Risk</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recent.map((scan) => (
-                <tr key={scan.scan_id}>
-                  <td>{scan.target}</td>
-                  <td>{scan.type.toUpperCase()}</td>
-                  <td className="align-right">{scan.risk.score}</td>
-                  <td className="align-right" style={{ textTransform: 'uppercase', fontWeight: 700 }}>
-                    {scan.risk.level}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="row-between" style={{ marginBottom: '0.5rem' }}>
+          <h3 className="cyber-title" style={{ fontSize: '0.95rem' }}>
+            Recent Indicators
+          </h3>
+          <span className="helper-text">Latest {recent.length} scans</span>
         </div>
+        {recent.length > 0 ? (
+          <div className="table-wrap">
+            <table className="cyber-table">
+              <thead>
+                <tr>
+                  <th>Indicator Target</th>
+                  <th>Indicator Type</th>
+                  <th className="align-right">Score</th>
+                  <th className="align-right">Risk Level</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recent.map((scan) => (
+                  <tr key={scan.scan_id}>
+                    <td style={{ fontWeight: 500 }}>{scan.target}</td>
+                    <td><span className="status-chip status-default">{scan.type.toUpperCase()}</span></td>
+                    <td className="align-right">{scan.risk.score} / 100</td>
+                    <td className="align-right">
+                      <span className={`status-chip status-${scan.risk.level.toLowerCase().replace('_risk', '')}`}>
+                        {scan.risk.level}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="terminal-block" style={{ marginTop: '0.75rem' }}>
+            <p className="helper-text">No scans recorded yet. Initiate an indicator scan in Scan Center to see live telemetry.</p>
+          </div>
+        )}
       </SurfacePanel>
     </div>
   )

@@ -7,5 +7,5 @@ interface SurfacePanelProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export function SurfacePanel({ className, scanline = false, ...props }: SurfacePanelProps) {
-  return <Card className={cn(scanline && 'scanline-overlay', className)} {...props} />
+  return <Card className={cn('surface-panel', scanline && 'scanline-overlay', className)} {...props} />
 }

@@ -7,7 +7,6 @@ import { HUDHeader } from '../components/ui/hud-header'
 import { DataRow } from '../components/ui/data-row'
 import { StatusBadge } from '../components/ui/status-badge'
 import { statusToneFromRisk } from '../components/ui/status-utils'
-import { TerminalBlock } from '../components/ui/terminal-block'
 import { scanService } from '../services/scanService'
 import { useScanStore } from '../store/scanStore'
 import type { ScanType } from '../types'
@@ -39,46 +38,63 @@ export default function ScanCenterPage() {
 
   return (
     <div className="stack-4">
-      <HUDHeader title="Scan Center" subtitle="Run IOC scans and receive contextual analyst summaries." glitch />
+      <HUDHeader title="Scan Center" subtitle="Execute indicator analysis across IPs, domains, hashes, and URLs." />
 
       <SurfacePanel>
-        <div style={{ display: 'grid', gap: '0.8rem', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
+        <div style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
           <CyberSelect value={type} onChange={(e) => setType(e.target.value as ScanType)}>
             {scanTypes.map((scanType) => (
               <option key={scanType} value={scanType}>
-                {scanType.toUpperCase()} scanner
+                {scanType.toUpperCase()} Indicator
               </option>
             ))}
           </CyberSelect>
-          <Input value={target} onChange={(e) => setTarget(e.target.value)} placeholder="Enter IOC target..." />
+          <Input
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && target.trim() && !loading && run()}
+            placeholder="Enter target IP, domain, URL, or email..."
+          />
           <Button className="w-full" onClick={run} disabled={loading || !target.trim()}>
-            {loading ? 'Scanning...' : 'Run scan'}
+            {loading ? 'Analyzing Target...' : 'Execute Scan'}
           </Button>
         </div>
         {error && <p className="form-error mt-3">{error}</p>}
       </SurfacePanel>
 
       {summary && (
-        <TerminalBlock>
-          <p className="cyber-label">AI Summary</p>
-          <p className="helper-text" style={{ whiteSpace: 'pre-wrap' }}>{summary}</p>
-        </TerminalBlock>
+        <SurfacePanel>
+          <div className="row-between" style={{ marginBottom: '0.5rem' }}>
+            <p className="cyber-title" style={{ fontSize: '0.95rem' }}>AI Threat Intelligence Synthesis</p>
+            <span className="live-tag brand">Gemini Analysis</span>
+          </div>
+          <p className="helper-text" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{summary}</p>
+        </SurfacePanel>
       )}
 
       <SurfacePanel>
-        <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
-          Recent scans
-        </h3>
-        <div className="stack-2 mt-4">
-          {recent.map((scan) => (
-            <DataRow
-              key={scan.scan_id}
-              title={`${scan.type.toUpperCase()} — ${scan.target}`}
-              subtitle={`Risk score ${scan.risk.score}`}
-              action={<StatusBadge tone={statusToneFromRisk(scan.risk.level)}>{scan.risk.level}</StatusBadge>}
-            />
-          ))}
+        <div className="row-between" style={{ marginBottom: '0.75rem' }}>
+          <h3 className="cyber-title" style={{ fontSize: '0.95rem' }}>
+            Recent Analyst Scans
+          </h3>
+          <span className="helper-text">{recent.length} recent executions</span>
         </div>
+        {recent.length > 0 ? (
+          <div className="stack-2">
+            {recent.map((scan) => (
+              <DataRow
+                key={scan.scan_id}
+                title={`${scan.type.toUpperCase()}: ${scan.target}`}
+                subtitle={`Calculated score: ${scan.risk.score}/100`}
+                action={<StatusBadge tone={statusToneFromRisk(scan.risk.level)}>{scan.risk.level}</StatusBadge>}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="terminal-block">
+            <p className="helper-text">No scans in this session yet. Submit an indicator above to begin analysis.</p>
+          </div>
+        )}
       </SurfacePanel>
     </div>
   )

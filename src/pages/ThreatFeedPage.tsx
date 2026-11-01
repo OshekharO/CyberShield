@@ -7,7 +7,6 @@ import { HUDHeader } from '../components/ui/hud-header'
 import { DataRow } from '../components/ui/data-row'
 import { StatusBadge } from '../components/ui/status-badge'
 import { statusToneFromRisk } from '../components/ui/status-utils'
-import { TerminalBlock } from '../components/ui/terminal-block'
 
 const ThreatItem = memo(function ThreatItem({ scan }: { scan: ScanResponse }) {
   return (
@@ -31,19 +30,19 @@ export default function ThreatFeedPage() {
 
   return (
     <SurfacePanel>
-      <HUDHeader title="Threat Feed" subtitle="Search and review scanned indicators of compromise." glitch />
-      <Input className="mt-4" placeholder="Search IOC target..." value={query} onChange={(e) => setQuery(e.target.value)} />
+      <HUDHeader title="Threat Intelligence Feed" subtitle="Search and review historically triaged indicators across all vectors." />
+      <Input className="mt-4" placeholder="Filter by indicator target, IP, domain, or email..." value={query} onChange={(e) => setQuery(e.target.value)} />
       <div className="stack-2 mt-4">
         {filtered.length > 0 ? (
           filtered.map((scan) => <ThreatItem key={scan.scan_id} scan={scan} />)
         ) : (
-          <TerminalBlock className="mt-2">
+          <div className="terminal-block mt-2">
             <p className="helper-text">
               {history.length === 0
                 ? 'No IOC scan history recorded yet. Run a scan in the Scan Center to populate the threat feed.'
                 : 'No indicators matched your search query.'}
             </p>
-          </TerminalBlock>
+          </div>
         )}
       </div>
     </SurfacePanel>

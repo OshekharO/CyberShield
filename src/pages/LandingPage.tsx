@@ -102,49 +102,53 @@ export default function LandingPage() {
   return (
     <div className="landing-shell" id="hero">
       <div className="landing-container">
-        <section className="hero">
-          <p className="status-chip status-low" style={{ margin: '0 auto' }}>
+        <header className="hero">
+          <span className="status-chip status-low" style={{ margin: '0 auto' }}>
             <Sparkles size={12} />
-            Enterprise security operations
-          </p>
+            Enterprise Threat Intelligence Platform
+          </span>
 
           <h1 className="cyber-title hero-title">
-            CyberShield for modern <span>SOC teams</span>
+            Unified threat triage for modern <span>security operations</span>
           </h1>
 
-          <p className="cyber-subtitle" style={{ maxWidth: '47rem', margin: '0 auto' }}>
-            Monitor, scan, triage, and report from a single intelligence-driven command center with a custom cyber SaaS interface.
+          <p className="cyber-subtitle" style={{ maxWidth: '44rem', margin: '0 auto' }}>
+            Automate indicator enrichment across IPs, domains, URLs, and emails. Generate AI-synthesized mitigation reports in minutes.
           </p>
 
           <div className="hero-actions">
             <Link to="/signup">
-              <Button className="cyber-glow-cyan" endIcon={<ArrowRight size={14} />}>
-                Start free
+              <Button size="lg" endIcon={<ArrowRight size={16} />}>
+                Get Started
               </Button>
             </Link>
             <Link to="/login">
-              <Button variant="outline">Sign in</Button>
+              <Button variant="outline" size="lg">
+                Sign In
+              </Button>
             </Link>
           </div>
-        </section>
+        </header>
 
-        <SurfacePanel scanline className="hero-gradient landing-highlights">
+        <div className="landing-highlights">
           {highlights.map((item) => (
             <div key={item} className="hud-panel highlight-item">
-              <CheckCircle2 size={15} className="icon-muted" />
-              <p className="cyber-subtitle">{item}</p>
+              <CheckCircle2 size={16} className="feature-icon" />
+              <span className="cyber-subtitle" style={{ fontSize: '0.875rem', fontWeight: 500 }}>
+                {item}
+              </span>
             </div>
           ))}
-        </SurfacePanel>
+        </div>
 
         <section className="feature-grid">
           {features.map((feature) => (
             <SurfacePanel key={feature.title} className="feature-card">
-              <feature.icon size={20} className="feature-icon" />
-              <h2 className="cyber-title" style={{ fontSize: '1.2rem', marginTop: '0.8rem' }}>
+              <feature.icon size={22} className="feature-icon" />
+              <h2 className="cyber-title" style={{ fontSize: '1.15rem', marginTop: '1rem' }}>
                 {feature.title}
               </h2>
-              <p className="cyber-subtitle" style={{ marginTop: '0.5rem' }}>
+              <p className="cyber-subtitle" style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
                 {feature.desc}
               </p>
             </SurfacePanel>
@@ -154,9 +158,9 @@ export default function LandingPage() {
         <section className="landing-section-grid">
           {detailCards.map((item) => (
             <SurfacePanel key={item.title} className="landing-detail-card">
-              <item.icon size={18} className="feature-icon" />
+              <item.icon size={20} className="feature-icon" />
               <h3 className="cyber-title landing-card-title">{item.title}</h3>
-              <p className="cyber-subtitle">{item.desc}</p>
+              <p className="cyber-subtitle" style={{ fontSize: '0.875rem' }}>{item.desc}</p>
             </SurfacePanel>
           ))}
         </section>
@@ -164,21 +168,23 @@ export default function LandingPage() {
         <section className="landing-two-col">
           <SurfacePanel>
             <p className="cyber-label">Testimonials</p>
-            <h2 className="cyber-title landing-section-title">Trusted by cyber operations teams</h2>
+            <h2 className="cyber-title landing-section-title">Trusted by SOC Leads and Analysts</h2>
             <div className="landing-testimonials">
               {testimonials.map((item) => (
                 <article key={item.name} className="hud-panel landing-testimonial-card">
-                  <p className="cyber-subtitle">“{item.quote}”</p>
-                  <p className="landing-testimonial-name">{item.name}</p>
-                  <p className="landing-testimonial-role">{item.role}</p>
+                  <p className="cyber-subtitle" style={{ fontSize: '0.875rem' }}>“{item.quote}”</p>
+                  <div>
+                    <p className="landing-testimonial-name">{item.name}</p>
+                    <p className="landing-testimonial-role">{item.role}</p>
+                  </div>
                 </article>
               ))}
             </div>
           </SurfacePanel>
 
           <SurfacePanel>
-            <p className="cyber-label">FAQ</p>
-            <h2 className="cyber-title landing-section-title">Questions security teams ask</h2>
+            <p className="cyber-label">Knowledge Base</p>
+            <h2 className="cyber-title landing-section-title">Frequently Asked Questions</h2>
             <div className="landing-faq-list">
               {faqItems.map((item) => (
                 <details key={item.question} className="landing-faq-item">
@@ -192,51 +198,58 @@ export default function LandingPage() {
 
         <section className="landing-two-col">
           <SurfacePanel>
-            <p className="cyber-label">Contact</p>
-            <h2 className="cyber-title landing-section-title">Talk to the CyberShield team</h2>
-            <p className="cyber-subtitle">Send your SOC requirements and we’ll help map the best workflow setup for your team.</p>
+            <p className="cyber-label">Get in Touch</p>
+            <h2 className="cyber-title landing-section-title">Talk to our Solutions Engineering Team</h2>
+            <p className="cyber-subtitle" style={{ fontSize: '0.875rem' }}>
+              Schedule a technical walk-through or discuss customized provider integrations for your environment.
+            </p>
             <form className="landing-contact-form" onSubmit={(e) => e.preventDefault()}>
               <label className="form-field" htmlFor="contactName">
-                <span className="form-label">Name</span>
+                <span className="form-label">Full Name</span>
                 <input id="contactName" className="cyber-input" placeholder="Jane Doe" />
               </label>
               <label className="form-field" htmlFor="contactEmail">
-                <span className="form-label">Email</span>
-                <input id="contactEmail" type="email" className="cyber-input" placeholder="you@company.com" />
+                <span className="form-label">Work Email</span>
+                <input id="contactEmail" type="email" className="cyber-input" placeholder="jane@company.com" />
               </label>
               <label className="form-field" htmlFor="contactMsg">
                 <span className="form-label">Message</span>
-                <textarea id="contactMsg" className="cyber-input landing-contact-textarea" placeholder="Tell us what your SOC needs..." />
+                <textarea id="contactMsg" className="landing-contact-textarea" placeholder="How can we help your security operations team?" />
               </label>
               <Button className="w-full" type="submit">
-                Send message
+                Submit Inquiry
               </Button>
             </form>
           </SurfacePanel>
 
           <SurfacePanel className="landing-contact-details">
-            <h2 className="cyber-title landing-section-title">Reach us directly</h2>
+            <p className="cyber-label">Direct Contacts</p>
+            <h2 className="cyber-title landing-section-title">Headquarters & Availability</h2>
             <div className="landing-contact-item">
-              <Mail size={16} className="icon-muted" />
-              <span>ops@cybershield.example</span>
+              <Mail size={16} className="feature-icon" />
+              <span>security-ops@cybershield.example</span>
             </div>
             <div className="landing-contact-item">
-              <Phone size={16} className="icon-muted" />
-              <span>+1 (555) 010-1420</span>
+              <Phone size={16} className="feature-icon" />
+              <span>+1 (800) 555-0199</span>
             </div>
             <div className="landing-contact-item">
-              <Building2 size={16} className="icon-muted" />
-              <span>Cyber Operations District, SecOps Tower</span>
+              <Building2 size={16} className="feature-icon" />
+              <span>San Francisco HQ, Cyber Operations Tower</span>
             </div>
-            <p className="cyber-subtitle">Available Monday-Friday, 09:00-18:00 UTC for product and deployment queries.</p>
+            <p className="cyber-subtitle" style={{ fontSize: '0.875rem', marginTop: '1rem' }}>
+              Our security engineering support desk operates 24/7 for critical enterprise incident response integrations.
+            </p>
           </SurfacePanel>
         </section>
 
         <footer className="landing-footer">
           <SurfacePanel className="landing-footer-panel">
             <div>
-              <p className="cyber-label">CyberShield</p>
-              <p className="cyber-subtitle">Built for SaaS-style cyber SOC operations, threat triage, and analyst reporting workflows.</p>
+              <p className="cyber-title" style={{ fontSize: '1.05rem', fontWeight: 700 }}>CyberShield</p>
+              <p className="cyber-subtitle" style={{ fontSize: '0.8125rem', marginTop: '0.25rem', maxWidth: '22rem' }}>
+                Enterprise threat intelligence platform for indicators, risk correlation, and analyst reporting.
+              </p>
             </div>
             <div className="landing-footer-links">
               {Object.entries(footerLinks).map(([group, links]) => (

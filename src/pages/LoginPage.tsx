@@ -28,42 +28,45 @@ export default function LoginPage() {
   return (
     <main className="auth-shell">
       <div className="auth-grid">
-        <SurfacePanel className="hero-gradient auth-side">
+        <aside className="auth-side">
           <HUDHeader
-            label="Security operations platform"
-            title="Intelligence-ready operations"
-            subtitle="Triage indicators, monitor threat posture, and generate analyst reports from one control center."
-            glitch
+            label="Enterprise SecOps"
+            title="Threat Intelligence Command"
+            subtitle="Automated IOC triage, comprehensive provider signals, and analyst reporting in one workspace."
           />
-          <div className="stack-4" style={{ marginTop: '1.8rem' }}>
+          <div className="stack-4" style={{ marginTop: '2rem' }}>
             <div className="hud-panel row-between" style={{ justifyContent: 'flex-start' }}>
               <Shield size={18} className="icon-muted" />
               <div>
-                <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
-                  Zero-friction access
+                <h3 className="cyber-title" style={{ fontSize: '0.95rem' }}>
+                  Role-Based Security
                 </h3>
-                <p className="cyber-subtitle">Secure login, role-aware workspace, and session-safe controls.</p>
+                <p className="cyber-subtitle" style={{ fontSize: '0.85rem' }}>
+                  JWT-authenticated sessions with HTTP-only cookies and granular analyst RBAC.
+                </p>
               </div>
             </div>
             <div className="hud-panel row-between" style={{ justifyContent: 'flex-start' }}>
               <Compass size={18} className="icon-muted" />
               <div>
-                <h3 className="cyber-title" style={{ fontSize: '1rem' }}>
-                  Fast SOC workflow
+                <h3 className="cyber-title" style={{ fontSize: '0.95rem' }}>
+                  Automated Triage Pipeline
                 </h3>
-                <p className="cyber-subtitle">Run scans and move directly into triage and downloadable reports.</p>
+                <p className="cyber-subtitle" style={{ fontSize: '0.85rem' }}>
+                  Aggregate threat signals across IPs, domains, hashes, and URLs with sub-second lookups.
+                </p>
               </div>
             </div>
           </div>
-        </SurfacePanel>
+        </aside>
 
-        <SurfacePanel scanline className="hero-gradient auth-card">
-          <HUDHeader label="CyberShield" title="Welcome back" subtitle="Sign in to access your security operations dashboard." glitch />
+        <SurfacePanel className="auth-card">
+          <HUDHeader label="CyberShield" title="Sign In" subtitle="Enter your credentials to access your security workspace." />
 
-          <div className="stack-4" style={{ marginTop: '1.6rem' }}>
+          <div className="stack-4" style={{ marginTop: '1.5rem' }}>
             <label className="form-field" htmlFor="email">
-              <span className="form-label">Email</span>
-              <Input id="email" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <span className="form-label">Work email</span>
+              <Input id="email" placeholder="name@company.com" value={email} onChange={(e) => setEmail(e.target.value)} />
             </label>
             <label className="form-field" htmlFor="password">
               <span className="form-label">Password</span>
@@ -71,20 +74,20 @@ export default function LoginPage() {
             </label>
             {error && <p className="form-error">{error}</p>}
             <Button className="w-full" onClick={submit}>
-              Sign in
+              Sign In
             </Button>
           </div>
 
-          <p className="auth-actions">
+          <div className="auth-actions">
             <Link to="/forgot-password" className="cyber-link">
               Forgot password?
             </Link>
-          </p>
+          </div>
 
-          <p className="auth-actions">
-            No account?{' '}
+          <p className="auth-actions" style={{ borderTop: 'none', paddingTop: 0, marginTop: '0.75rem' }}>
+            Need an account?{' '}
             <Link to="/signup" className="cyber-link">
-              Create one
+              Create an account
             </Link>
           </p>
         </SurfacePanel>

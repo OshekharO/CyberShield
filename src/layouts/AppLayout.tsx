@@ -12,8 +12,6 @@ import {
 import { ThemeToggle } from '../components/ThemeToggle'
 import { useAuthStore } from '../store/authStore'
 import { Button } from '../components/ui/button'
-import { GlitchText } from '../components/ui/glitch-text'
-import { SurfacePanel } from '../components/ui/surface-panel'
 
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -38,16 +36,18 @@ export function AppLayout() {
   return (
     <div className="app-shell">
       <div className="app-grid">
-        <SurfacePanel className="sidebar scanline-overlay">
+        <aside className="sidebar">
           <div className="sidebar-head">
-            <div>
-              <p className="cyber-label">CyberShield</p>
-              <div className="brand-title">
-                <span className="brand-dot" aria-hidden="true">
-                  <ShieldCheck size={14} />
-                </span>
-                <p className="cyber-title" style={{ fontSize: '1rem' }}>
-                  <GlitchText text="OPERATIONS" className="inline-block" />
+            <div className="brand-title">
+              <span className="brand-dot" aria-hidden="true">
+                <ShieldCheck size={20} />
+              </span>
+              <div>
+                <p className="cyber-title" style={{ fontSize: '0.95rem', fontWeight: 700 }}>
+                  CyberShield
+                </p>
+                <p className="cyber-label" style={{ fontSize: '0.68rem', letterSpacing: '0.04em' }}>
+                  Enterprise SecOps
                 </p>
               </div>
             </div>
@@ -74,7 +74,7 @@ export function AppLayout() {
             )}
           </ul>
 
-          <div className="hud-panel profile-box">
+          <div className="profile-box">
             <div className="profile-head">
               <span className="profile-avatar">{(user?.name ?? 'U').slice(0, 1).toUpperCase()}</span>
               <div className="profile-meta">
@@ -86,15 +86,17 @@ export function AppLayout() {
               Sign out
             </Button>
           </div>
-        </SurfacePanel>
+        </aside>
 
         <main className="main-content">
-          <SurfacePanel className="mobile-topbar">
+          <header className="mobile-topbar">
             <div className="mobile-topbar-head">
-              <div>
-                <p className="cyber-label">CyberShield</p>
-                <p className="cyber-title" style={{ fontSize: '1rem' }}>
-                  <GlitchText text="OPERATIONS" className="inline-block" />
+              <div className="brand-title">
+                <span className="brand-dot" aria-hidden="true">
+                  <ShieldCheck size={18} />
+                </span>
+                <p className="cyber-title" style={{ fontSize: '0.95rem' }}>
+                  CyberShield
                 </p>
               </div>
               <div className="mobile-topbar-actions">
@@ -104,21 +106,23 @@ export function AppLayout() {
                 </Button>
               </div>
             </div>
-          </SurfacePanel>
-
-          <header className="live-header hero-gradient">
-            <p className="cyber-label">Live workspace</p>
-            <p className="helper-text">Real-time threat scanning, triage, and reporting across your security operations workflow.</p>
-            <div className="live-tags">
-              <span className="live-tag scan-pulse-tag">
-                <span className="scan-pulse-dot" aria-hidden="true" />
-                Scan pulse
-              </span>
-              <span className="live-tag brand">Real-time</span>
-              <span className="live-tag brand">AI-assisted</span>
-              <span className="live-tag">SOC-ready</span>
-            </div>
           </header>
+
+          <div className="live-header">
+            <div className="row-between">
+              <div>
+                <p className="cyber-title" style={{ fontSize: '1.15rem' }}>Security Workspace</p>
+                <p className="helper-text">Real-time threat scanning, triage intelligence, and analyst reporting.</p>
+              </div>
+              <div className="live-tags" style={{ marginTop: 0 }}>
+                <span className="live-tag scan-pulse-tag">
+                  <span className="scan-pulse-dot" aria-hidden="true" />
+                  Active Telemetry
+                </span>
+                <span className="live-tag brand">SOC Ready</span>
+              </div>
+            </div>
+          </div>
           <div className="page-content">
             <Outlet />
           </div>

@@ -32,36 +32,36 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="auth-shell">
-      <div className="auth-grid">
-        <SurfacePanel scanline className="hero-gradient auth-card">
-          <HUDHeader label="CyberShield" title="Reset password" subtitle="Enter your email address and we will send you a reset link." glitch />
+      <div className="auth-grid" style={{ maxWidth: '30rem' }}>
+        <SurfacePanel className="auth-card">
+          <HUDHeader label="CyberShield" title="Reset Password" subtitle="Enter your work email address to generate an access recovery link." />
 
           {submitted ? (
-            <div className="stack-4" style={{ marginTop: '1.6rem' }}>
+            <div className="stack-4" style={{ marginTop: '1.5rem' }}>
               <p className="cyber-subtitle">
                 If an account exists for <strong>{email}</strong>, a reset link has been generated.
               </p>
               {resetUrl && (
                 <div className="hud-panel" style={{ wordBreak: 'break-all' }}>
-                  <p className="form-label" style={{ marginBottom: '0.4rem' }}>Reset link</p>
-                  <Link to={resetUrl.replace(window.location.origin, '')} className="cyber-link" style={{ fontSize: '0.8rem' }}>
+                  <p className="form-label" style={{ marginBottom: '0.4rem' }}>Direct Recovery Link</p>
+                  <Link to={resetUrl.replace(window.location.origin, '')} className="cyber-link" style={{ fontSize: '0.8125rem' }}>
                     {resetUrl}
                   </Link>
                 </div>
               )}
               <p className="auth-actions">
                 <Link to="/login" className="cyber-link">
-                  Back to sign in
+                  Return to Sign In
                 </Link>
               </p>
             </div>
           ) : (
-            <div className="stack-4" style={{ marginTop: '1.6rem' }}>
+            <div className="stack-4" style={{ marginTop: '1.5rem' }}>
               <label className="form-field" htmlFor="email">
-                <span className="form-label">Email</span>
+                <span className="form-label">Work email</span>
                 <Input
                   id="email"
-                  placeholder="you@company.com"
+                  placeholder="name@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && submit()}
@@ -69,11 +69,11 @@ export default function ForgotPasswordPage() {
               </label>
               {error && <p className="form-error">{error}</p>}
               <Button className="w-full" onClick={submit}>
-                Send reset link
+                Send Recovery Link
               </Button>
               <p className="auth-actions">
                 <Link to="/login" className="cyber-link">
-                  Back to sign in
+                  Return to Sign In
                 </Link>
               </p>
             </div>
