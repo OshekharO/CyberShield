@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Button } from '../components/ui/button'
 import { SurfacePanel } from '../components/ui/surface-panel'
 import { HUDHeader } from '../components/ui/hud-header'
-import { TerminalBlock } from '../components/ui/terminal-block'
 import { adminService } from '../services/adminService'
 import { useAuthStore } from '../store/authStore'
 import { getApiErrorMessage } from '../utils/apiError'
@@ -37,25 +36,32 @@ export default function SettingsPage() {
   return (
     <div className="stack-4">
       <SurfacePanel>
-        <HUDHeader title="Settings" subtitle="Configure API keys, provider thresholds, and SOC profile preferences." glitch />
-        <TerminalBlock className="mt-4">Settings are managed via deployment environment variables and secured server-side controls.</TerminalBlock>
+        <HUDHeader title="Workspace Configuration" subtitle="Review platform environment controls, provider thresholds, and compliance parameters." />
+        <div className="hud-panel mt-4">
+          <p className="helper-text">
+            Security keys, provider API endpoints, and database connection pools are secured via deployment environment variables.
+          </p>
+        </div>
       </SurfacePanel>
 
       {user?.role === 'ADMIN' && (
         <SurfacePanel>
-          <HUDHeader title="Data Retention" subtitle="Manually trigger retention cleanup for logs and scan records." />
+          <div className="row-between" style={{ marginBottom: '0.75rem' }}>
+            <HUDHeader title="Data Retention Management" subtitle="Execute on-demand retention enforcement for audit logs and scan histories." />
+            <span className="live-tag brand">Retention Policy</span>
+          </div>
           <div className="stack-2 mt-3">
             <Button variant="outline" onClick={runCleanup} disabled={loadingCleanup}>
-              {loadingCleanup ? 'Running cleanup...' : 'Run retention cleanup now'}
+              {loadingCleanup ? 'Executing Retention Policy...' : 'Run Retention Cleanup Now'}
             </Button>
             {cleanupError && <p className="form-error">{cleanupError}</p>}
             {cleanupResult && (
-              <TerminalBlock>
-                <p className="helper-text">
-                  Cleanup completed by {cleanupResult.triggeredBy}. Deleted {cleanupResult.deleted.apiLogs} API logs and{' '}
-                  {cleanupResult.deleted.scanResults} scan results.
+              <div className="hud-panel" style={{ marginTop: '0.5rem' }}>
+                <p className="helper-text" style={{ color: 'var(--color-safe)' }}>
+                  ✓ Cleanup executed by {cleanupResult.triggeredBy}. Purged {cleanupResult.deleted.apiLogs} API audit logs and{' '}
+                  {cleanupResult.deleted.scanResults} stale scan records.
                 </p>
-              </TerminalBlock>
+              </div>
             )}
           </div>
         </SurfacePanel>

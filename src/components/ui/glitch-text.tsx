@@ -10,7 +10,7 @@ interface GlitchTextProps {
 
 export function GlitchText({ text, as: Tag = 'span', className, children }: GlitchTextProps) {
   return (
-    <Tag className={cn('glitch-text', className)} data-text={text}>
+    <Tag className={cn('glitch-text font-semibold tracking-tight', className)}>
       {children ?? text}
     </Tag>
   )

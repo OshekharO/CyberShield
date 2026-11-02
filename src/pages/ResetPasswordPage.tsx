@@ -44,27 +44,27 @@ export default function ResetPasswordPage() {
 
   return (
     <main className="auth-shell">
-      <div className="auth-grid">
-        <SurfacePanel scanline className="hero-gradient auth-card">
-          <HUDHeader label="CyberShield" title="New password" subtitle="Choose a new password for your account." glitch />
+      <div className="auth-grid" style={{ maxWidth: '30rem' }}>
+        <SurfacePanel className="auth-card">
+          <HUDHeader label="CyberShield" title="Set New Password" subtitle="Choose a strong password to secure your analyst account." />
 
-          <div className="stack-4" style={{ marginTop: '1.6rem' }}>
+          <div className="stack-4" style={{ marginTop: '1.5rem' }}>
             <label className="form-field" htmlFor="new-password">
               <span className="form-label">New password</span>
               <Input
                 id="new-password"
                 type="password"
-                placeholder="At least 8 characters"
+                placeholder="Minimum 8 characters"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
             </label>
             <label className="form-field" htmlFor="confirm-password">
-              <span className="form-label">Confirm password</span>
+              <span className="form-label">Confirm new password</span>
               <Input
                 id="confirm-password"
                 type="password"
-                placeholder="Repeat new password"
+                placeholder="Re-enter password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && submit()}
@@ -72,11 +72,11 @@ export default function ResetPasswordPage() {
             </label>
             {error && <p className="form-error">{error}</p>}
             <Button className="w-full" onClick={submit}>
-              Update password
+              Save New Password
             </Button>
             <p className="auth-actions">
               <Link to="/login" className="cyber-link">
-                Back to sign in
+                Return to Sign In
               </Link>
             </p>
           </div>
